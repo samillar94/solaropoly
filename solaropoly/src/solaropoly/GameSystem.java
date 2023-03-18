@@ -18,7 +18,7 @@ public class GameSystem {
 	public static final int MIN_PLAYERS = 2;
 	public static final int MAX_PLAYERS = 4;
 	public static final String PRE = ""; /// resource prefix
-	public static final String SUF = "kWh"; /// resource suffix
+	public static final String SUF = " kWh"; /// resource suffix
 
 	/// essential components
 
@@ -57,7 +57,7 @@ public class GameSystem {
 
 			}
 			
-			/// final code to show balances and assets
+			/// TODO final code to show balances and assets
 			
 
 		} catch (InterruptedException e) {
@@ -78,6 +78,9 @@ public class GameSystem {
 
 		int num = 0;
 		/// TODO scanner code
+		
+		
+		
 		players = new ArrayList<Player>(num);
 		return num;
 
@@ -85,12 +88,18 @@ public class GameSystem {
 
 	private static ArrayList<Player> registerPlayers() {
 		/// TODO scanner
+		
+		
 		ArrayList<Player> playerBuilder = new ArrayList<Player>();
 		return playerBuilder;
 	}
 
 	private static void turn(Player player) {
-		/// TODO turn mechanism
+		/// TODO do you want to take the turn?
+		/// TODO roll dice
+		/// TODO move on board and activate square
+		/// TODO smash or pass square
+		/// TODO develop if you can
 
 	}
 
