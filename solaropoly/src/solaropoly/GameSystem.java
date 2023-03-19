@@ -90,8 +90,8 @@ public class GameSystem {
 		/// TODO scanner
 		
 		
-		ArrayList<Player> playerBuilder = new ArrayList<Player>();
-		return playerBuilder;
+		ArrayList<Player> playersBuilder = new ArrayList<Player>();
+		return playersBuilder;
 	}
 
 	private static void turn(Player player) {
