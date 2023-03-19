@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 
 /**
- * @author samil
- * 
+ * This is the square that actually does stuff! Areas can be owned and developed by players.
+ * @author G17
  */
 public class Area extends Square implements GeneratesIncome {
 	

@@ -5,8 +5,7 @@ package solaropoly;
 
 /**
  * Second square on the board with no effects - equivalent to Monopoly "Just Parking"
- * @author samil
- *
+ * @author G17
  */
 public class Parking extends Square {
 

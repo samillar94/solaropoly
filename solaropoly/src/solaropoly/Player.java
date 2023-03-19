@@ -10,8 +10,9 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
- * @author samil
- *
+ * This class holds properties about the player's status in game, including name, balance, position
+ * and assets
+ * @author G17
  */
 public class Player {
 	
@@ -71,7 +72,8 @@ public class Player {
 	 * @param position the position to set
 	 */
 	public void setPosition(int position) {
-		if (position >= GameSystem.BOARD_SIZE || position < 0) {
+		/// TODO use Board size
+		if (position >= 12 /*GameSystem.board.size()*/ || position < 0) {
 			throw new IllegalArgumentException("Invalid player position");
 		} else {
 			this.position = position;

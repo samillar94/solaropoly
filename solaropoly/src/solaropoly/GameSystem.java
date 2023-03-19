@@ -4,11 +4,12 @@
 package solaropoly;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
- * The executable class of the system, starting the Solaropoly command-line game
- * @author all
+ * The executable class of the system, starting the Solaropoly command-line game.
+ * @author G17
  */
 public class GameSystem {
 
@@ -24,10 +25,13 @@ public class GameSystem {
 
 	public static final Scanner SCANNER = new Scanner(System.in);
 
-	private static boolean gameEndTrigger = false;
+	public static boolean gameEndTrigger = false;
 
 	public static ArrayList<Player> players = new ArrayList<Player>();
 
+	
+	/// executable code
+	
 	/**
 	 * Main method - execution starts here
 	 * @param args
@@ -83,9 +87,19 @@ public class GameSystem {
 	private static int setNumPlayers() {
 
 		int num = 0;
-		/// TODO scanner code
 		
+		while (num == 0) {
+			System.out.println("How many are playing? Type a number between "+MIN_PLAYERS
+				+" and "+MAX_PLAYERS+" and press Enter.");
+			try {
+				num = SCANNER.nextInt();
+			} catch (InputMismatchException e) {
+				System.out.println("Sorry, need a whole number.");
+			} catch (Exception e) {
+				System.out.println("Sorry, try again.");
+			}
 		
+		}
 		
 		players = new ArrayList<Player>(num);
 		return num;

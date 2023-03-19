@@ -4,10 +4,9 @@
 package solaropoly;
 
 /**
- * Abstract class for sqaures on the board, which shall have in common a name and an action
+ * Abstract class for squares on the board, which shall have in common a name and an action
  * when a player lands on them
- * @author samil
- *
+ * @author G17
  */
 public abstract class Square {
 	
