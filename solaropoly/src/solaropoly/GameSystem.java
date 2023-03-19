@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * @author samil
- *
+ * The executable class of the system, starting the Solaropoly command-line game
+ * @author all
  */
 public class GameSystem {
 
@@ -29,6 +29,7 @@ public class GameSystem {
 	public static ArrayList<Player> players = new ArrayList<Player>();
 
 	/**
+	 * Main method - execution starts here
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -74,6 +75,11 @@ public class GameSystem {
 
 	}
 
+	/**
+	 * Takes user input at the start of the game to set the number of players whose names
+	 * will be registered.
+	 * @return the number of players
+	 */
 	private static int setNumPlayers() {
 
 		int num = 0;
@@ -86,20 +92,32 @@ public class GameSystem {
 
 	}
 
+	/**
+	 * Registers players by name, including validation
+	 * @return an ArrayList of Players
+	 */
 	private static ArrayList<Player> registerPlayers() {
-		/// TODO scanner
-		
-		
 		ArrayList<Player> playersBuilder = new ArrayList<Player>();
+		/// TODO scanner stuff
+		
+		
 		return playersBuilder;
 	}
 
+	/**
+	 * This method is called for each player in turn from the main method, and organises 
+	 * the inputs and results that will be a part of their turn, including 
+	 * (1) deciding whether to abandon the game or roll and move; 
+	 * (2) developing any fields they have monopolised; and 
+	 * (3) trading assets with other players
+	 * @param player
+	 */
 	private static void turn(Player player) {
 		/// TODO do you want to take the turn?
 		/// TODO roll dice
 		/// TODO move on board and activate square
-		/// TODO smash or pass square
 		/// TODO develop if you can
+		/// TODO trade assets 
 
 	}
 

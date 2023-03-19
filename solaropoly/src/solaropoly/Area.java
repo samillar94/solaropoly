@@ -173,7 +173,7 @@ public class Area extends Square implements GeneratesIncome {
 	@Override
 	public void act(Player player) {
 		
-		/// TODO offer the property for sale to the playerand allow them to pass it if they don't want it
+		/// TODO offer the property for sale to the player and allow them to pass on it if they don't want it
 		
 
 	}
