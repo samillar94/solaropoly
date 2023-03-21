@@ -179,6 +179,7 @@ public class Area extends Square implements GeneratesIncome {
 	}
 	/**
 	 * this method will transferred money automatically when players landed on competitors' land
+	 * @author Li
 	 * 
 	 */
 public void rentPay(Player p1, Square s1) {
