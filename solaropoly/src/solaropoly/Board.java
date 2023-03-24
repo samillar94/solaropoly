@@ -76,13 +76,13 @@ public class Board {
 		
 		if (totalsize >= MIN_SQUARES && totalsize <= MAX_SQUARES) {
 			this.squares = (ArrayList<Square>) squares;
-		} else if (totalsize <= MAX_SQUARES) {
+		} else if (totalsize > MAX_SQUARES) {
 			this.squares = (ArrayList<Square>) squares.subList(MAX_SQUARES + 1, totalsize);
 			System.err.printf("The List of squares was too long, and we need to comply with the rules.\n"
 					+ "%d is the maximum number of squares allowed, but %d squares were provided.\n"
 					+ "%d squares were truncated from the end of the List and the board.\n",
 					MAX_SQUARES, totalsize, totalsize - MAX_SQUARES);
-		} else if (totalsize >= MIN_SQUARES) {
+		} else if (totalsize < MIN_SQUARES) {
 			throw new IllegalArgumentException("The size of the list should be incremented. The minimum number of squares is " + MIN_SQUARES);
 		}
 	}
@@ -116,10 +116,10 @@ public class Board {
 		
 		if (totalsize >= MIN_GROUPS && totalsize <= MAX_GROUPS) {
 			this.groups = (HashSet<Group>) groups;
-		} else if (totalsize <= MAX_GROUPS) {
+		} else if (totalsize > MAX_GROUPS) {
 			throw new IllegalArgumentException("The Set of groups was too long, and we need to comply with the rules.\n"
 					+ MAX_GROUPS + "is the maximum number of groups allowed, but " + totalsize + " groups were provided.\n");
-		} else if (totalsize >= MIN_GROUPS) {
+		} else if (totalsize < MIN_GROUPS) {
 			throw new IllegalArgumentException("The size of the Set should be incremented. The minimum number of groups is " + MIN_GROUPS);
 		}
 	}
