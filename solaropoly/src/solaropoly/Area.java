@@ -12,39 +12,18 @@ import java.util.stream.Collectors;
  * This is the square that actually does stuff! Areas can be owned and developed by players.
  * @author G17
  */
-public class Area extends Square {
+public class Area extends Square implements GeneratesIncome {
 	
 	private Group group;
 	private Player owner;
 	private int cost;
-	private ArrayList<Integer> rentProfile=new ArrayList<>();
+	private HashMap<String, ArrayList<Integer>> rentProfile = new HashMap<>(2);
 	private int monopolyLevel = 0;
 	private int developmentLevel = 0;
-private String name;
+
 	
 	/// setget
 	
-	/**
- * @return the name
- */
-public String getName() {
-	return name;
-}
-
-/**
- * @param name the name to set
- */
-public void setName(String name) {
-	this.name = name;
-}
-
-/**
- * @param rentProfile the rentProfile to set
- */
-public void setRentProfile(ArrayList<Integer> rentProfile) {
-	this.rentProfile = rentProfile;
-}
-
 	/**
 	 * @return the field
 	 */
@@ -76,6 +55,35 @@ public void setRentProfile(ArrayList<Integer> rentProfile) {
 	/**
 	 * @return the cost
 	 */
+	@Override
+	public int getCost() {
+		return cost;
+	}
+
+	/**
+	 * @param cost the cost to set
+	 */
+	@Override
+	public void setCost(int cost) {
+		this.cost = cost;
+	}
+	
+	/**
+	 * @return the rentProfile
+	 */
+	public HashMap<String, ArrayList<Integer>> getRentProfile() {
+		return rentProfile;
+	}
+
+	/**
+	 * @param rentProfile the rentProfile to set
+	 */
+	public void setRentProfile(HashMap<String, ArrayList<Integer>> rentProfile) {
+		// TODO validate HashMap and ArrayList not empty, Integer 0+
+		this.rentProfile = rentProfile;
+	}
+
+	
 	
 
 	/**
@@ -174,13 +182,8 @@ public void setRentProfile(ArrayList<Integer> rentProfile) {
 	 * @author Li
 	 * 
 	 */
-public void rentPay(Player p2, Area a2) {
+public void rentPay(Player p1, Square s1) {
 	// TODO When players landed on others land
-	
-	p2.setBalance(p2.getBalance()-rentProfile.get(a2.developmentLevel+a2.monopolyLevel));
-	a2.getOwner().setBalance(p2.getBalance()-rentProfile.get(a2.developmentLevel+a2.monopolyLevel));
-	//change test
-	
 }
 	
 
