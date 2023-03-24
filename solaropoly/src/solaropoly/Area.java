@@ -182,8 +182,14 @@ public class Area extends Square implements GeneratesIncome {
 	 * @author Li
 	 * 
 	 */
-public void rentPay(Player p1, Square s1) {
+public void rentPay(Player p1, Area a1) {
 	// TODO When players landed on others land
+	p1.setBalance(p1.getBalance()-a1.getCurrentRent());
+	if(p1.getBalance()<0) {
+		GameSystem.gameEndTrigger=true;
+	}else {
+		a1.getOwner().setBalance(a1.getOwner().getBalance()+a1.getCurrentRent());
+	}
 }
 	
 
