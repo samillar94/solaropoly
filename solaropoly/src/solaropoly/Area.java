@@ -20,7 +20,6 @@ public class Area extends Square implements GeneratesIncome {
 	private HashMap<String, ArrayList<Integer>> rentProfile = new HashMap<>(2);
 	private int monopolyLevel = 0;
 	private int developmentLevel = 0;
-
 	
 	/// setget
 	
@@ -182,8 +181,14 @@ public class Area extends Square implements GeneratesIncome {
 	 * @author Li
 	 * 
 	 */
-public void rentPay(Player p1, Square s1) {
-	// TODO When players landed on others land
+public void rentPay(Player p1, Area a1) {
+	
+	p1.setBalance(p1.getBalance()-a1.getCurrentRent());
+	if(p1.getBalance()<0) {
+		GameSystem.gameEndTrigger=true;
+	}else {
+	a1.getOwner().setBalance(a1.getOwner().getBalance()+a1.getCurrentRent());
+	}
 }
 	
 
