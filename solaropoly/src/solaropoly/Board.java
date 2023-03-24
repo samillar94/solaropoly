@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.ArrayList;
-import java.util.HashMap;
-import javafx.util.Pair;
 
 /**
  * This class represents the game board, which consists of a number of squares and groups.
