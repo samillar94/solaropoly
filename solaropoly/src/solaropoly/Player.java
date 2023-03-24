@@ -29,6 +29,19 @@ public class Player {
 	public Player() {}
 	
 	/**
+	 * Constructor with arguments
+	 * @param name
+	 * @param balance
+	 * @param position
+	 */
+	public Player(String name, int balance, int position) {
+		this.setName(name);
+		this.balance = balance;
+		this.setPosition(position);
+		this.ownedSquares = new HashSet<Square>();
+	};
+	
+	/**
 	 * @return the name
 	 */
 	public String getName() {

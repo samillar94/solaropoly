@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javafx.util.Pair;
 
 /**
  * This class represents the game board, which consists of a number of squares and groups.
@@ -140,15 +141,34 @@ public class Board {
 	
 	//TODO: I still need to implement the new methods that I added in the class diagram:
 	
-	public Square getSquare(int index) {
-		return null;
+	public BoardPosition getSquare(int diceRoll) throws IndexOutOfBoundsException {
+		int oldPosition = 1;
+		return this.getSquare(oldPosition, diceRoll);
+	}
+	
+	public BoardPosition getSquare(int oldPosition, int diceRoll) throws IndexOutOfBoundsException {
+		if (!this.squares.isEmpty()) {
+			oldPosition = (oldPosition < 1) ? oldPosition : 1;
+			diceRoll = (diceRoll < 1) ? diceRoll : 1;
+			oldPosition--;
+			diceRoll--;
+			int overrunPosition = oldPosition + diceRoll;
+	        int startPassed = overrunPosition / getSize();
+	        int newPosition = overrunPosition % getSize();
+			Square square = this.squares.get(newPosition);
+			return new BoardPosition(square, startPassed);
+		} else {
+			throw new IndexOutOfBoundsException("The List of squares is empty. Please fill the board with squares before using the method.");
+		}
 	}
 	
 	public int getPosition(Square square) {
+		
 		return 0;
 	}
 	
 	public Group getGroup(Square square) {
+		
 		return null;
 	}
 }
