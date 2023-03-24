@@ -142,16 +142,14 @@ public class Board {
 	//TODO: I still need to implement the new methods that I added in the class diagram:
 	
 	public BoardPosition getSquare(int diceRoll) throws IndexOutOfBoundsException {
-		int oldPosition = 1;
+		int oldPosition = 0;
 		return this.getSquare(oldPosition, diceRoll);
 	}
 	
 	public BoardPosition getSquare(int oldPosition, int diceRoll) throws IndexOutOfBoundsException {
 		if (!this.squares.isEmpty()) {
-			oldPosition = (oldPosition < 1) ? oldPosition : 1;
-			diceRoll = (diceRoll < 1) ? diceRoll : 1;
-			oldPosition--;
-			diceRoll--;
+			oldPosition = (oldPosition < 0) ? oldPosition : 0;
+			diceRoll = (diceRoll < 0) ? diceRoll : 0;
 			int overrunPosition = oldPosition + diceRoll;
 	        int startPassed = overrunPosition / getSize();
 	        int newPosition = overrunPosition % getSize();
