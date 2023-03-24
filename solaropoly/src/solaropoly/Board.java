@@ -139,9 +139,9 @@ public class Board {
 	
 	//TODO: I still need to implement the new methods that I added in the class diagram:
 	
-	public BoardPosition getSquare(int diceRoll) throws IndexOutOfBoundsException {
-		int oldPosition = 0;
-		return this.getSquare(oldPosition, diceRoll);
+	public BoardPosition getSquare(int index) throws IndexOutOfBoundsException {
+		int oldPosition = 1;
+		return this.getSquare(oldPosition, index);
 	}
 	
 	public BoardPosition getSquare(int oldPosition, int diceRoll) throws IndexOutOfBoundsException {
