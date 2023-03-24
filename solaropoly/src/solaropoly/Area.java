@@ -177,7 +177,7 @@ public class Area extends Square implements GeneratesIncome {
 
 	}
 	/**
-	 * this method will transfer money automatically when players landed on competitors' land
+	 * this method will transferrr money automatically when players landed on competitors' land
 	 * @author Li
 	 * 
 	 */
