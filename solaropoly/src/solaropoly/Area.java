@@ -173,8 +173,46 @@ public class Area extends Square implements GeneratesIncome {
 	@Override
 	public void act(Player player) {
 
-		/// TODO offer the property for sale to the player and allow them to pass on it
-		/// if they don't want it
+		/// TODO if other types of property are made, make Property an interface and move a lot of this code there
+		
+		System.out.println(this.getName());
+		
+		if (this.owner == null && player.getBalance()>=this.cost) {
+			
+			System.out.printf("Would you like to buy this area for £%,d?%nPress Enter to buy, else press any other character and press Enter to decline.%n", this.cost);	
+			String input = GameSystem.SCANNER.nextLine();
+			
+			if (input == null || input == "") {
+				
+				player.decreaseBalance(this.cost);
+				
+				// two-way link
+				this.setOwner(player);
+				player.gainOwnership(this);
+				
+				System.out.printf("Ok, you've bought %s! ",this.getName());
+				player.displayBalance();	
+				
+			} else {
+				
+				dutchAuctionSystem(player);
+				
+			}
+			
+		} else if (this.owner == null && player.getBalance()<this.cost){
+			
+			System.out.println("You can't buy this, sorry.");
+			
+		} else if (this.owner == player) {
+			
+			System.out.println("Opulence! You own this.");
+			
+		} else {
+			
+			rentPay(player, this);
+			
+		}
+
 
 	}
 
@@ -202,7 +240,7 @@ public class Area extends Square implements GeneratesIncome {
 	 *                   DutchAuctionSystem
 	 * @throws Exception
 	 */
-	public void DutchAuctionSystem(Player auctioneer) {
+	public void dutchAuctionSystem(Player auctioneer) {
 		if (auctioneer.getOwnedSquares().isEmpty()) {
 			System.out.println("You don't have any property, auction system closed");
 			return;
@@ -257,7 +295,7 @@ public class Area extends Square implements GeneratesIncome {
 
 						} else {
 							System.out.println("Sorry for that you do not have enough balance to buy");
-							DutchAuctionSystem(auctioneer);
+							dutchAuctionSystem(auctioneer);
 						}
 						legalInput = true;
 
@@ -274,12 +312,12 @@ public class Area extends Square implements GeneratesIncome {
 					System.out.println("System closed");
 					return;
 				} else if (UserAnswer.equalsIgnoreCase("Y")) {
-					DutchAuctionSystem(auctioneer);
+					dutchAuctionSystem(auctioneer);
 				}
 			} while (!UserAnswer.equalsIgnoreCase("Y") | !UserAnswer.equalsIgnoreCase("N"));
 		} catch (Exception e) {
 			System.out.println("Exception happened, trade system restart");
-			DutchAuctionSystem(auctioneer);
+			dutchAuctionSystem(auctioneer);
 		}
 	}
 
