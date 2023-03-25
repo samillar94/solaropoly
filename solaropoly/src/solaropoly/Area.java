@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * @author G17
  */
 public class Area extends Square implements GeneratesIncome {
-	
+	private static final int  MIN_LEVEL = 0, MAX_LEVEL = 4;
 	private Group group;
 	private Player owner;
 	private int cost;
@@ -97,7 +97,11 @@ public class Area extends Square implements GeneratesIncome {
 	 */
 	public void setMonopolyLevel(int monopolyLevel) {
 		// TODO validate 0+
+		if(monopolyLevel<MIN_LEVEL ) {
+			throw new IllegalArgumentException("Monopoly level must be greater or equal than " + MIN_LEVEL);
+		} else {
 		this.monopolyLevel = monopolyLevel;
+		}
 	}
 
 	/**
@@ -111,8 +115,12 @@ public class Area extends Square implements GeneratesIncome {
 	 * @param developmentLevel the developmentLevel to set
 	 */
 	public void setDevelopmentLevel(int developmentLevel) {
-		// TODO validate 0+
+		if(developmentLevel<MIN_LEVEL || developmentLevel > MAX_LEVEL) {
+			throw new IllegalArgumentException("Development level level must be greater or equal than " + MIN_LEVEL +  " or less than or equal to "+ MAX_LEVEL);
+					
+		} else {
 		this.developmentLevel = developmentLevel;
+		}
 	}
 
 	
