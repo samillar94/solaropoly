@@ -320,6 +320,10 @@ public class GameSystem {
 
 	}
 
+	/**
+	 * develop method
+	 * @param player
+	 */
 	private static void developArea(Player player) {
 		if (player.getOwnedGroups().size() > 0) {
 
