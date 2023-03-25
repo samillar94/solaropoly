@@ -182,13 +182,14 @@ public class Area extends Square implements GeneratesIncome {
 	 * 
 	 */
 public void rentPay(Player p1, Area a1) {
-	
-	p1.setBalance(p1.getBalance()-a1.getCurrentRent());
-	if(p1.getBalance()<0) {
-		GameSystem.gameEndTrigger=true;
-	}else {
-	a1.getOwner().setBalance(a1.getOwner().getBalance()+a1.getCurrentRent());
-	}
+	if(p1.getBalance()<a1.getCurrentRent()) {
+	  a1.getOwner().setBalance(+p1.getBalance());
+	  GameSystem.players.remove(p1);
+	  }else {
+		  p1.setBalance(-a1.getCurrentRent());
+		  a1.getOwner().setBalance(+a1.getCurrentRent());
+	  }
+	  
 }
 	
 
