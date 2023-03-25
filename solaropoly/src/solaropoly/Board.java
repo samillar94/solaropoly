@@ -19,24 +19,24 @@ import java.util.ArrayList;
 public class Board {
 	
 	/**
-	 * Maximum number of squares from the requirements of the game.
-	 */
-	private static final int MAX_SQUARES = 20;
-	
-	/**
 	 * Minimum number of squares from the requirements of the game.
 	 */
 	private static final int MIN_SQUARES = 6;
 	
 	/**
-	 * Maximum number of groups from the requirements of the game.
+	 * Maximum number of squares from the requirements of the game.
 	 */
-	private static final int MAX_GROUPS = 4;
+	private static final int MAX_SQUARES = 20;
 	
 	/**
 	 * Minimum number of groups from the requirements of the game.
 	 */
 	private static final int MIN_GROUPS = 2;
+	
+	/**
+	 * Maximum number of groups from the requirements of the game.
+	 */
+	private static final int MAX_GROUPS = 4;
 	
 	private ArrayList<Square> squares = new ArrayList<Square>();
 	private HashSet<Group> groups = new HashSet<Group>();
@@ -70,7 +70,7 @@ public class Board {
 	 * @param squares The squares of the game board. It will be casted in an ArrayList.
 	 * @throws IllegalArgumentException - respect the requirements, minimum and maximum size.
 	 */
-	public void setSquares(List<Square> squares) throws IllegalArgumentException {
+	public void setSquares(List<Square> squares) throws IllegalArgumentException,  {
 		int totalsize = this.getSize() + squares.size();
 		
 		if (totalsize >= MIN_SQUARES && totalsize <= MAX_SQUARES) {
@@ -99,16 +99,22 @@ public class Board {
 	 * @throws IllegalArgumentException - respect the requirements, the logic of the game and minimum and maximum size.
 	 * 									  The board should contain only groups that are present in the board
 	 * 									  and that are "Area" objects (rule applied in the Group class).
+	 * @throws IndexOutOfBoundsException - if the squares List is empty.
 	 */
-	public void setGroups(Set<Group> groups) throws IllegalArgumentException {
-		ArrayList<Area> areas = new ArrayList<Area>();
+	public void setGroups(Set<Group> groups) throws IllegalArgumentException, IndexOutOfBoundsException {
+		checkSquaresList();
+		ArrayList<Area> areasGroups = new ArrayList<Area>();
 		
 		for (Group group : groups) {
-			areas.addAll(group.getAreas());
+			areasGroups.addAll(group.getAreas());
 		}
-		if (!squares.containsAll(areas)) {
-			throw new IllegalArgumentException("The Set of groups has elements (squares of type area) that are not present on the board.\n"
-					+ "please correct the groups to match the areas/squares present in the boards.");
+		
+		if (!this.squares.containsAll(areasGroups)) {
+			throw new IllegalArgumentException("The Set of groups has elements (squares of type Area) that are not present on the board.\n"
+					+ "please correct the groups to match the areas/squares present in the board.");
+		} else if (!areasGroups.containsAll(this.getSquaresByType(Area.class))) {
+			System.err.printf("The Set of groups does not contains all the elements (squares of type Area) that are present on the board.\n"
+					+ "please be aware that not all the areas in this board have a group.");
 		}
 		
 		int totalsize = this.getGroups().size() + groups.size();
@@ -125,17 +131,47 @@ public class Board {
 	
 	@Override
 	public String toString() {
-		return "Board [squares=" + this.getSize() + ", groups=" + groups.size() + "]";
+		return "Board [squares=" + this.getSize() + ", groups=" + this.groups.size() + "]";
 	}
 	
 	// Methods
 	
 	/**
-	 * Board size in squares.
+	 * This method returns the board size in squares.
 	 * @return the size of the game board, so the total number of squares that it contains
 	 */
 	public int getSize() {
 		return this.squares.size();
+	}
+	
+	/**
+	 * This method is used to retrieve from the board all the squares of a certain type.
+	 * @param type - the type of square to retrieve. use: NameClassSquare.class
+	 * 				 and put instead of NameClassSquare the name of your class.
+	 * @return the size of the game board, so the total number of squares that it contains.
+	 * @throws IndexOutOfBoundsException - if the squares List is empty.
+	 */
+	public <T> ArrayList<T> getSquaresByType(Class<T> type) throws IndexOutOfBoundsException {
+	    return this.getSquaresByType(this.squares, type);
+	}
+	
+	/**
+	 * This method is used to retrieve from a given List of squares all the squares of a certain type.
+	 * @param squares - The List to filter.
+	 * @param type - the type of square to retrieve. use: NameClassSquare.class
+	 * 				 and put instead of NameClassSquare the name of your class.
+	 * @return the size of the game board, so the total number of squares that it contains.
+	 * @throws IndexOutOfBoundsException - if the squares List is empty.
+	 */
+	public <T> ArrayList<T> getSquaresByType(List<Square> squares, Class<T> type) throws IndexOutOfBoundsException {
+		checkSquaresList();
+		ArrayList<T> result = new ArrayList<>();
+	    for (Square square : squares) {
+	        if (type.isInstance(square)) {
+	            result.add(type.cast(square));
+	        }
+	    }
+	    return result;
 	}
 	
 	/**
@@ -192,7 +228,7 @@ public class Board {
 	 */
 	public Group getGroup(Area area) throws IndexOutOfBoundsException {
 		checkGroupsSet();
-		for (Group group : groups) {
+		for (Group group : this.groups) {
 			if (group.getAreas().contains(area)) {
 				return group;
 			}
