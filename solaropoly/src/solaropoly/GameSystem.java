@@ -241,11 +241,34 @@ public class GameSystem {
 	 */
 	private static void turn(Player player) {
 		/// TODO do you want to take the turn?
-		/// TODO roll dice
 		/// TODO move on board and activate square
 		/// TODO develop if you can
 		/// TODO trade assets 
 
+	}
+	/**
+	 * rollDice method called from turn method. imitates  2 dice.
+	 */
+	private static void rollDice() {
+		
+		System.out.println("\n\nRolling Dice");
+		
+		Random diceRandom = new Random();
+		int face1 = 0;
+		int face2 = 0;
+		int total = 0;
+		
+	
+		for (int roll = 1; roll <=2; roll ++) {
+			face1 = 1 + diceRandom.nextInt(6);
+			face2 = 1 + diceRandom.nextInt(6);
+			total = face1 + face2;
+			
+			
+		}
+		
+		System.out.println(" to You rolled a " + total + "\n\n");
+		
 	}
 
 }
