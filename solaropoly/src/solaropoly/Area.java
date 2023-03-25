@@ -278,7 +278,7 @@ public class Area extends Square implements GeneratesIncome {
 				}
 			} while (!UserAnswer.equalsIgnoreCase("Y") | !UserAnswer.equalsIgnoreCase("N"));
 		} catch (Exception e) {
-			System.out.println("Illegal input Exception happened, please try again");
+			System.out.println("Exception happened, trade system restart");
 			DutchAuctionSystem(auctioneer);
 		}
 	}
