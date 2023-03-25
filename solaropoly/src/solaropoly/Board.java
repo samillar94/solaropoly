@@ -138,20 +138,34 @@ public class Board {
 		return this.squares.size();
 	}
 	
-	
-	//TODO: I still need to implement the new methods that I added in the class diagram:
-	
+	/**
+	 * This method returns the square on the board and the number of times the player has passed the first square.
+	 * It uses an index to calculate the new position.
+	 * @param index - the position in the board to retrieve.
+	 * @return BoardPosition - a pair consisting of a Square object and an Integer representing the number of times the.
+	 * 						   player has looped around the board. The pair can be accessed using the getKey() and getValue()
+	 * 						   methods from the Map.Entry interface, or with getSquare() (the Square) and getStartPassed() (the Integer).
+	 * @throws IndexOutOfBoundsException - if there is an error with the calculation of the index
+	 */
 	public BoardPosition getSquare(int index) throws IndexOutOfBoundsException {
-		int oldPosition = 1;
+		int oldPosition = 0;
 		return this.getSquare(oldPosition, index);
 	}
 	
+	/**
+	 * This method returns the square on the board and the number of times the player has passed the first square.
+	 * It uses the player's current position and the dice roll result to calculate the new position.
+	 * @param oldPosition - the player's current position on the board. The dice roll result will be added to this value.
+	 * @param diceRoll - the result of the dice roll or a number to be added to the player's current position.
+	 * @return BoardPosition - a pair consisting of a Square object and an Integer representing the number of times the
+	 * 						   player has looped around the board. The pair can be accessed using the getKey() and getValue()
+	 * 						   methods from the Map.Entry interface, or with getSquare() (the Square) and getStartPassed() (the Integer).
+	 * @throws IndexOutOfBoundsException - if there is an error with the calculation of the index
+	 */
 	public BoardPosition getSquare(int oldPosition, int diceRoll) throws IndexOutOfBoundsException {
 		if (!this.squares.isEmpty()) {
-			oldPosition = (oldPosition < 1) ? oldPosition : 1;
-			diceRoll = (diceRoll < 1) ? diceRoll : 1;
-			oldPosition--;
-			diceRoll--;
+			oldPosition = (oldPosition < 0) ? oldPosition : 0;
+			diceRoll = (diceRoll < 0) ? diceRoll : 0;
 			int overrunPosition = oldPosition + diceRoll;
 	        int startPassed = overrunPosition / getSize();
 	        int newPosition = overrunPosition % getSize();
@@ -162,6 +176,11 @@ public class Board {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param square
+	 * @return
+	 */
 	public int getPosition(Square square) {
 		
 		return 0;
