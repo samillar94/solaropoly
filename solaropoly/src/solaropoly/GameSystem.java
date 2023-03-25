@@ -261,8 +261,7 @@ public class GameSystem {
 	 */
 	private static void turn(Player player) {
 
-		boolean consent = false;
-		consent = consent(player);
+		boolean consent = consent(player);
 		
 		if (consent) {
 			
