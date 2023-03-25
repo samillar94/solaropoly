@@ -5,6 +5,7 @@ package solaropoly;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -306,11 +307,39 @@ public class GameSystem {
 	
 	private static void move(Player player) {
 		/// TODO 
-//		int roll = rollDice();
+		int roll = rollDice();
 		
 		/// TODO movement on board
 		
 	}
+	
+	/**
+	 * rollDice method called from turn method. imitates  2 dice.
+	 */
+	private static int rollDice() {
+		
+		System.out.println("\n\nRolling Dice");
+		
+		Random diceRandom = new Random();
+		int face1 = 0;
+		int face2 = 0;
+		int total = 0;
+		
+	
+		for (int roll = 1; roll <=2; roll ++) {
+			face1 = 1 + diceRandom.nextInt(6);
+			face2 = 1 + diceRandom.nextInt(6);
+			total = face1 + face2;
+			
+			
+		}
+		
+		System.out.println(" to You rolled a " + total + "\n\n");
+		
+		return total;
+		
+	}
+
 	
 
 }
