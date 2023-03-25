@@ -70,8 +70,8 @@ public class Board {
 	 * @param squares The squares of the game board. It will be casted in an ArrayList.
 	 * @throws IllegalArgumentException - respect the requirements, minimum and maximum size.
 	 */
-	public void setSquares(List<Square> squares) throws IllegalArgumentException,  {
-		int totalsize = this.getSize() + squares.size();
+	public void setSquares(List<Square> squares) throws IllegalArgumentException  {
+		int totalsize = squares.size();
 		
 		if (totalsize >= MIN_SQUARES && totalsize <= MAX_SQUARES) {
 			this.squares = (ArrayList<Square>) squares;
@@ -104,7 +104,6 @@ public class Board {
 	public void setGroups(Set<Group> groups) throws IllegalArgumentException, IndexOutOfBoundsException {
 		checkSquaresList();
 		ArrayList<Area> areasGroups = new ArrayList<Area>();
-		
 		for (Group group : groups) {
 			areasGroups.addAll(group.getAreas());
 		}
@@ -117,8 +116,7 @@ public class Board {
 					+ "please be aware that not all the areas in this board have a group.");
 		}
 		
-		int totalsize = this.getGroups().size() + groups.size();
-		
+		int totalsize = groups.size();
 		if (totalsize >= MIN_GROUPS && totalsize <= MAX_GROUPS) {
 			this.groups = (HashSet<Group>) groups;
 		} else if (totalsize > MAX_GROUPS) {
