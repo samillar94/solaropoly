@@ -198,7 +198,7 @@ public class Area extends Square implements GeneratesIncome {
 
 	/**
 	 * @author Li
-	 * @param auctioneer Trade System to help gamer sell their property in
+	 * @param auctioneer Trade System to help player sell their property in
 	 *                   DutchAuctionSystem
 	 * @throws Exception
 	 */
@@ -212,14 +212,14 @@ public class Area extends Square implements GeneratesIncome {
 			boolean legalInput = false;
 			HashSet<Square> auctionnerSet = new HashSet<>();
 			auctionnerSet = auctioneer.getOwnedSquares();
-			Area aa = new Area();
+			Area tradeArea = new Area();
 			System.out.println(
 					"Welcome to Dutch auction system,which item would you like to aucion? please enter the name");
 			// show the list of owners' estates
 			for (Square s : auctionnerSet) {
-				Area a = new Area();
-				a = (Area) s;
-				System.out.println(a.toString());
+				Area area = new Area();
+				area = (Area) s;
+				System.out.println(area.toString());
 			}
 			String Userinput = GameSystem.SCANNER.nextLine();
 			// Let player choose the land he or she wants to sell
@@ -227,7 +227,7 @@ public class Area extends Square implements GeneratesIncome {
 				for (Square s : auctionnerSet) {
 					if (Userinput.equalsIgnoreCase(s.getName())) {
 						System.out.println("Land is picked up successfully");
-						aa = (Area) s;
+						tradeArea = (Area) s;
 						getResult = true;
 					}
 				}
@@ -246,12 +246,12 @@ public class Area extends Square implements GeneratesIncome {
 					if (p.getName().equalsIgnoreCase(userName)) {
 						if (p.getBalance() > gamerInput) {
 							p.decreaseBalance(gamerInput);
-							aa.getOwner().increaseBalance(gamerInput);
-							HashSet<Square> demoSquare = aa.getOwner().getOwnedSquares();
-							demoSquare.remove(aa);
-							aa.getOwner().setOwnedSquares(demoSquare);
+							tradeArea.getOwner().increaseBalance(gamerInput);
+							HashSet<Square> demoSquare = tradeArea.getOwner().getOwnedSquares();
+							demoSquare.remove(tradeArea);
+							tradeArea.getOwner().setOwnedSquares(demoSquare);
 							HashSet<Square> Demo = p.getOwnedSquares();
-							Demo.add(aa);
+							Demo.add(tradeArea);
 							p.setOwnedSquares(Demo);
 							System.out.println("Deal! Do you want to auction another property? Y/N");
 
@@ -263,7 +263,7 @@ public class Area extends Square implements GeneratesIncome {
 
 					}
 					if (!legalInput) {
-						System.out.println("Please enter existing name");
+						System.out.println("Plz enter legal input");
 						System.out.println();
 					}
 				}
