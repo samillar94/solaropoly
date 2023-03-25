@@ -127,12 +127,12 @@ public class Player {
 	
 	@Override
 	public String toString() {
-		return "Player [name=" + name + ", balance=" + balance + ", position=" + position + ", ownedSquares="
+		return "Player [name=" + GameSystem.RED_BRIGHT + name + GameSystem.RESET + ", balance=" + balance + ", position=" + position + ", ownedSquares="
 				+ ownedSquares + ", ownedGroups=" + ownedGroups + "]";
 	}
 
 	public void displayBalance() {
-		System.out.printf("%s, your current balance is £%,d.%n", this.name, this.balance);
+		System.out.printf("%s%s%s, your current balance is £%,d.%n", GameSystem.RED_BRIGHT, this.name, GameSystem.RESET, this.balance);
 		// TODO another version showing properties too
 	}
 	
