@@ -4,7 +4,6 @@
 package solaropoly;
 
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * BoardPosition is the pair of the square and the position that needs to be returned from a method.
