@@ -126,7 +126,7 @@ public class GameSystem {
 
 				for (int playerIndex = 0; playerIndex < players.size(); playerIndex++) {
 
-					Thread.sleep(2000);
+					Thread.sleep(2000); 
 
 					turn(players.get(playerIndex));
 
@@ -136,8 +136,28 @@ public class GameSystem {
 
 			}
 			
-			/// TODO final code to show balances and assets
+			/// game ending
+			System.out.println("\nGAME OVER!\nAssets accumulated:");
 			
+			/// TODO put this into a method so it can also be called when players leave early 
+			for (Player player : players) {
+				
+				int propertyValue = 0;
+				
+				for (Square area : player.getOwnedSquares()) {
+					propertyValue += ((Area) area).getCost();
+				}
+				
+				System.out.printf("%s%s%s has £%,d cash and owns £%,d of assets %s for a total of £%,d.%n", 
+						RED_BRIGHT, player.getName(), RESET, 
+						player.getBalance(), 
+						propertyValue, 
+						player.getOwnedSquares().toString(), 
+						player.getBalance()+propertyValue);
+				
+			}
+			
+			System.out.println("Thank you for playing SOLAROPOLY");	
 
 		} catch (InterruptedException e) {
 
@@ -240,35 +260,57 @@ public class GameSystem {
 	 * @param player
 	 */
 	private static void turn(Player player) {
-		/// TODO do you want to take the turn?
-		/// TODO move on board and activate square
-		/// TODO develop if you can
-		/// TODO trade assets 
 
-	}
-	/**
-	 * rollDice method called from turn method. imitates  2 dice.
-	 */
-	private static void rollDice() {
+		boolean consent = consent(player);
 		
-		System.out.println("\n\nRolling Dice");
-		
-		Random diceRandom = new Random();
-		int face1 = 0;
-		int face2 = 0;
-		int total = 0;
-		
-	
-		for (int roll = 1; roll <=2; roll ++) {
-			face1 = 1 + diceRandom.nextInt(6);
-			face2 = 1 + diceRandom.nextInt(6);
-			total = face1 + face2;
+		if (consent) {
 			
+			move(player);
+		/// TODO	
+//			develop(player);
+//			trade(player);
+		
+		} else {
+			
+			players.remove(player);
+			/// TODO print player assets
+			/// TODO remove their ownerships from assets
 			
 		}
 		
-		System.out.println(" to You rolled a " + total + "\n\n");
+		if (players.size() == 1) gameEndTrigger = true;
+
+	}
+	
+	/**
+	 * This method is called before each turn to ask the player if they want to continue or leave the game.
+	 * @param player
+	 * @return 
+	 */
+	private static boolean consent(Player player) {
+		
+		System.out.println();
+		player.displayBalance(); 
+		
+		System.out.printf("If you would like to take your turn, press Enter.%nOtherwise, enter any character and press Enter to leave the game. ", player.getName());
+		
+		String input = SCANNER.nextLine();
+		
+		if (input == null || input == "") {
+			return true;
+		} else {
+			return false;
+		}
 		
 	}
+	
+	private static void move(Player player) {
+		/// TODO 
+//		int roll = rollDice();
+		
+		/// TODO movement on board
+		
+	}
+	
 
 }

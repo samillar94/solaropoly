@@ -11,9 +11,17 @@ import java.util.ArrayList;
  */
 public class Group {
 	
-	/// constants
-	public static final int MIN_AREAS = 2;
-	public static final int MAX_AREAS = 3;
+	/**
+	 * Maximum number of squares that a group can contain from the requirements of the game.
+	 * It represent the maximum size of the group.
+	 */
+	private static final int MAX_AREAS = 3;
+	
+	/**
+	 * Minimum number of squares that a group can contain from the requirements of the game.
+	 * It represent the maximum size of the group.
+	 */
+	private static final int MIN_AREAS = 2;
 	
 	/// variables
 	private String name;

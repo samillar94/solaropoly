@@ -12,19 +12,34 @@ import java.util.TreeSet;
 /**
  * This class holds properties about the player's status in game, including name, balance, position
  * and assets
- * @author G17
+ * @author Roberto Lo Duca 40386172
  */
 public class Player {
 	
 	// instance vars
-
 	private String name;
 	private int balance;
 	private int position;
 	private HashSet<Square> ownedSquares; // TODO make this TreeSet/ArrayList
-	private ArrayList<Group> ownedGroups; 
+	private ArrayList<Group> ownedGroups;
 	
-	// setget
+	/**
+	 * Default constructor
+	 */
+	public Player() {}
+	
+	/**
+	 * Constructor with arguments
+	 * @param name
+	 * @param balance
+	 * @param position
+	 */
+	public Player(String name, int balance, int position) {
+		this.setName(name);
+		this.balance = balance;
+		this.setPosition(position);
+		this.ownedSquares = new HashSet<Square>();
+	};
 	
 	/**
 	 * @return the name
@@ -107,28 +122,17 @@ public class Player {
 	public void setOwnedGroups(ArrayList<Group> ownedGroups) {
 		this.ownedGroups = ownedGroups;
 	}
-
-	
-	// constr
-	
-	public Player() {}
-	
-	/**
-	 * @param name
-	 * @param balance
-	 * @param position
-	 */
-	public Player(String name, int balance, int position) {
-		this.setName(name);
-		this.balance = balance;
-		this.setPosition(position);
-		this.ownedSquares = new HashSet<Square>();
-	};
 	
 	// methods
 	
+	@Override
+	public String toString() {
+		return "Player [name=" + GameSystem.RED_BRIGHT + name + GameSystem.RESET + ", balance=" + balance + ", position=" + position + ", ownedSquares="
+				+ ownedSquares + ", ownedGroups=" + ownedGroups + "]";
+	}
+
 	public void displayBalance() {
-		System.out.printf("%s, your current balance is £%,d.%n", this.name, this.balance);
+		System.out.printf("%s%s%s, your current balance is £%,d.%n", GameSystem.RED_BRIGHT, this.name, GameSystem.RESET, this.balance);
 		// TODO another version showing properties too
 	}
 	
@@ -143,5 +147,4 @@ public class Player {
 	public void gainOwnership(Square square) {
 		this.ownedSquares.add(square);
 	}
-	
 }
