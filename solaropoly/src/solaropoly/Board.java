@@ -128,6 +128,8 @@ public class Board {
 		return "Board [squares=" + this.getSize() + ", groups=" + groups.size() + "]";
 	}
 	
+	// Methods
+	
 	/**
 	 * Board size in squares.
 	 * @return the size of the game board, so the total number of squares that it contains
@@ -182,8 +184,6 @@ public class Board {
 		return this.squares.indexOf(square);
 	}
 	
-	
-	
 	/**
 	 * This method return the Group of a particular Area
 	 * @param area - the Area to check in order to determine the Group.
@@ -199,6 +199,8 @@ public class Board {
 		}
 		return null;
 	}
+	
+	// Business rules
 	
 	/**
 	 * Business rule to apply if the squares List is needed and not empty in a method
