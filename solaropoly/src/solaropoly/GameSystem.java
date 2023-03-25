@@ -265,8 +265,8 @@ public class GameSystem {
 		
 		if (consent) {
 			
+			move(player);
 		/// TODO	
-//			move(player);
 //			develop(player);
 //			trade(player);
 		
