@@ -266,7 +266,7 @@ public class GameSystem {
 		if (consent) {
 			
 		/// TODO	
-//			rollAndMove(player);
+//			move(player);
 //			develop(player);
 //			trade(player);
 		
@@ -301,6 +301,14 @@ public class GameSystem {
 		} else {
 			return false;
 		}
+		
+	}
+	
+	private static void move(Player player) {
+		/// TODO 
+//		int roll = rollDice();
+		
+		/// TODO movement on board
 		
 	}
 	
