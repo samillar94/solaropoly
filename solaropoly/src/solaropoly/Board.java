@@ -143,7 +143,7 @@ public class Board {
 	 * @return BoardPosition - a pair consisting of a Square object and an Integer representing the number of times the.
 	 * 						   player has looped around the board. The pair can be accessed using the getKey() and getValue()
 	 * 						   methods from the Map.Entry interface, or with getSquare() (the Square) and getStartPassed() (the Integer).
-	 * @throws IndexOutOfBoundsException - if there is an error with the calculation of the index
+	 * @throws IndexOutOfBoundsException - if there is an error with the calculation of the index or if the squares List is empty.
 	 */
 	public BoardPosition getSquare(int index) throws IndexOutOfBoundsException {
 		int oldPosition = 0;
@@ -158,34 +158,65 @@ public class Board {
 	 * @return BoardPosition - a pair consisting of a Square object and an Integer representing the number of times the
 	 * 						   player has looped around the board. The pair can be accessed using the getKey() and getValue()
 	 * 						   methods from the Map.Entry interface, or with getSquare() (the Square) and getStartPassed() (the Integer).
-	 * @throws IndexOutOfBoundsException - if there is an error with the calculation of the index
+	 * @throws IndexOutOfBoundsException - if there is an error with the calculation of the index or if the squares List is empty.
 	 */
 	public BoardPosition getSquare(int oldPosition, int diceRoll) throws IndexOutOfBoundsException {
-		if (!this.squares.isEmpty()) {
-			oldPosition = (oldPosition < 0) ? oldPosition : 0;
-			diceRoll = (diceRoll < 0) ? diceRoll : 0;
-			int overrunPosition = oldPosition + diceRoll;
-	        int startPassed = overrunPosition / getSize();
-	        int newPosition = overrunPosition % getSize();
-			Square square = this.squares.get(newPosition);
-			return new BoardPosition(square, startPassed);
-		} else {
+		checkSquaresList();
+		oldPosition = (oldPosition < 0) ? oldPosition : 0;
+		diceRoll = (diceRoll < 0) ? diceRoll : 0;
+		int overrunPosition = oldPosition + diceRoll;
+        int startPassed = overrunPosition / getSize();
+        int newPosition = overrunPosition % getSize();
+		Square square = this.squares.get(newPosition);
+		return new BoardPosition(square, startPassed);
+	}
+	
+	/**
+	 * This method return the position of a given Square.
+	 * @param square - the Square to check in order to determine the position.
+	 * @return the number corresponding to the position of the Square.
+	 * @throws IndexOutOfBoundsException - if the squares List is empty.
+	 */
+	public int getPosition(Square square) throws IndexOutOfBoundsException {
+		checkSquaresList();
+		return this.squares.indexOf(square);
+	}
+	
+	
+	
+	/**
+	 * This method return the Group of a particular Area
+	 * @param area - the Area to check in order to determine the Group.
+	 * @return the Group object of the Area.
+	 * @throws IndexOutOfBoundsException - if the groups Set is empty.
+	 */
+	public Group getGroup(Area area) throws IndexOutOfBoundsException {
+		checkGroupsSet();
+		for (Group group : groups) {
+			if (group.getAreas().contains(area)) {
+				return group;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Business rule to apply if the squares List is needed and not empty in a method
+	 * @throws IndexOutOfBoundsException - if the squares List is empty.
+	 */
+	private void checkSquaresList() throws IndexOutOfBoundsException {
+		if (this.squares.isEmpty()) {
 			throw new IndexOutOfBoundsException("The List of squares is empty. Please fill the board with squares before using the method.");
 		}
 	}
 	
 	/**
-	 * 
-	 * @param square
-	 * @return
+	 * Business rule to apply if the groups Set is needed and not empty in a method
+	 * @throws IndexOutOfBoundsException - if the groups Set is empty.
 	 */
-	public int getPosition(Square square) {
-		
-		return 0;
-	}
-	
-	public Group getGroup(Square square) {
-		
-		return null;
+	private void checkGroupsSet() throws IndexOutOfBoundsException {
+		if (this.groups.isEmpty()) {
+			throw new IndexOutOfBoundsException("The Set of groups is empty. Please fill the board with groups before using the method.");
+		}
 	}
 }
