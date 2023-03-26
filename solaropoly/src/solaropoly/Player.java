@@ -12,9 +12,14 @@ import java.util.TreeSet;
 /**
  * This class holds properties about the player's status in game, including name, balance, position
  * and assets
- * @author Roberto Lo Duca 40386172
+ * @author G17
  */
 public class Player {
+	
+	/**
+	 * Separator to use in the getPlayerAttention to separate the action for each player
+	 */
+	private static final char SEPARATOR_CHAR = '_';
 	
 	// instance vars
 	private String name;
@@ -123,14 +128,31 @@ public class Player {
 		this.ownedGroups = ownedGroups;
 	}
 	
-	// methods
-	
 	@Override
 	public String toString() {
 		return "Player [name=" + GameSystem.RED_BRIGHT + name + GameSystem.RESET + ", balance=" + balance + ", position=" + position + ", ownedSquares="
 				+ ownedSquares + ", ownedGroups=" + ownedGroups + "]";
 	}
-
+	
+	// Methods
+	
+	/**
+	 * This method prints in console a long line that cover the width of the terminal automatically.
+	 * It uses the current terminal width and prints the line separation to apply when the player
+	 * attention should be caught because an action is required. Then it prints the name of the player
+	 * asking to take an action.
+	 */
+	public void getPlayerAttention() {
+		int consoleWidth = 80; // Default console width
+        try {
+            consoleWidth = Integer.parseInt(System.getenv("COLUMNS"));
+        } catch (NumberFormatException e) {
+            // Ignore the exception and use the default console width
+        }
+        System.out.println(String.valueOf(SEPARATOR_CHAR).repeat(consoleWidth));
+        System.out.printf("Player %s, take action!%n%n", this.name);
+	}
+	
 	public void displayBalance() {
 		System.out.printf("%s%s%s, your current balance is £%,d.%n", GameSystem.RED_BRIGHT, this.name, GameSystem.RESET, this.balance);
 		// TODO another version showing properties too

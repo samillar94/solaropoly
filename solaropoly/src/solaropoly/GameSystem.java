@@ -285,15 +285,15 @@ public class GameSystem {
 	
 	/**
 	 * This method is called before each turn to ask the player if they want to continue or leave the game.
-	 * @param player
-	 * @return 
+	 * @param player - the player that needs to consent the turn
+	 * @return boolean - the decision
 	 */
 	private static boolean consent(Player player) {
 		
-		System.out.println();
-		player.displayBalance(); 
-		
-		System.out.printf("If you would like to take your turn, press Enter.%nOtherwise, enter any character and press Enter to leave the game. ", player.getName());
+		player.getPlayerAttention();
+		player.displayBalance();
+		System.out.printf("If you would like to take your turn, press Enter.%n"
+				+ "Otherwise, enter any character and press Enter to leave the game. ", player.getName());
 		
 		String input = SCANNER.nextLine();
 		
@@ -310,6 +310,7 @@ public class GameSystem {
 		int roll = rollDice();
 		
 		/// TODO movement on board
+		
 		
 	}
 	

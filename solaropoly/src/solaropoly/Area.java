@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -24,7 +25,33 @@ public class Area extends Square implements GeneratesIncome {
 	private HashMap<String, ArrayList<Integer>> rentProfile = new HashMap<>(2);
 	private int monopolyLevel = 0;
 	private int developmentLevel = 0;
+	
+	/// constr
+	
+	/**
+	 * Default constructor
+	 */
+	public Area() {}
 
+	/**
+	 * This constructor sets up an area with a name, Group, cost and rent profile.
+	 * The rent profile is set by passing two integer arrays, one for how rent
+	 * changes with monopoly level in its group, and one for how rent changes with
+	 * its development level. Both levels are set to zero on instantiation.
+	 * 
+	 * @param name
+	 */
+	public Area(String name, Group group, int cost, int[] monopolyProfile, int[] developmentProfile) {
+		super(name);
+		this.group = group;
+		this.setCost(cost);
+		this.rentProfile.put("Monopoly",
+				(ArrayList<Integer>) Arrays.stream(monopolyProfile).boxed().collect(Collectors.toList()));
+		this.rentProfile.put("Development",
+				(ArrayList<Integer>) Arrays.stream(developmentProfile).boxed().collect(Collectors.toList()));
+
+	}
+	
 	/// setget
 
 	/**
@@ -72,6 +99,9 @@ public class Area extends Square implements GeneratesIncome {
 	}
 
 	/**
+	 * The rent profile is set by passing two integer arrays, one for how rent
+	 * changes with monopoly level in its group, and one for how rent changes with
+	 * its development level. Both levels are set to zero on instantiation.
 	 * @return the rentProfile
 	 */
 	public HashMap<String, ArrayList<Integer>> getRentProfile() {
@@ -79,6 +109,9 @@ public class Area extends Square implements GeneratesIncome {
 	}
 
 	/**
+	 * The rent profile is set by passing two integer arrays, one for how rent
+	 * changes with monopoly level in its group, and one for how rent changes with
+	 * its development level. Both levels are set to zero on instantiation.
 	 * @param rentProfile the rentProfile to set
 	 */
 	public void setRentProfile(HashMap<String, ArrayList<Integer>> rentProfile) {
@@ -115,34 +148,45 @@ public class Area extends Square implements GeneratesIncome {
 		// TODO validate 0+
 		this.developmentLevel = developmentLevel;
 	}
-
-	/// constr
-
+	
+	/// show details
+	
 	/**
-	 * 
+	 * @return the rentProfile but in String format
 	 */
-	public Area() {
+	public String getRentProfileString() {
+        StringBuilder sb = new StringBuilder();
+        
+        for (HashMap.Entry<String, ArrayList<Integer>> entry : this.rentProfile.entrySet()) {
+            String name = entry.getKey();
+            ArrayList<Integer> rents = entry.getValue();
+            
+            sb.append(name + ": ");
+            for (Integer rent : rents) {
+                sb.append(rent +", " );
+            }
+            sb.setLength(sb.length() - 2); // Remove the last ", "
+            sb.append("\n");
+        }
+		return sb.toString();
 	}
-
-	/**
-	 * This constructor sets up an area with a name, Group, cost and rent profile.
-	 * The rent profile is set by passing two integer arrays, one for how rent
-	 * changes with monopoly level in its group, and one for how rent changes with
-	 * its development level. Both levels are set to zero on instantiation.
-	 * 
-	 * @param name
-	 */
-	public Area(String name, Group group, int cost, int[] monopolyProfile, int[] developmentProfile) {
-		super(name);
-		this.group = group;
-		this.setCost(cost);
-		this.rentProfile.put("Monopoly",
-				(ArrayList<Integer>) Arrays.stream(monopolyProfile).boxed().collect(Collectors.toList()));
-		this.rentProfile.put("Development",
-				(ArrayList<Integer>) Arrays.stream(developmentProfile).boxed().collect(Collectors.toList()));
-
+	
+	@Override
+	public String toString() {
+		// return String.format("%s (%s, value £%,d)", this.getName(), this.group, this.cost);
+		return ""
+			+ "Name: " + this.getName() + "\n"
+			+ "Group name: " + this.group.getName() + "\n"
+			+ "Base rent: " + this.getBaseRent() + "\n"
+			+ "Rent profile:\n" + this.getRentProfileString() + "\n"
+			+ "Development level: " + this.developmentLevel + "\n"
+			+ "Monopoly level: " + this.monopolyLevel + "\n"
+			+ "Owner: " + this.owner.getName() + "\n"
+			+ "Base rent: " + this.getBaseRent() + "\n"
+			+ "Current rent: " + this.getCurrentRent() + "\n"
+			+ "Cost area: " + this.cost;
 	}
-
+	
 	/// methods
 
 	/**
@@ -164,56 +208,40 @@ public class Area extends Square implements GeneratesIncome {
 			return rentProfile.get("Development").get(this.developmentLevel);
 		}
 	}
-
-	@Override
-	public String toString() {
-		return String.format("%s (%s, value £%,d)", this.getName(), this.group, this.cost);
-	}
-
+	
+	/**
+	 *  TODO if other types of property are made, make Property an interface and move a lot of this code there
+	 */
 	@Override
 	public void act(Player player) {
-
-		/// TODO if other types of property are made, make Property an interface and move a lot of this code there
+		System.out.println("You landed in: " + this.getName() + "\n"
+				+ "This square information:\n\n"
+				+ this.toString());
 		
-		System.out.println(this.getName());
-		
-		if (this.owner == null && player.getBalance()>=this.cost) {
-			
-			System.out.printf("Would you like to buy this area for £%,d?%nPress Enter to buy, else press any other character and press Enter to decline.%n", this.cost);	
+		if (this.owner == null && player.getBalance() >= this.cost) {
+			System.out.printf("Would you like to buy this area for %,d%s?%n"
+					+ "Press Enter to buy, else press any other character and press Enter to decline.%n", GameSystem.SUF, this.cost);
 			String input = GameSystem.SCANNER.nextLine();
 			
 			if (input == null || input == "") {
-				
 				player.decreaseBalance(this.cost);
-				
 				// two-way link
 				this.setOwner(player);
 				player.gainOwnership(this);
-				
-				System.out.printf("Ok, you've bought %s! ",this.getName());
-				player.displayBalance();	
-				
+				System.out.printf("Ok, you've bought %s! %n",this.getName());
+				player.displayBalance();
 			} else {
-				
-				dutchAuctionSystem(player);
+				// requirement for the unknown square:
+				System.out.println("");
 				
 			}
-			
 		} else if (this.owner == null && player.getBalance()<this.cost){
-			
 			System.out.println("You can't buy this, sorry.");
-			
 		} else if (this.owner == player) {
-			
 			System.out.println("Opulence! You own this.");
-			
 		} else {
-			
 			rentPay(player, this);
-			
 		}
-
-
 	}
 
 	/**
