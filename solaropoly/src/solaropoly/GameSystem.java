@@ -4,6 +4,7 @@
 package solaropoly;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -322,43 +323,114 @@ public class GameSystem {
 
 	/**
 	 * develop method
+	 * 
 	 * @param player
 	 */
 	private static void developArea(Player player) {
+		boolean groupStatus = true;
+		boolean areaStatus = true;
+		ArrayList<Area> fullyDevelopedAreaStatus = new ArrayList<Area>();
 		if (player.getOwnedGroups().size() > 0) {
 
-			System.out.println();
-			System.out.println("If you wish to develop within a group please enter the group name, else, to skip just press Enter");
-			String inputGroup = SCANNER.nextLine();
+			do {
+				System.out.println();
+				System.out.println(
+						"If you wish to develop within a group please enter the group name, else, to skip just press Enter");
+				String inputGroup = SCANNER.nextLine();
 
-			if (inputGroup == null || inputGroup == "") {
-				System.out.println("System recognises you do not wish to develop");
-			} else {
-				
-				for(Group group : player.getOwnedGroups()) {
-					
-					if(group.getName().equalsIgnoreCase(inputGroup)) {
-						System.out.println("Please enter which area you would like to develop, else, to stop developing press Enter ");
-						String inputArea = SCANNER.nextLine();
-						
-						if (inputArea == null || inputArea == "") {
-							System.out.println("System recognises you no longer wish to develop");
-						} else {
-							for(Square square : player.getOwnedSquares()) {
-								if(square.getName().equalsIgnoreCase(inputArea)){
-									
+				if (inputGroup == null || inputGroup == "") {
+					System.out.println("System recognises you do not wish to develop");
+					groupStatus = false;
+				} else {
+
+					for (Group group : player.getOwnedGroups()) {
+
+						if (group.getName().equalsIgnoreCase(inputGroup)) {
+							do {
+
+								System.out.println(
+										"Please enter which area you would like to develop, else, to stop developing press Enter ");
+								String inputArea = SCANNER.nextLine();
+
+								if (inputArea == null || inputArea == "") {
+									System.out.println("System recognises you no longer wish to develop");
+									areaStatus = false;
+
+								} else {
+									// developing areas loop
+									for (Square square : player.getOwnedSquares()) {
+
+										if (square.getName().equalsIgnoreCase(inputArea)) {
+											Area area;
+
+											if (square instanceof Area) {
+												area = (Area) square;
+
+												if (area.getDevelopmentLevel() < 3) {
+
+													if (player.getBalance() >= area.getMinorDevelopmentCost()) {
+														area.setDevelopmentLevel();
+														System.out.println(area.getName() + " level: "
+																+ area.getDevelopmentLevel());
+													} else {
+														throw new IllegalArgumentException("Insufficient funds");
+
+													}
+
+												} else if (area.getDevelopmentLevel() == 3) {
+													if (player.getBalance() >= area.getMajorDevelopmentCost()) {
+														area.setDevelopmentLevel();
+														System.out.println("Major development achieved."
+																+ area.getName() + " developed "
+																+ area.getDevelopmentLevel() + " times");
+													} else {
+														throw new IllegalArgumentException("Insufficient funds");
+													}
+
+												} else {
+													throw new IllegalArgumentException(
+															"Error: not able to develop area.");
+
+												}
+
+											} else {
+												throw new IllegalArgumentException(
+														"Please enter a square that is an area");
+											}
+
+										}
+									}
+									// condition for all areas fully developed
+									do {
+										for (Square square : player.getOwnedSquares()) {
+											Area area;
+
+											if (square instanceof Area) {
+												area = (Area) square;
+												if (area.getDevelopmentLevel() == 4) {
+													fullyDevelopedAreaStatus.add(area);
+												}
+											}
+										}
+									} while (fullyDevelopedAreaStatus.size() != player.getOwnedSquares().size());
+
+									if (fullyDevelopedAreaStatus.size() == player.getOwnedSquares().size()) {
+										areaStatus = false;
+									}
+
 								}
-							}
-							
+
+							} while (areaStatus != false);
+
+						} else {
+							throw new IllegalArgumentException(
+									"Please enter a valid group name or a group that you own");
+
 						}
-						
-					} else {
-						throw new IllegalArgumentException("Please enter a valid group name or a group that you own");
-						
 					}
 				}
-			}
+
+			} while (groupStatus != false);
 		}
 	}
-
 }

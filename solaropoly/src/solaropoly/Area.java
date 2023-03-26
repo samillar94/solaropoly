@@ -20,6 +20,9 @@ public class Area extends Square implements GeneratesIncome {
 	private HashMap<String, ArrayList<Integer>> rentProfile = new HashMap<>(2);
 	private int monopolyLevel = 0;
 	private int developmentLevel = 0;
+	private int minorDevelopmentCost, majorDevelopmentCost;
+	
+	
 	
 	/// setget
 	
@@ -35,6 +38,34 @@ public class Area extends Square implements GeneratesIncome {
 	 */
 	public void setGroup(Group group) {
 		this.group = group;
+	}
+
+	/**
+	 * @return the minorDevelopmentCost
+	 */
+	public int getMinorDevelopmentCost() {
+		return minorDevelopmentCost;
+	}
+
+	/**
+	 * @param minorDevelopmentCost the minorDevelopmentCost to set
+	 */
+	public void setMinorDevelopmentCost(int minorDevelopmentCost) {
+		this.minorDevelopmentCost = minorDevelopmentCost;
+	}
+
+	/**
+	 * @return the majorDevelopmentCost
+	 */
+	public int getMajorDevelopmentCost() {
+		return majorDevelopmentCost;
+	}
+
+	/**
+	 * @param majorDevelopmentCost the majorDevelopmentCost to set
+	 */
+	public void setMajorDevelopmentCost(int majorDevelopmentCost) {
+		this.majorDevelopmentCost = majorDevelopmentCost;
 	}
 
 	/**
@@ -114,13 +145,14 @@ public class Area extends Square implements GeneratesIncome {
 	/**
 	 * @param developmentLevel the developmentLevel to set
 	 */
-	public void setDevelopmentLevel(int developmentLevel) {
+	public int setDevelopmentLevel() {
+		int developmentLevel =0;
+		developmentLevel++;
 		if(developmentLevel<MIN_LEVEL || developmentLevel > MAX_LEVEL) {
 			throw new IllegalArgumentException("Development level level must be greater or equal than " + MIN_LEVEL +  " or less than or equal to "+ MAX_LEVEL);
 					
-		} else {
-		this.developmentLevel = developmentLevel;
-		}
+		} 
+		return developmentLevel;
 	}
 
 	
