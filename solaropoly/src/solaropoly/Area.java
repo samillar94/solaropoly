@@ -218,29 +218,132 @@ public class Area extends Square implements GeneratesIncome {
 				+ "This square information:\n\n"
 				+ this.toString());
 		
-		if (this.owner == null && player.getBalance() >= this.cost) {
-			System.out.printf("Would you like to buy this area for %,d%s?%n"
-					+ "Press Enter to buy, else press any other character and press Enter to decline.%n", GameSystem.SUF, this.cost);
-			String input = GameSystem.SCANNER.nextLine();
-			
-			if (input == null || input == "") {
-				player.decreaseBalance(this.cost);
-				// two-way link
-				this.setOwner(player);
-				player.gainOwnership(this);
-				System.out.printf("Ok, you've bought %s! %n",this.getName());
-				player.displayBalance();
-			} else {
-				// requirement for the unknown square:
-				System.out.println("");
-				
-			}
-		} else if (this.owner == null && player.getBalance()<this.cost){
-			System.out.println("You can't buy this, sorry.");
+		if (this.owner == null) {
+			purchaseArea(player);
 		} else if (this.owner == player) {
 			System.out.println("Opulence! You own this.");
 		} else {
 			rentPay(player, this);
+		}
+	}
+	
+	/**
+	 * This method is used to fulfill the requirement for an unknown square, which specifies that the square should
+	 * be bought or sold to a different player at the same price. In this case, the requirement is to sell the square,
+	 * but since the price is fixed for all players, this method first checks the active player's decision.
+	 * If the active player wants to sell, or can only sell because they don't have enough money,
+	 * the method will let them choose whether to sell or do nothing. If the sell option is chosen,
+	 * the method will check all other players' balances and ask only those who have enough money if they want to accept the offer.
+	 * If more than one player accepts the offer, the active player can choose between them.
+	 * @param player - The active player that needs to take actions.
+	 */
+	private void purchaseArea(Player player) {
+		try {
+			System.out.printf("Would you like to buy this square for %,d%s?%n"
+					+ "Type Buy and Enter to buy%n"
+					+ "Type Sell and Enter to sell%n"
+					+ "Type None to end the turn%n"
+					, GameSystem.SUF, this.cost);
+			String input = "";
+			
+			while (true) {
+				input = GameSystem.SCANNER.nextLine();
+				
+				if (input.equalsIgnoreCase("Buy") || input.equalsIgnoreCase("Sell") || input.equalsIgnoreCase("None")) {
+					break;
+				} else {
+					System.out.println("Wrong imput. please choose between Buy, Sell and None (case is ignored)...");
+				}
+			}
+			
+			if (input.equalsIgnoreCase("Buy") && player.getBalance() >= this.cost) {
+				player.decreaseBalance(this.cost);
+				this.setOwner(player);
+				player.gainOwnership(this);
+				System.out.printf("Ok, you've bought %s! %n", this.getName());
+				player.displayBalance();
+			} else if (input.equalsIgnoreCase("Buy") && player.getBalance() < this.cost) {
+				System.out.println("Not enough money, sell or nothing. do you want to sell the square to other players?\n"
+						+ "Type Sell and Enter to sell\n"
+						+ "Type None to end the turn");
+				
+				while (true) {
+					input = GameSystem.SCANNER.nextLine();
+					
+					if (input.equalsIgnoreCase("Sell") || input.equalsIgnoreCase("None")) {
+						break;
+					} else {
+						System.out.println("Wrong imput. please choose between Sell and None (case is ignored)...");
+					}
+				}
+			}
+			
+			if (input.equalsIgnoreCase("Sell")) {
+				ArrayList<Player> accepters = new ArrayList<Player>();
+				for (Player competitor : GameSystem.players) {
+					competitor.getPlayerAttention();
+					System.out.printf("%s, do you want to accept the square that %s refused to buy?%n"
+							+ "Type Accept and Enter to accept%n"
+							+ "Type Refuse to refuse%n"
+							, competitor.getName(), player.getName());
+					
+					while (true) {
+						input = GameSystem.SCANNER.nextLine();
+						
+						if (input.equalsIgnoreCase("Accept") || input.equalsIgnoreCase("Refuse")) {
+							break;
+						} else {
+							System.out.println("Wrong imput. please choose between Accept and Refuse (case is ignored)...");
+						}
+					}
+					
+					if (input.equalsIgnoreCase("Accept")) {
+						accepters.add(competitor);
+					}
+				}
+				
+				player.getPlayerAttention();
+				if (accepters.isEmpty()) {
+					System.out.println(player.getName() + ", no one wants your square. Skip the turn.");
+				} else if (accepters.size() == 1) {
+					System.out.println(player.getName() + " congratulation, your square was sold to " + accepters.get(0).getName());
+				} else {
+					System.out.printf("%s, there are %s players that are willing to buy your square.%n"
+							+ "Please enter the name of the one you prefer to sell the square.%n"
+							+ "Choose between these players:%n", player.getName(), accepters.size());
+					
+					for (Player accepter : accepters) {
+						System.out.println(accepter.getName());
+					}
+					
+					boolean flag = false;
+					while (true) {
+						input = GameSystem.SCANNER.nextLine();
+						
+						for (Player accepter : accepters) {
+							if (input.equalsIgnoreCase(accepter.getName())) {
+								accepter.decreaseBalance(this.cost);
+								this.setOwner(accepter);
+								accepter.gainOwnership(this);
+								System.out.printf("Ok, %s bought %s! %n", accepter.getName(), this.getName());
+								accepter.displayBalance();
+								flag = true;
+							}
+						}
+						
+						if (flag) {
+							break;
+						} else {
+							System.out.println("Wrong imput. please choose between one of the valid names...");
+						}
+					}
+					
+					System.out.println("You have sold the square successfully.");
+				}
+			}
+		} catch (Exception e) {
+			System.err.println("We had a problem, skip turn.");
+			GameSystem.SCANNER.nextLine(); // clean the scanner to avoid other errors in GameSystem
 		}
 	}
 
