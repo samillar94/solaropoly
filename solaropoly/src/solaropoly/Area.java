@@ -210,7 +210,8 @@ public class Area extends Square implements GeneratesIncome {
 	}
 	
 	/**
-	 *  TODO if other types of property are made, make Property an interface and move a lot of this code there
+	 * This method allow actions when the plater lands on an area
+	 * @param player - the player who landed in this area
 	 */
 	@Override
 	public void act(Player player) {

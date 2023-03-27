@@ -14,14 +14,12 @@ import java.util.Scanner;
  */
 public class GameSystem {
 
-	/// game parameter constants
-
+	/// game parameter constants (rules)
 	public static final int STARTING_BALANCE = 15000000;
 	public static final int MIN_PLAYERS = 2;
 	public static final int MAX_PLAYERS = 4;
 	public static final String PRE = ""; /// resource prefix
 	public static final String SUF = " kWh"; /// resource suffix
-	
 	
 	/// console colour keys
 	// Regular
@@ -97,6 +95,8 @@ public class GameSystem {
 
 
 	/// essential components
+    
+    public static Board board = new Board();
 
 	public static final Scanner SCANNER = new Scanner(System.in);
 
@@ -305,42 +305,33 @@ public class GameSystem {
 		
 	}
 	
+	/**
+	 * 
+	 * @param player
+	 */
 	private static void move(Player player) {
-		/// TODO 
 		int roll = rollDice();
-		
-		/// TODO movement on board
-		
-		
+		BoardPosition boardPosition = board.getSquare(player.getPosition(), roll);
+		Square square = boardPosition.getSquare();
+		int startPassed = boardPosition.getStartPassed();
+		board.getSquaresByType(Go.class).get(0).actPass(player);
+		square.act(player);
 	}
 	
 	/**
-	 * rollDice method called from turn method. imitates  2 dice.
+	 * rollDice method called from turn method. imitates 2 dice.
 	 */
 	private static int rollDice() {
+		Die die = new Die();
+		int dice = 2;
+		int total = 2;
 		
-		System.out.println("\n\nRolling Dice");
-		
-		Random diceRandom = new Random();
-		int face1 = 0;
-		int face2 = 0;
-		int total = 0;
-		
-	
-		for (int roll = 1; roll <=2; roll ++) {
-			face1 = 1 + diceRandom.nextInt(6);
-			face2 = 1 + diceRandom.nextInt(6);
-			total = face1 + face2;
-			
-			
+		System.out.println("Rolling Dice");
+		for (int roll = 0; roll < dice; roll++) {
+			total = die.roll();
 		}
-		
+
 		System.out.println(" to You rolled a " + total + "\n\n");
-		
 		return total;
-		
 	}
-
-	
-
 }
