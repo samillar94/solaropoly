@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -176,13 +174,18 @@ public class Area extends Square implements GeneratesIncome {
 
 	@Override
 	public String toString() {
-		// return String.format("%s (%s, value £%,d)", this.getName(), this.group,
-		// this.cost);
-		return "" + "Name: " + this.getName() + "\n" + "Group name: " + this.group.getName() + "\n" + "Base rent: "
-				+ this.getBaseRent() + "\n" + "Rent profile:\n" + this.getRentProfileString() + "\n"
-				+ "Development level: " + this.developmentLevel + "\n" + "Monopoly level: " + this.monopolyLevel + "\n"
-				+ "Owner: " + this.owner.getName() + "\n" + "Base rent: " + this.getBaseRent() + "\n" + "Current rent: "
-				+ this.getCurrentRent() + "\n" + "Cost area: " + this.cost;
+		// return String.format("%s (%s, value £%,d)", this.getName(), this.group, this.cost);
+		return ""
+			+ "Name: " + this.getName() + "\n"
+			+ "Group name: " + this.group.getName() + "\n"
+			+ "Base rent: " + this.getBaseRent() + "\n"
+			+ "Rent profile:\n" + this.getRentProfileString() + "\n"
+			+ "Development level: " + this.developmentLevel + "\n"
+			+ "Monopoly level: " + this.monopolyLevel + "\n"
+			+ "Owner: " + this.owner.getName() + "\n"
+			+ "Base rent: " + this.getBaseRent() + "\n"
+			+ "Current rent: " + this.getCurrentRent() + "\n"
+			+ "Cost area: " + this.cost + "\n";
 	}
 
 	/// methods
@@ -208,8 +211,9 @@ public class Area extends Square implements GeneratesIncome {
 	}
 
 	/**
-	 * TODO if other types of property are made, make Property an interface and move
-	 * a lot of this code there
+	 * This method allow actions when the plater lands on an area
+	 * @param player - the player who landed in this area
+	 * TODO if other types of property are made, make Property an interface and move a lot of this code there
 	 */
 	@Override
 	public void act(Player player) {
@@ -282,12 +286,12 @@ public class Area extends Square implements GeneratesIncome {
 			if (input.equalsIgnoreCase("Sell")) {
 				ArrayList<Player> accepters = new ArrayList<Player>();
 				for (Player competitor : GameSystem.players) {
-					competitor.getPlayerAttention();
-					System.out.printf(
-							"%s, do you want to accept the square that %s refused to buy?%n"
-									+ "Type Accept and Enter to accept%n" + "Type Refuse to refuse%n",
-							competitor.getName(), player.getName());
-
+					competitor.getAttention();
+					System.out.printf("%s, do you want to accept the square that %s refused to buy?%n"
+							+ "Type Accept and Enter to accept%n"
+							+ "Type Refuse to refuse%n"
+							, competitor.getName(), player.getName());
+					
 					while (true) {
 						input = GameSystem.SCANNER.nextLine();
 
@@ -303,8 +307,8 @@ public class Area extends Square implements GeneratesIncome {
 						accepters.add(competitor);
 					}
 				}
-
-				player.getPlayerAttention();
+				
+				player.getAttention();
 				if (accepters.isEmpty()) {
 					System.out.println(player.getName() + ", no one wants your square. Skip the turn.");
 				} else if (accepters.size() == 1) {

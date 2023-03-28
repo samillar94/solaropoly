@@ -40,9 +40,13 @@ public abstract class Square {
 		this.name = name;
 	}
 	
-	
 	// abstract methods
-
+	
+	/**
+	 * This method should be implemented to all the extensions of square
+	 * to allow the square to take actions when the plater lands on it
+	 * @param player - the player who landed in this square
+	 */
 	public abstract void act(Player player);
 
 }

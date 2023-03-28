@@ -14,14 +14,12 @@ import java.util.Scanner;
  */
 public class GameSystem {
 
-	/// game parameter constants
-
+	/// game parameter constants (rules)
 	public static final int STARTING_BALANCE = 15000000;
 	public static final int MIN_PLAYERS = 2;
 	public static final int MAX_PLAYERS = 4;
 	public static final String PRE = ""; /// resource prefix
 	public static final String SUF = " kWh"; /// resource suffix
-	
 	
 	/// console colour keys
 	// Regular
@@ -97,12 +95,19 @@ public class GameSystem {
 
 
 	/// essential components
+    
+    public static Board board = new Board();
 
 	public static final Scanner SCANNER = new Scanner(System.in);
 
 	public static boolean gameEndTrigger = false;
 
 	public static ArrayList<Player> players = new ArrayList<Player>();
+	
+	/**
+	 * Stores only players that are still in game
+	 */
+	public static ArrayList<Player> playersInGame = new ArrayList<Player>();;
 
 	
 	/// executable code
@@ -120,19 +125,20 @@ public class GameSystem {
 
 			/// register players
 			players = registerPlayers(numPlayers);
+			playersInGame.addAll(players);
 
 			/// game starts - do while (and try-catch?), cycling through players until game
 			/// end triggered
 			while (!gameEndTrigger) {
 
-				for (int playerIndex = 0; playerIndex < players.size(); playerIndex++) {
-
-					Thread.sleep(2000); 
-
-					turn(players.get(playerIndex));
-
+				for (Player player : players) {
+					if (playersInGame.contains(player)) {
+						
+						Thread.sleep(2000); 
+						
+						turn(player);
+					}
 					if (gameEndTrigger)	break;
-
 				}
 
 			}
@@ -246,17 +252,17 @@ public class GameSystem {
 			}
 			
 		}
-
+		
 		System.out.println("Welcome, all, to SOLAROPOLY");
-
+		
 		return playersBuilder;
 	}
 
 	/**
-	 * This method is called for each player in turn from the main method, and organises 
+	 * This method is called for each player in turn from the main method, and organizes 
 	 * the inputs and results that will be a part of their turn, including 
-	 * (1) deciding whether to abandon the game or roll and move; 
-	 * (2) developing any fields they have monopolised; and 
+	 * (1) deciding whether to abandon the game or roll and move;
+	 * (2) developing any fields they have monopolized; and 
 	 * (3) trading assets with other players
 	 * @param player
 	 */
@@ -266,21 +272,37 @@ public class GameSystem {
 		
 		if (consent) {
 			
-			move(player);
+			player.move(rollDice());
 		/// TODO	
 //			develop(player);
 //			trade(player);
 		
 		} else {
+			playersInGame.remove(player);
 			
-			players.remove(player);
-			/// TODO print player assets
-			/// TODO remove their ownerships from assets
+			System.out.println("You quitted the game. return all the properties.");
 			
+			// reset ownership in all the system.
+			// TODO: Roberto suggestion: I don't really like this way. Too confusing. We should consider to set the ownership and check it only from one class like player.
+			player.setOwnedGroups(null);
+			player.setOwnedSquares(null);
+			for (Group group : board.getGroups()) {
+				if (group.getOwner().equals(player)) {
+					group.setOwner(null);
+				}
+			}
+			for (Square square : board.getSquares()) {
+				if (square instanceof Area || true /*here the other classes if square extend new squares*/) {
+					if (((Area) square).getOwner().equals(player)) {
+						((Area) square).setOwner(null);
+					}
+				}/* else if (here the other classes if square extend new squares) {}*/
+			}
 		}
 		
-		if (players.size() == 1) gameEndTrigger = true;
-
+		if (players.size() < 2 || playersInGame.size() < 2) {
+			gameEndTrigger = true;
+		}
 	}
 	
 	/**
@@ -289,58 +311,43 @@ public class GameSystem {
 	 * @return boolean - the decision
 	 */
 	private static boolean consent(Player player) {
-		
-		player.getPlayerAttention();
+		player.getAttention();
 		player.displayBalance();
+		String input = "";
 		System.out.printf("If you would like to take your turn, press Enter.%n"
-				+ "Otherwise, enter any character and press Enter to leave the game. ", player.getName());
+				+ "Otherwise, type Quit and press Enter to leave the game. ", player.getName());
 		
-		String input = SCANNER.nextLine();
+		while (true) {
+			input = GameSystem.SCANNER.nextLine();
+			
+			if (input.equalsIgnoreCase("Quit") || input.equalsIgnoreCase("")) {
+				break;
+			} else {
+				System.out.println("Wrong imput. please choose Quit (case is ignored) or just press Enter to continue");
+			}
+		}
 		
-		if (input == null || input == "") {
+		if (input.equals("")) {
 			return true;
 		} else {
 			return false;
 		}
-		
-	}
-	
-	private static void move(Player player) {
-		/// TODO 
-		int roll = rollDice();
-		
-		/// TODO movement on board
-		
-		
 	}
 	
 	/**
-	 * rollDice method called from turn method. imitates  2 dice.
+	 * rollDice method called from turn method. imitates 2 dice.
 	 */
 	private static int rollDice() {
+		Die die = new Die();
+		int dice = 2;
+		int total = 2;
 		
-		System.out.println("\n\nRolling Dice");
-		
-		Random diceRandom = new Random();
-		int face1 = 0;
-		int face2 = 0;
-		int total = 0;
-		
-	
-		for (int roll = 1; roll <=2; roll ++) {
-			face1 = 1 + diceRandom.nextInt(6);
-			face2 = 1 + diceRandom.nextInt(6);
-			total = face1 + face2;
-			
-			
+		System.out.println("Rolling Dice");
+		for (int roll = 0; roll < dice; roll++) {
+			total = die.roll();
 		}
-		
+
 		System.out.println(" to You rolled a " + total + "\n\n");
-		
 		return total;
-		
 	}
-
-	
-
 }
