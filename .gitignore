@@ -1,2 +1,4 @@
 /.metadata/
 /solaropoly/bin/
+solaropoly/bin/
+*.class
