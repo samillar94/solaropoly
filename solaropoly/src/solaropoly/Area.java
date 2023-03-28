@@ -182,7 +182,7 @@ public class Area extends Square implements GeneratesIncome2 {
 			+ "Rent profile:\n" + this.getRentProfileString() + "\n"
 			+ "Development level: " + this.developmentLevel + "\n"
 			+ "Monopoly level: " + this.monopolyLevel + "\n"
-			+ "Owner: " + this.owner.getName() + "\n"
+			//+ "Owner: " + this.owner.getName() + "\n"
 			+ "Base rent: " + this.getBaseRent() + "\n"
 			+ "Current rent: " + this.getCurrentRent() + "\n"
 			+ "Cost area: " + this.cost + "\n";
@@ -246,7 +246,7 @@ public class Area extends Square implements GeneratesIncome2 {
 	private void purchaseArea(Player player) {
 		try {
 			System.out.printf(
-					"Would you like to buy this square for %,d%s?%n" + "Type Buy and Enter to buy%n"
+					"Would you like to buy this square for %s%d?%n" + "Type Buy and Enter to buy%n"
 							+ "Type Sell and Enter to sell%n" + "Type None to end the turn%n",
 					GameSystem.SUF, this.cost);
 			String input = "";

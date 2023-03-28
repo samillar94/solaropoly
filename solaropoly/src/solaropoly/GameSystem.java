@@ -349,9 +349,7 @@ public class GameSystem {
 		
 		if (consent) {
 			
-			int roll = rollDice(player);
-			
-			player.move(roll);
+			player.move(rollDice(player));
 			
 		/// TODO	
 //			develop(player);
