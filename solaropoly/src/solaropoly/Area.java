@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * 
  * @author G17
  */
-public class Area extends Square implements GeneratesIncome {
+public class Area extends Square implements GeneratesIncome2 {
 
 	private Group group;
 	private Player owner;

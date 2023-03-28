@@ -4,8 +4,8 @@
 package solaropoly;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.InputMismatchException;
-import java.util.Random;
 import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.File;
@@ -184,6 +184,78 @@ public class GameSystem {
 		}
 
 	}
+	
+	/**
+	* reads from csv file rent prices
+	*/
+	private static void setupBoard() {
+		
+		ArrayList<Square> squares = new ArrayList<Square>(12);
+		ArrayList<Area> areas = new ArrayList<Area>(10);
+		ArrayList<Group> groups = new ArrayList<Group>(4);
+		
+		squares.add(new Go("Go"));
+		squares.add(new Parking("The Sea"));
+		
+		groups.add(new Group("Field A"));
+		groups.add(new Group("Field B"));
+		groups.add(new Group("Field C"));
+		groups.add(new Group("Field D"));
+
+	
+		File file = new File("Solaropoly.csv");
+		
+		try {
+			
+			FileReader fr = new FileReader(file);
+			BufferedReader br = new BufferedReader(fr);
+			String line;
+			br.readLine();
+			line = br.readLine();
+			
+			while(line!=null) {
+				
+				String[] data = line.split(",");
+				int baseRent = Integer.parseInt(data[0]);
+				int oneHouse = Integer.parseInt(data[1]);
+				int twoHouse = Integer.parseInt(data[2]);
+				int threeHouse = Integer.parseInt(data[3]);
+				int oneHotel = Integer.parseInt(data[4]);
+				String areaName = data[5];
+				int groupIndex = Integer.parseInt(data[6]);
+				int cost = Integer.parseInt(data[7]);
+				
+				int[] monopolyProfile = {baseRent, baseRent*2};
+				int[] developmentProfile = {baseRent, oneHouse, twoHouse, threeHouse, oneHotel};
+				
+				Area area = new Area(areaName, groups.get(groupIndex), cost, monopolyProfile, developmentProfile);
+				areas.add(area);
+				
+				line = br.readLine();	
+				
+			}
+			
+			squares.addAll(areas);
+			
+			for (Group group : groups) {
+				group.setAreas(areas);
+			}
+			
+			board.setSquares(squares);
+			board.setGroups(new HashSet<Group>(groups));
+			
+			br.close();
+	
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
 	/**
 	 * Takes user input at the start of the game to set the number of players whose names
@@ -251,7 +323,7 @@ public class GameSystem {
 				} catch (Exception e) {
 					
 					System.out.println("Sorry, that wasn't a valid name.");
-					
+					e.printStackTrace();
 				}
 				
 			}
@@ -277,7 +349,10 @@ public class GameSystem {
 		
 		if (consent) {
 			
-			player.move(rollDice());
+			int roll = rollDice(player);
+			
+			player.move(roll);
+			
 		/// TODO	
 //			develop(player);
 //			trade(player);
@@ -285,7 +360,7 @@ public class GameSystem {
 		} else {
 			playersInGame.remove(player);
 			
-			System.out.println("You quitted the game. return all the properties.");
+			System.out.println("You quit the game - all your properties will now be made available.");
 			
 			// reset ownership in all the system.
 			// TODO: Roberto suggestion: I don't really like this way. Too confusing. We should consider to set the ownership and check it only from one class like player.
@@ -342,55 +417,18 @@ public class GameSystem {
 	/**
 	 * rollDice method called from turn method. imitates 2 dice.
 	 */
-	private static int rollDice() {
-		Die die = new Die();
-		int dice = 2;
-		int total = 2;
-		
-		System.out.println("Rolling Dice");
-		for (int roll = 0; roll < dice; roll++) {
-			total = die.roll();
-		}
+	private static int rollDice(Player player) {
+		Die die1 = new Die(), die2 = new Die();
 
-		System.out.println(" to You rolled a " + total + "\n\n");
+		int rollA = die1.roll();
+		int rollB = die2.roll();
+		
+		int total = rollA+rollB;
+
+		System.out.printf("%n%s, you've rolled a %d and a %d for %d total, landing you in position %d.%n", player.getName(), rollA, rollB, total, player.getPosition()+total);
+		
 		return total;
 	}
-	/**
-	* reads from csv file rent prices
-	*/
-	private static void setupBoard() {
 	
-		File file = new File("Solaropoly.csv");
-		
-		try {
-			
-			FileReader fr = new FileReader(file);
-			BufferedReader br = new BufferedReader(fr);
-			String line;
-			br.readLine();
-			line = br.readLine();
-			
-			while(line!=null) {
-				String[] fields = line.split(",");
-				String noPropertyRent = fields[0];
-				String oneHouse = fields[1];
-				String twoHouse = fields[2];
-				String threeHouse = fields[3];
-				String oneHotel = fields[4];
-				String groupName = fields[5];
-			}
-			
-			br.close();
-	
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-	
+
 }
