@@ -50,4 +50,9 @@ public class BoardPosition {
 	public int getPosition() {
 		return position;
 	}
+
+	@Override
+	public String toString() {
+		return "BoardPosition [square=" + square + ", startPassed=" + startPassed + ", position=" + position + "]";
+	}
 }

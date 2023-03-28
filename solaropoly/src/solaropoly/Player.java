@@ -175,6 +175,7 @@ public class Player {
 	public void move(int roll) throws IllegalArgumentException {
 		if (roll >= DICE_NUMBER) {
 			BoardPosition boardPosition = GameSystem.board.getBoardPosition(this.position, roll);
+			
 			for (int i = 0; i < boardPosition.getStartPassed(); i++) {
 				GameSystem.board.getSquare(0).act(this);
 			}
