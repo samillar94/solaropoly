@@ -195,8 +195,8 @@ public class Board {
 	 */
 	public BoardPosition getBoardPosition(int oldPosition, int diceRoll) throws IndexOutOfBoundsException {
 		checkSquaresList();
-		oldPosition = (oldPosition > 0) ? oldPosition : 0;
-		diceRoll = (diceRoll > 0) ? diceRoll : 0;
+		oldPosition = (oldPosition < 0) ? 0 : oldPosition;
+		diceRoll = (diceRoll < 0) ? 0 : diceRoll;
 		int overrunPosition = oldPosition + diceRoll;
         int startPassed = overrunPosition / getSize();
         int newPosition = overrunPosition % getSize();

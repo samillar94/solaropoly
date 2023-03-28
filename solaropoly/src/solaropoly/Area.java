@@ -285,7 +285,11 @@ public class Area extends Square implements GeneratesIncome2 {
 
 			if (input.equalsIgnoreCase("Sell")) {
 				ArrayList<Player> accepters = new ArrayList<Player>();
-				for (Player competitor : GameSystem.players) {
+				ArrayList<Player> competitors = new ArrayList<Player>();
+				competitors.addAll(GameSystem.players);
+				competitors.remove(player);
+				
+				for (Player competitor : competitors) {
 					competitor.getAttention();
 					System.out.printf("%s, do you want to accept the square that %s refused to buy?%n"
 							+ "Type Accept and Enter to accept%n"
