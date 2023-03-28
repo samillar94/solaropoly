@@ -6,6 +6,11 @@ package solaropoly;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
+Import java.io.BufferedReader;
+import java.io.IOException;
 
 /**
  * The executable class of the system, starting the Solaropoly command-line game.
@@ -113,7 +118,7 @@ public class GameSystem {
 	public static void main(String[] args) {
 
 		try {
-
+			setupBoard();
 			/// set number of players
 			int numPlayers = setNumPlayers();
 
@@ -247,5 +252,42 @@ public class GameSystem {
 		/// TODO trade assets 
 
 	}
+	private static void setupBoard() {
+	
+	File file = new File("Solaropoly.csv");
+	
+	try {
+		
+		
+		FileReader fr = new FileReader(file);
+		BufferedReader br = new BufferedReader(fr);
+		String line;
+		br.readLine();
+		line = br.readLine();
+		
+		while(line!=null) {
+			String[] fields = line.split(",");
+			String noPropertyRent = fields[0];
+			String oneHouse = fields[1];
+			String twoHouse = fields[2];
+			String threeHouse = fields[3];
+			String oneHotel = fields[4];
+			String groupName = fields[5];
+		}
+		
+		br.close();
+
+		
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	
+	
+}
 
 }
