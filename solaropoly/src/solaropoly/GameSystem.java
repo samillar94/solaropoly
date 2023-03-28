@@ -5,6 +5,7 @@ package solaropoly;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.Random;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileReader;
@@ -18,14 +19,12 @@ import java.io.IOException;
  */
 public class GameSystem {
 
-	/// game parameter constants
-
+	/// game parameter constants (rules)
 	public static final int STARTING_BALANCE = 15000000;
 	public static final int MIN_PLAYERS = 2;
 	public static final int MAX_PLAYERS = 4;
 	public static final String PRE = ""; /// resource prefix
 	public static final String SUF = " kWh"; /// resource suffix
-	
 	
 	/// console colour keys
 	// Regular
@@ -101,12 +100,19 @@ public class GameSystem {
 
 
 	/// essential components
+    
+    public static Board board = new Board();
 
 	public static final Scanner SCANNER = new Scanner(System.in);
 
 	public static boolean gameEndTrigger = false;
 
 	public static ArrayList<Player> players = new ArrayList<Player>();
+	
+	/**
+	 * Stores only players that are still in game
+	 */
+	public static ArrayList<Player> playersInGame = new ArrayList<Player>();;
 
 	
 	/// executable code
@@ -124,25 +130,46 @@ public class GameSystem {
 
 			/// register players
 			players = registerPlayers(numPlayers);
+			playersInGame.addAll(players);
 
 			/// game starts - do while (and try-catch?), cycling through players until game
 			/// end triggered
 			while (!gameEndTrigger) {
 
-				for (int playerIndex = 0; playerIndex < players.size(); playerIndex++) {
-
-					Thread.sleep(2000);
-
-					turn(players.get(playerIndex));
-
+				for (Player player : players) {
+					if (playersInGame.contains(player)) {
+						
+						Thread.sleep(2000); 
+						
+						turn(player);
+					}
 					if (gameEndTrigger)	break;
-
 				}
 
 			}
 			
-			/// TODO final code to show balances and assets
+			/// game ending
+			System.out.println("\nGAME OVER!\nAssets accumulated:");
 			
+			/// TODO put this into a method so it can also be called when players leave early 
+			for (Player player : players) {
+				
+				int propertyValue = 0;
+				
+				for (Square area : player.getOwnedSquares()) {
+					propertyValue += ((Area) area).getCost();
+				}
+				
+				System.out.printf("%s%s%s has £%,d cash and owns £%,d of assets %s for a total of £%,d.%n", 
+						RED_BRIGHT, player.getName(), RESET, 
+						player.getBalance(), 
+						propertyValue, 
+						player.getOwnedSquares().toString(), 
+						player.getBalance()+propertyValue);
+				
+			}
+			
+			System.out.println("Thank you for playing SOLAROPOLY");	
 
 		} catch (InterruptedException e) {
 
@@ -230,64 +257,102 @@ public class GameSystem {
 			}
 			
 		}
-
+		
 		System.out.println("Welcome, all, to SOLAROPOLY");
-
+		
 		return playersBuilder;
 	}
 
 	/**
-	 * This method is called for each player in turn from the main method, and organises 
+	 * This method is called for each player in turn from the main method, and organizes 
 	 * the inputs and results that will be a part of their turn, including 
-	 * (1) deciding whether to abandon the game or roll and move; 
-	 * (2) developing any fields they have monopolised; and 
+	 * (1) deciding whether to abandon the game or roll and move;
+	 * (2) developing any fields they have monopolized; and 
 	 * (3) trading assets with other players
 	 * @param player
 	 */
 	private static void turn(Player player) {
-		/// TODO do you want to take the turn?
-		/// TODO roll dice
-		/// TODO move on board and activate square
-		/// TODO develop if you can
-		/// TODO trade assets 
 
-	}
-	private static void setupBoard() {
-	
-	File file = new File("Solaropoly.csv");
-	
-	try {
+		boolean consent = consent(player);
 		
+		if (consent) {
+			
+			player.move(rollDice());
+		/// TODO	
+//			develop(player);
+//			trade(player);
 		
-		FileReader fr = new FileReader(file);
-		BufferedReader br = new BufferedReader(fr);
-		String line;
-		br.readLine();
-		line = br.readLine();
-		
-		while(line!=null) {
-			String[] fields = line.split(",");
-			String noPropertyRent = fields[0];
-			String oneHouse = fields[1];
-			String twoHouse = fields[2];
-			String threeHouse = fields[3];
-			String oneHotel = fields[4];
-			String groupName = fields[5];
+		} else {
+			playersInGame.remove(player);
+			
+			System.out.println("You quitted the game. return all the properties.");
+			
+			// reset ownership in all the system.
+			// TODO: Roberto suggestion: I don't really like this way. Too confusing. We should consider to set the ownership and check it only from one class like player.
+			player.setOwnedGroups(null);
+			player.setOwnedSquares(null);
+			for (Group group : board.getGroups()) {
+				if (group.getOwner().equals(player)) {
+					group.setOwner(null);
+				}
+			}
+			for (Square square : board.getSquares()) {
+				if (square instanceof Area || true /*here the other classes if square extend new squares*/) {
+					if (((Area) square).getOwner().equals(player)) {
+						((Area) square).setOwner(null);
+					}
+				}/* else if (here the other classes if square extend new squares) {}*/
+			}
 		}
 		
-		br.close();
-
-		
-	} catch (FileNotFoundException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		if (players.size() < 2 || playersInGame.size() < 2) {
+			gameEndTrigger = true;
+		}
 	}
 	
+	/**
+	 * This method is called before each turn to ask the player if they want to continue or leave the game.
+	 * @param player - the player that needs to consent the turn
+	 * @return boolean - the decision
+	 */
+	private static boolean consent(Player player) {
+		player.getAttention();
+		player.displayBalance();
+		String input = "";
+		System.out.printf("If you would like to take your turn, press Enter.%n"
+				+ "Otherwise, type Quit and press Enter to leave the game. ", player.getName());
+		
+		while (true) {
+			input = GameSystem.SCANNER.nextLine();
+			
+			if (input.equalsIgnoreCase("Quit") || input.equalsIgnoreCase("")) {
+				break;
+			} else {
+				System.out.println("Wrong imput. please choose Quit (case is ignored) or just press Enter to continue");
+			}
+		}
+		
+		if (input.equals("")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
-	
-}
+	/**
+	 * rollDice method called from turn method. imitates 2 dice.
+	 */
+	private static int rollDice() {
+		Die die = new Die();
+		int dice = 2;
+		int total = 2;
+		
+		System.out.println("Rolling Dice");
+		for (int roll = 0; roll < dice; roll++) {
+			total = die.roll();
+		}
 
+		System.out.println(" to You rolled a " + total + "\n\n");
+		return total;
+	}
 }

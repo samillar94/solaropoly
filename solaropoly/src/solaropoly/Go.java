@@ -1,5 +1,5 @@
 /**
- * 
+ * Solaropoly game
  */
 package solaropoly;
 
@@ -10,23 +10,35 @@ package solaropoly;
  * @author G17
  */
 public class Go extends Square {
+	
+	/**
+	 * resource to take after one loop of the board
+	 */
+	public static final int PASS_GO_RESOURCE = 1000000;
 
 	/**
-	 * 
+	 * Default constructor.
 	 */
-	public Go() {
-		
-	}
+	public Go() {}
 	
+	/**
+	 * Constructor with arguments.
+	 * @param name
+	 */
 	public Go(String name) {
 		super.setName(name);
 	}
-
+	
+	/**
+	 * Increase the player's resource when he lands on this square
+	 */
 	@Override
 	public void act(Player player) {
-
-		System.out.println("Welcome back to Go :)");
-
+		player.increaseBalance(PASS_GO_RESOURCE);
+		if (player.getLandedSquare().equals(this)) {
+			System.out.printf("Welcome back to Go, increase %s by: %d", GameSystem.SUF, PASS_GO_RESOURCE);
+		} else {
+			System.out.printf("You passed from Go, increase %s by: %d", GameSystem.SUF, PASS_GO_RESOURCE);
+		}
 	}
-
 }
