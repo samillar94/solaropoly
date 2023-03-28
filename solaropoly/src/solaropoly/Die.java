@@ -19,7 +19,7 @@ public class Die {
     
     /**
      * Default constructor
-     * It sets the default number of sides at 6 (a normal dice)
+     * It sets the default number of sides at 6 (a normal die)
      */
     public Die() {
         this(6);
@@ -27,7 +27,7 @@ public class Die {
     
     /**
      * Constructor with arguments
-     * @param sides - the number of sides of the dice to set
+     * @param sides - the number of sides of the die to set
      * @throws IllegalArgumentException - the side should be a number greater than 1
      */
     public Die(int sides) throws IllegalArgumentException {
@@ -45,7 +45,7 @@ public class Die {
 	/**
 	 * @param sides the sides to set
 	 * @throws IllegalArgumentException - the side should be a number greater than 1.
-	 * 									  Dices with odd numbers exists, there are many of them.
+	 * 									  Dice with odd numbers exists, there are many of them.
 	 */
 	public void setSides(int sides) throws IllegalArgumentException {
 		if (sides > 0) {
