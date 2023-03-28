@@ -170,7 +170,7 @@ public class Player {
 	}
 	
 	/**
-	 * This method move the player by a given valid dice result value
+	 * This method move the player by a given valid dice result value and start his turn
 	 */
 	public void move(int roll) throws IllegalArgumentException {
 		if (roll >= DICE_NUMBER) {
