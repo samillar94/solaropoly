@@ -103,6 +103,11 @@ public class GameSystem {
 	public static boolean gameEndTrigger = false;
 
 	public static ArrayList<Player> players = new ArrayList<Player>();
+	
+	/**
+	 * Stores only players that are still in game
+	 */
+	public static ArrayList<Player> playersInGame = new ArrayList<Player>();;
 
 	
 	/// executable code
@@ -120,21 +125,20 @@ public class GameSystem {
 
 			/// register players
 			players = registerPlayers(numPlayers);
+			playersInGame.addAll(players);
 
 			/// game starts - do while (and try-catch?), cycling through players until game
 			/// end triggered
 			while (!gameEndTrigger) {
 
 				for (Player player : players) {
-					if (player.isPlay()) {
+					if (playersInGame.contains(player)) {
 						
 						Thread.sleep(2000); 
 						
 						turn(player);
-						
-						if (gameEndTrigger)	break;
-						
 					}
+					if (gameEndTrigger)	break;
 				}
 
 			}
@@ -232,7 +236,7 @@ public class GameSystem {
 						
 					} else {
 					
-						playersBuilder.add(new Player(name, STARTING_BALANCE, 0, true));
+						playersBuilder.add(new Player(name, STARTING_BALANCE, 0));
 						names.add(name);
 						resolved = true;
 						System.out.printf("Welcome %s%s%s! You start the game with a balance of %s%,d%s.%n", RED_BRIGHT, playersBuilder.get(playerNum-1).getName(), RESET, PRE, STARTING_BALANCE, SUF);
@@ -248,9 +252,9 @@ public class GameSystem {
 			}
 			
 		}
-
+		
 		System.out.println("Welcome, all, to SOLAROPOLY");
-
+		
 		return playersBuilder;
 	}
 
@@ -274,7 +278,7 @@ public class GameSystem {
 //			trade(player);
 		
 		} else {
-			player.setPlay(false);
+			playersInGame.remove(player);
 			
 			System.out.println("You quitted the game. return all the properties.");
 			
@@ -296,7 +300,9 @@ public class GameSystem {
 			}
 		}
 		
-		if (players.size() < 2) gameEndTrigger = true;
+		if (players.size() < 2 || playersInGame.size() < 2) {
+			gameEndTrigger = true;
+		}
 	}
 	
 	/**

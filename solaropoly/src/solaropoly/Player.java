@@ -32,7 +32,6 @@ public class Player {
 	private static final int DICE_NUMBER = 2;
 	
 	// instance vars
-	private boolean play;
 	private String name;
 	private int balance;
 	private int position;
@@ -50,26 +49,11 @@ public class Player {
 	 * @param balance
 	 * @param position
 	 */
-	public Player(String name, int balance, int position, boolean play) throws IllegalArgumentException, IllegalStateException {
+	public Player(String name, int balance, int position) throws IllegalArgumentException, IllegalStateException {
 		this.setName(name);
 		this.balance = balance;
 		this.setPosition(position);
 		this.ownedSquares = new HashSet<Square>();
-		this.play = play;
-	}
-	
-	/**
-	 * @return the play, it says if the player is playing or not
-	 */
-	public boolean isPlay() {
-		return play;
-	}
-
-	/**
-	 * @param play the play to set, it set the decision of the player to stop to play
-	 */
-	public void setPlay(boolean play) {
-		this.play = play;
 	}
 	
 	/**
