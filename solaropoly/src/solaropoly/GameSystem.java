@@ -355,4 +355,44 @@ public class GameSystem {
 		System.out.println(" to You rolled a " + total + "\n\n");
 		return total;
 	}
+	/**
+	* reads from csv file rent prices
+	*/
+	private static void setupBoard() {
+	
+	File file = new File("Solaropoly.csv");
+	
+	try {
+		
+		
+		FileReader fr = new FileReader(file);
+		BufferedReader br = new BufferedReader(fr);
+		String line;
+		br.readLine();
+		line = br.readLine();
+		
+		while(line!=null) {
+			String[] fields = line.split(",");
+			String noPropertyRent = fields[0];
+			String oneHouse = fields[1];
+			String twoHouse = fields[2];
+			String threeHouse = fields[3];
+			String oneHotel = fields[4];
+			String groupName = fields[5];
+		}
+		
+		br.close();
+
+		
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	
+	
+}
 }
