@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
+Import java.io.BufferedReader;
+import java.io.IOException;
 
 /**
  * The executable class of the system, starting the Solaropoly command-line game.
@@ -119,7 +124,7 @@ public class GameSystem {
 	public static void main(String[] args) {
 
 		try {
-
+			setupBoard();
 			/// set number of players
 			int numPlayers = setNumPlayers();
 
