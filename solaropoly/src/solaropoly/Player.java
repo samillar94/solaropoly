@@ -181,6 +181,31 @@ public class Player {
 			}
 			this.setPosition(boardPosition.getPosition());
 			boardPosition.getSquare().act(this);
+			
+			// develop area and trade actions
+			String input = "";
+			System.out.println("If you would like to Trade or Develop an area type Trade or Develop and press Enter.\n"
+					+ "Otherwise, type Skip and press Enter to skip the turn.");
+			
+			while (true) {
+				input = GameSystem.SCANNER.nextLine();
+				
+				if (input.equalsIgnoreCase("Trade") || input.equalsIgnoreCase("Develop") || input.equalsIgnoreCase("Skip")) {
+					break;
+				} else {
+					System.out.println("Wrong imput. please choose between Trade, Develop and Skip (case is ignored).");
+				}
+			}
+			
+			if (input.equalsIgnoreCase("Develop")) {
+				System.out.println("You choosed to develop area");
+				//GameSystem.developArea();
+			} else if (input.equalsIgnoreCase("Trade")) {
+				System.out.println("You choosed to trade");
+				//Area.dutchAuctionSystem(this);
+			}
+			
+			System.out.println("Turn ended. Next player...");
 		} else {
 			throw new IllegalArgumentException("Invalid dice roll. Try to change the number of dice to roll");
 		}
