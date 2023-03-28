@@ -184,7 +184,7 @@ public class Area extends Square implements GeneratesIncome {
 			+ "Owner: " + this.owner.getName() + "\n"
 			+ "Base rent: " + this.getBaseRent() + "\n"
 			+ "Current rent: " + this.getCurrentRent() + "\n"
-			+ "Cost area: " + this.cost;
+			+ "Cost area: " + this.cost + "\n";
 	}
 	
 	/// methods
