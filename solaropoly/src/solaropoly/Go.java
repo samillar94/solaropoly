@@ -30,17 +30,15 @@ public class Go extends Square {
 	}
 	
 	/**
-	 * This method is activated when the player pass this square even if he does not land on it.
+	 * Increase the player's resource when he lands on this square
 	 */
-	public void actPass(Player player) {
-		player.increaseBalance(PASS_GO_RESOURCE);
-		System.out.println("You passed the go");
-	}
-
 	@Override
 	public void act(Player player) {
 		player.increaseBalance(PASS_GO_RESOURCE);
-		if 
-			System.out.println("Welcome back to Go :)");
+		if (player.getLandedSquare().equals(this)) {
+			System.out.printf("Welcome back to Go, increase %s by: %d", GameSystem.SUF, PASS_GO_RESOURCE);
+		} else {
+			System.out.printf("You passed from Go, increase %s by: %d", GameSystem.SUF, PASS_GO_RESOURCE);
+		}
 	}
 }

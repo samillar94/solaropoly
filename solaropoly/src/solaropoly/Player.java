@@ -21,7 +21,18 @@ public class Player {
 	 */
 	private static final char SEPARATOR_CHAR = '_';
 	
+	/**
+	 * Force the business rule if required to stop the game if there's a limit of loops on the board
+	 */
+	private static final int LOOPS_LIMIT = 1;
+	
+	/**
+	 * The result of a die should be minimum 1. Set the limit based on the number of dice the game should use
+	 */
+	private static final int DICE_NUMBER = 2;
+	
 	// instance vars
+	private boolean play;
 	private String name;
 	private int balance;
 	private int position;
@@ -39,12 +50,27 @@ public class Player {
 	 * @param balance
 	 * @param position
 	 */
-	public Player(String name, int balance, int position) {
+	public Player(String name, int balance, int position, boolean play) throws IllegalArgumentException, IllegalStateException {
 		this.setName(name);
 		this.balance = balance;
 		this.setPosition(position);
 		this.ownedSquares = new HashSet<Square>();
-	};
+		this.play = play;
+	}
+	
+	/**
+	 * @return the play, it says if the player is playing or not
+	 */
+	public boolean isPlay() {
+		return play;
+	}
+
+	/**
+	 * @param play the play to set, it set the decision of the player to stop to play
+	 */
+	public void setPlay(boolean play) {
+		this.play = play;
+	}
 	
 	/**
 	 * @return the name
@@ -91,10 +117,9 @@ public class Player {
 	/**
 	 * @param position the position to set
 	 */
-	public void setPosition(int position) {
-		/// TODO use Board size
-		if (position >= 12 /*GameSystem.board.size()*/ || position < 0) {
-			throw new IllegalArgumentException("Invalid player position");
+	public void setPosition(int position) throws IllegalArgumentException {
+		if (position >= (GameSystem.board.getSize() * LOOPS_LIMIT) || position < 0) {
+			throw new IllegalArgumentException("Invalid player position. Try to reduce the dice sides or the number of dice");
 		} else {
 			this.position = position;
 		}
@@ -142,7 +167,7 @@ public class Player {
 	 * attention should be caught because an action is required. Then it prints the name of the player
 	 * asking to take an action.
 	 */
-	public void getPlayerAttention() {
+	public void getAttention() {
 		int consoleWidth = 80; // Default console width
         try {
             consoleWidth = Integer.parseInt(System.getenv("COLUMNS"));
@@ -151,6 +176,29 @@ public class Player {
         }
         System.out.println(String.valueOf(SEPARATOR_CHAR).repeat(consoleWidth));
         System.out.printf("Player %s, take action!%n%n", this.name);
+	}
+	
+	/**
+	 * This method returns the square where the player actually is.
+	 */
+	public Square getLandedSquare() {
+		return GameSystem.board.getSquare(this.position);
+	}
+	
+	/**
+	 * This method move the player by a given valid dice result value
+	 */
+	public void move(int roll) throws IllegalArgumentException {
+		if (roll >= DICE_NUMBER) {
+			BoardPosition boardPosition = GameSystem.board.getBoardPosition(this.position, roll);
+			for (int i = 0; i < boardPosition.getStartPassed(); i++) {
+				GameSystem.board.getSquare(0).act(this);
+			}
+			this.setPosition(boardPosition.getPosition());
+			boardPosition.getSquare().act(this);
+		} else {
+			throw new IllegalArgumentException("Invalid dice roll. Try to change the number of dice to roll");
+		}
 	}
 	
 	public void displayBalance() {

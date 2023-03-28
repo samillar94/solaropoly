@@ -282,7 +282,7 @@ public class Area extends Square implements GeneratesIncome {
 			if (input.equalsIgnoreCase("Sell")) {
 				ArrayList<Player> accepters = new ArrayList<Player>();
 				for (Player competitor : GameSystem.players) {
-					competitor.getPlayerAttention();
+					competitor.getAttention();
 					System.out.printf("%s, do you want to accept the square that %s refused to buy?%n"
 							+ "Type Accept and Enter to accept%n"
 							+ "Type Refuse to refuse%n"
@@ -303,7 +303,7 @@ public class Area extends Square implements GeneratesIncome {
 					}
 				}
 				
-				player.getPlayerAttention();
+				player.getAttention();
 				if (accepters.isEmpty()) {
 					System.out.println(player.getName() + ", no one wants your square. Skip the turn.");
 				} else if (accepters.size() == 1) {

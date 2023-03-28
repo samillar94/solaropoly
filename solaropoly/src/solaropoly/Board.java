@@ -173,38 +173,35 @@ public class Board {
 	}
 	
 	/**
-	 * This method returns the square on the board and the number of times the player has passed the first square.
-	 * It uses an index to calculate the new position.
+	 * This method returns the square on the board in a given position.
 	 * @param index - the position in the board to retrieve.
-	 * @return BoardPosition - a pair consisting of a Square object and an Integer representing the number of times the.
-	 * 						   player has looped around the board. The pair can be accessed using the getKey() and getValue()
-	 * 						   methods from the Map.Entry interface, or with getSquare() (the Square) and getStartPassed() (the Integer).
+	 * @return Square - the square in that position in the board.
 	 * @throws IndexOutOfBoundsException - if there is an error with the calculation of the index or if the squares List is empty.
 	 */
-	public BoardPosition getSquare(int index) throws IndexOutOfBoundsException {
+	public Square getSquare(int index) throws IndexOutOfBoundsException {
 		int oldPosition = 0;
-		return this.getSquare(oldPosition, index);
+		return this.getBoardPosition(oldPosition, index).getSquare();
 	}
 	
 	/**
-	 * This method returns the square on the board and the number of times the player has passed the first square.
+	 * This method returns the square on the board, the number of times the player has passed the first square and his new position.
 	 * It uses the player's current position and the dice roll result to calculate the new position.
 	 * @param oldPosition - the player's current position on the board. The dice roll result will be added to this value.
 	 * @param diceRoll - the result of the dice roll or a number to be added to the player's current position.
-	 * @return BoardPosition - a pair consisting of a Square object and an Integer representing the number of times the
-	 * 						   player has looped around the board. The pair can be accessed using the getKey() and getValue()
-	 * 						   methods from the Map.Entry interface, or with getSquare() (the Square) and getStartPassed() (the Integer).
+	 * @return BoardPosition - a container class called BoardPosition consisting of a Square object of the new position, an integer
+	 * 						   representing the number of times the player has looped around the board and an integer with the new index position.
+	 * 						   The values can be accessed using the getSquare() getStartPassed() and getPosition() methods from the class.
 	 * @throws IndexOutOfBoundsException - if there is an error with the calculation of the index or if the squares List is empty.
 	 */
-	public BoardPosition getSquare(int oldPosition, int diceRoll) throws IndexOutOfBoundsException {
+	public BoardPosition getBoardPosition(int oldPosition, int diceRoll) throws IndexOutOfBoundsException {
 		checkSquaresList();
 		oldPosition = (oldPosition < 0) ? oldPosition : 0;
 		diceRoll = (diceRoll < 0) ? diceRoll : 0;
 		int overrunPosition = oldPosition + diceRoll;
         int startPassed = overrunPosition / getSize();
         int newPosition = overrunPosition % getSize();
-		Square square = this.squares.get(newPosition);
-		return new BoardPosition(square, startPassed);
+		Square newSquare = this.squares.get(newPosition);
+		return new BoardPosition(newSquare, startPassed, newPosition);
 	}
 	
 	/**

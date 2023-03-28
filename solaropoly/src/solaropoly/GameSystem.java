@@ -125,14 +125,16 @@ public class GameSystem {
 			/// end triggered
 			while (!gameEndTrigger) {
 
-				for (int playerIndex = 0; playerIndex < players.size(); playerIndex++) {
-
-					Thread.sleep(2000); 
-
-					turn(players.get(playerIndex));
-
-					if (gameEndTrigger)	break;
-
+				for (Player player : players) {
+					if (player.isPlay()) {
+						
+						Thread.sleep(2000); 
+						
+						turn(player);
+						
+						if (gameEndTrigger)	break;
+						
+					}
 				}
 
 			}
@@ -230,7 +232,7 @@ public class GameSystem {
 						
 					} else {
 					
-						playersBuilder.add(new Player(name, STARTING_BALANCE, 0));
+						playersBuilder.add(new Player(name, STARTING_BALANCE, 0, true));
 						names.add(name);
 						resolved = true;
 						System.out.printf("Welcome %s%s%s! You start the game with a balance of %s%,d%s.%n", RED_BRIGHT, playersBuilder.get(playerNum-1).getName(), RESET, PRE, STARTING_BALANCE, SUF);
@@ -253,10 +255,10 @@ public class GameSystem {
 	}
 
 	/**
-	 * This method is called for each player in turn from the main method, and organises 
+	 * This method is called for each player in turn from the main method, and organizes 
 	 * the inputs and results that will be a part of their turn, including 
-	 * (1) deciding whether to abandon the game or roll and move; 
-	 * (2) developing any fields they have monopolised; and 
+	 * (1) deciding whether to abandon the game or roll and move;
+	 * (2) developing any fields they have monopolized; and 
 	 * (3) trading assets with other players
 	 * @param player
 	 */
@@ -266,21 +268,35 @@ public class GameSystem {
 		
 		if (consent) {
 			
-			move(player);
+			player.move(rollDice());
 		/// TODO	
 //			develop(player);
 //			trade(player);
 		
 		} else {
+			player.setPlay(false);
 			
-			players.remove(player);
-			/// TODO print player assets
-			/// TODO remove their ownerships from assets
+			System.out.println("You quitted the game. return all the properties.");
 			
+			// reset ownership in all the system.
+			// TODO: Roberto suggestion: I don't really like this way. Too confusing. We should consider to set the ownership and check it only from one class like player.
+			player.setOwnedGroups(null);
+			player.setOwnedSquares(null);
+			for (Group group : board.getGroups()) {
+				if (group.getOwner().equals(player)) {
+					group.setOwner(null);
+				}
+			}
+			for (Square square : board.getSquares()) {
+				if (square instanceof Area || true /*here the other classes if square extend new squares*/) {
+					if (((Area) square).getOwner().equals(player)) {
+						((Area) square).setOwner(null);
+					}
+				}/* else if (here the other classes if square extend new squares) {}*/
+			}
 		}
 		
-		if (players.size() == 1) gameEndTrigger = true;
-
+		if (players.size() < 2) gameEndTrigger = true;
 	}
 	
 	/**
@@ -289,33 +305,27 @@ public class GameSystem {
 	 * @return boolean - the decision
 	 */
 	private static boolean consent(Player player) {
-		
-		player.getPlayerAttention();
+		player.getAttention();
 		player.displayBalance();
+		String input = "";
 		System.out.printf("If you would like to take your turn, press Enter.%n"
-				+ "Otherwise, enter any character and press Enter to leave the game. ", player.getName());
+				+ "Otherwise, type Quit and press Enter to leave the game. ", player.getName());
 		
-		String input = SCANNER.nextLine();
+		while (true) {
+			input = GameSystem.SCANNER.nextLine();
+			
+			if (input.equalsIgnoreCase("Quit") || input.equalsIgnoreCase("")) {
+				break;
+			} else {
+				System.out.println("Wrong imput. please choose Quit (case is ignored) or just press Enter to continue");
+			}
+		}
 		
-		if (input == null || input == "") {
+		if (input.equals("")) {
 			return true;
 		} else {
 			return false;
 		}
-		
-	}
-	
-	/**
-	 * 
-	 * @param player
-	 */
-	private static void move(Player player) {
-		int roll = rollDice();
-		BoardPosition boardPosition = board.getSquare(player.getPosition(), roll);
-		Square square = boardPosition.getSquare();
-		int startPassed = boardPosition.getStartPassed();
-		board.getSquaresByType(Go.class).get(0).actPass(player);
-		square.act(player);
 	}
 	
 	/**
