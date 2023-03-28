@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -25,13 +23,14 @@ public class Area extends Square implements GeneratesIncome {
 	private HashMap<String, ArrayList<Integer>> rentProfile = new HashMap<>(2);
 	private int monopolyLevel = 0;
 	private int developmentLevel = 0;
-	
+
 	/// constr
-	
+
 	/**
 	 * Default constructor
 	 */
-	public Area() {}
+	public Area() {
+	}
 
 	/**
 	 * This constructor sets up an area with a name, Group, cost and rent profile.
@@ -51,7 +50,7 @@ public class Area extends Square implements GeneratesIncome {
 				(ArrayList<Integer>) Arrays.stream(developmentProfile).boxed().collect(Collectors.toList()));
 
 	}
-	
+
 	/// setget
 
 	/**
@@ -102,6 +101,7 @@ public class Area extends Square implements GeneratesIncome {
 	 * The rent profile is set by passing two integer arrays, one for how rent
 	 * changes with monopoly level in its group, and one for how rent changes with
 	 * its development level. Both levels are set to zero on instantiation.
+	 * 
 	 * @return the rentProfile
 	 */
 	public HashMap<String, ArrayList<Integer>> getRentProfile() {
@@ -112,6 +112,7 @@ public class Area extends Square implements GeneratesIncome {
 	 * The rent profile is set by passing two integer arrays, one for how rent
 	 * changes with monopoly level in its group, and one for how rent changes with
 	 * its development level. Both levels are set to zero on instantiation.
+	 * 
 	 * @param rentProfile the rentProfile to set
 	 */
 	public void setRentProfile(HashMap<String, ArrayList<Integer>> rentProfile) {
@@ -148,29 +149,29 @@ public class Area extends Square implements GeneratesIncome {
 		// TODO validate 0+
 		this.developmentLevel = developmentLevel;
 	}
-	
+
 	/// show details
-	
+
 	/**
 	 * @return the rentProfile but in String format
 	 */
 	public String getRentProfileString() {
-        StringBuilder sb = new StringBuilder();
-        
-        for (HashMap.Entry<String, ArrayList<Integer>> entry : this.rentProfile.entrySet()) {
-            String name = entry.getKey();
-            ArrayList<Integer> rents = entry.getValue();
-            
-            sb.append(name + ": ");
-            for (Integer rent : rents) {
-                sb.append(rent +", " );
-            }
-            sb.setLength(sb.length() - 2); // Remove the last ", "
-            sb.append("\n");
-        }
+		StringBuilder sb = new StringBuilder();
+
+		for (HashMap.Entry<String, ArrayList<Integer>> entry : this.rentProfile.entrySet()) {
+			String name = entry.getKey();
+			ArrayList<Integer> rents = entry.getValue();
+
+			sb.append(name + ": ");
+			for (Integer rent : rents) {
+				sb.append(rent + ", ");
+			}
+			sb.setLength(sb.length() - 2); // Remove the last ", "
+			sb.append("\n");
+		}
 		return sb.toString();
 	}
-	
+
 	@Override
 	public String toString() {
 		// return String.format("%s (%s, value £%,d)", this.getName(), this.group, this.cost);
@@ -186,7 +187,7 @@ public class Area extends Square implements GeneratesIncome {
 			+ "Current rent: " + this.getCurrentRent() + "\n"
 			+ "Cost area: " + this.cost + "\n";
 	}
-	
+
 	/// methods
 
 	/**
@@ -208,17 +209,17 @@ public class Area extends Square implements GeneratesIncome {
 			return rentProfile.get("Development").get(this.developmentLevel);
 		}
 	}
-	
+
 	/**
 	 * This method allow actions when the plater lands on an area
 	 * @param player - the player who landed in this area
+	 * TODO if other types of property are made, make Property an interface and move a lot of this code there
 	 */
 	@Override
 	public void act(Player player) {
-		System.out.println("You landed in: " + this.getName() + "\n"
-				+ "This square information:\n\n"
-				+ this.toString());
-		
+		System.out
+				.println("You landed in: " + this.getName() + "\n" + "This square information:\n\n" + this.toString());
+
 		if (this.owner == null) {
 			purchaseArea(player);
 		} else if (this.owner == player) {
@@ -227,36 +228,39 @@ public class Area extends Square implements GeneratesIncome {
 			rentPay(player, this);
 		}
 	}
-	
+
 	/**
-	 * This method is used to fulfill the requirement for an unknown square, which specifies that the square should
-	 * be bought or sold to a different player at the same price. In this case, the requirement is to sell the square,
-	 * but since the price is fixed for all players, this method first checks the active player's decision.
-	 * If the active player wants to sell, or can only sell because they don't have enough money,
-	 * the method will let them choose whether to sell or do nothing. If the sell option is chosen,
-	 * the method will check all other players' balances and ask only those who have enough money if they want to accept the offer.
-	 * If more than one player accepts the offer, the active player can choose between them.
+	 * This method is used to fulfill the requirement for an unknown square, which
+	 * specifies that the square should be bought or sold to a different player at
+	 * the same price. In this case, the requirement is to sell the square, but
+	 * since the price is fixed for all players, this method first checks the active
+	 * player's decision. If the active player wants to sell, or can only sell
+	 * because they don't have enough money, the method will let them choose whether
+	 * to sell or do nothing. If the sell option is chosen, the method will check
+	 * all other players' balances and ask only those who have enough money if they
+	 * want to accept the offer. If more than one player accepts the offer, the
+	 * active player can choose between them.
+	 * 
 	 * @param player - The active player that needs to take actions.
 	 */
 	private void purchaseArea(Player player) {
 		try {
-			System.out.printf("Would you like to buy this square for %,d%s?%n"
-					+ "Type Buy and Enter to buy%n"
-					+ "Type Sell and Enter to sell%n"
-					+ "Type None to end the turn%n"
-					, GameSystem.SUF, this.cost);
+			System.out.printf(
+					"Would you like to buy this square for %,d%s?%n" + "Type Buy and Enter to buy%n"
+							+ "Type Sell and Enter to sell%n" + "Type None to end the turn%n",
+					GameSystem.SUF, this.cost);
 			String input = "";
-			
+
 			while (true) {
 				input = GameSystem.SCANNER.nextLine();
-				
+
 				if (input.equalsIgnoreCase("Buy") || input.equalsIgnoreCase("Sell") || input.equalsIgnoreCase("None")) {
 					break;
 				} else {
 					System.out.println("Wrong imput. please choose between Buy, Sell and None (case is ignored)...");
 				}
 			}
-			
+
 			if (input.equalsIgnoreCase("Buy") && player.getBalance() >= this.cost) {
 				player.decreaseBalance(this.cost);
 				this.setOwner(player);
@@ -264,13 +268,13 @@ public class Area extends Square implements GeneratesIncome {
 				System.out.printf("Ok, you've bought %s! %n", this.getName());
 				player.displayBalance();
 			} else if (input.equalsIgnoreCase("Buy") && player.getBalance() < this.cost) {
-				System.out.println("Not enough money, sell or nothing. do you want to sell the square to other players?\n"
-						+ "Type Sell and Enter to sell\n"
-						+ "Type None to end the turn");
-				
+				System.out
+						.println("Not enough money, sell or nothing. do you want to sell the square to other players?\n"
+								+ "Type Sell and Enter to sell\n" + "Type None to end the turn");
+
 				while (true) {
 					input = GameSystem.SCANNER.nextLine();
-					
+
 					if (input.equalsIgnoreCase("Sell") || input.equalsIgnoreCase("None")) {
 						break;
 					} else {
@@ -278,7 +282,7 @@ public class Area extends Square implements GeneratesIncome {
 					}
 				}
 			}
-			
+
 			if (input.equalsIgnoreCase("Sell")) {
 				ArrayList<Player> accepters = new ArrayList<Player>();
 				for (Player competitor : GameSystem.players) {
@@ -290,14 +294,15 @@ public class Area extends Square implements GeneratesIncome {
 					
 					while (true) {
 						input = GameSystem.SCANNER.nextLine();
-						
+
 						if (input.equalsIgnoreCase("Accept") || input.equalsIgnoreCase("Refuse")) {
 							break;
 						} else {
-							System.out.println("Wrong imput. please choose between Accept and Refuse (case is ignored)...");
+							System.out.println(
+									"Wrong imput. please choose between Accept and Refuse (case is ignored)...");
 						}
 					}
-					
+
 					if (input.equalsIgnoreCase("Accept")) {
 						accepters.add(competitor);
 					}
@@ -307,20 +312,21 @@ public class Area extends Square implements GeneratesIncome {
 				if (accepters.isEmpty()) {
 					System.out.println(player.getName() + ", no one wants your square. Skip the turn.");
 				} else if (accepters.size() == 1) {
-					System.out.println(player.getName() + " congratulation, your square was sold to " + accepters.get(0).getName());
+					System.out.println(player.getName() + " congratulation, your square was sold to "
+							+ accepters.get(0).getName());
 				} else {
 					System.out.printf("%s, there are %s players that are willing to buy your square.%n"
 							+ "Please enter the name of the one you prefer to sell the square.%n"
 							+ "Choose between these players:%n", player.getName(), accepters.size());
-					
+
 					for (Player accepter : accepters) {
 						System.out.println(accepter.getName());
 					}
-					
+
 					boolean flag = false;
 					while (true) {
 						input = GameSystem.SCANNER.nextLine();
-						
+
 						for (Player accepter : accepters) {
 							if (input.equalsIgnoreCase(accepter.getName())) {
 								accepter.decreaseBalance(this.cost);
@@ -331,14 +337,14 @@ public class Area extends Square implements GeneratesIncome {
 								flag = true;
 							}
 						}
-						
+
 						if (flag) {
 							break;
 						} else {
 							System.out.println("Wrong imput. please choose between one of the valid names...");
 						}
 					}
-					
+
 					System.out.println("You have sold the square successfully.");
 				}
 			}
@@ -357,8 +363,23 @@ public class Area extends Square implements GeneratesIncome {
 	 */
 	public void rentPay(Player p1, Area a1) {
 		if (p1.getBalance() < a1.getCurrentRent()) {
-			a1.getOwner().setBalance(+p1.getBalance());
-			GameSystem.players.remove(p1);
+
+			System.out.println(
+					"Sorry for that you do not have enough money to pay it. You are forced to enter AUCTION SYSTEM");
+			do {
+				if (p1.getOwnedSquares().isEmpty()) {
+					System.out.println("You have no more properties for sell. You bankrupted!");
+					GameSystem.players.remove(p1);
+				} else {
+					dutchAuctionSystem(p1);
+				}
+			} while (p1.getBalance() < a1.getCurrentRent());
+			if (GameSystem.players.contains(p1)) {
+				p1.setBalance(-a1.getCurrentRent());
+				a1.getOwner().setBalance(+a1.getCurrentRent());
+				System.out.printf("Rent fee paid successfully \nLandowner %s received %d\n You paid %d", a1.getOwner(),
+						a1.getCurrentRent(), a1.getCurrentRent());
+			}
 		} else {
 			p1.setBalance(-a1.getCurrentRent());
 			a1.getOwner().setBalance(+a1.getCurrentRent());
@@ -379,6 +400,7 @@ public class Area extends Square implements GeneratesIncome {
 		}
 		try {
 			boolean getResult = false;
+			int gamerInput;
 			boolean legalInput = false;
 			HashSet<Square> auctionnerSet = new HashSet<>();
 			auctionnerSet = auctioneer.getOwnedSquares();
@@ -406,7 +428,20 @@ public class Area extends Square implements GeneratesIncome {
 				}
 			} while (!getResult);
 			System.out.println("Now please type in the price you want to sell");
-			int gamerInput = GameSystem.SCANNER.nextInt();
+
+			while (true) {
+				
+				try {
+					gamerInput = GameSystem.SCANNER.nextInt();
+					if(gamerInput<0) {
+						System.out.println("Please type into a number greater than zero");
+					}else {
+						break;
+					}
+				}catch(Exception e) {
+					System.out.println("Please enter in positive integer");
+				}
+			}
 			System.out.println("Does anyone want receive it offer? The offer price is " + gamerInput);
 			do {
 				System.out.println("If someone want to take it, please enter your name."
