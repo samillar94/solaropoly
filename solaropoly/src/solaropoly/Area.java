@@ -263,8 +263,7 @@ public class Area extends Square implements GeneratesIncome2 {
 
 			if (input.equalsIgnoreCase("Buy") && player.getBalance() >= this.cost) {
 				player.decreaseBalance(this.cost);
-				this.setOwner(player);
-				player.gainOwnership(this);
+				changeOwnership(player);
 				System.out.printf("Ok, you've bought %s! %n", this.getName());
 				player.displayBalance();
 			} else if (input.equalsIgnoreCase("Buy") && player.getBalance() < this.cost) {
@@ -334,8 +333,7 @@ public class Area extends Square implements GeneratesIncome2 {
 						for (Player accepter : accepters) {
 							if (input.equalsIgnoreCase(accepter.getName())) {
 								accepter.decreaseBalance(this.cost);
-								this.setOwner(accepter);
-								accepter.gainOwnership(this);
+								changeOwnership(accepter);
 								System.out.printf("Ok, %s bought %s! %n", accepter.getName(), this.getName());
 								accepter.displayBalance();
 								flag = true;
@@ -355,6 +353,68 @@ public class Area extends Square implements GeneratesIncome2 {
 		} catch (Exception e) {
 			System.err.println("We had a problem, skip turn.");
 			GameSystem.SCANNER.nextLine(); // clean the scanner to avoid other errors in GameSystem
+		}
+	}
+	
+	/**
+	 * This method transfer or assign the ownership of this area to a Player.
+	 * To do so the method modifies the ownership in the Group object if all the areas are owned
+	 * by one player after the transfer of the ownership, sets the new owner of this area and updates
+	 * the owned groups and squares on the Player object at once.
+	 * @param player - the player who gets the ownership of this area
+	 */
+	public void changeOwnership(Player player) {
+		// retrieve the group of this square
+		Group group = GameSystem.board.getGroup(this);
+		
+		// check if the square is in a group owned by someone. if yes:
+		if (group.getOwner().equals(null)) {
+			// remove ownership in group
+			group.setOwner(null);
+			// remove ownership in player
+			group.getOwner().removeOwnership(group);
+		// if the player has all the squares of the group:
+		} else if (group.getAreas().containsAll(player.getOwnedSquares())) {
+			// add ownership in group
+			group.setOwner(player);
+			// add ownership in player
+			player.gainOwnership(group);
+		}
+		
+		// check if the square is owned. if yes:
+		if (this.owner != null) {
+			// remove ownership in player
+			player.removeOwnership(this);
+		}
+		
+		// change ownership in Area
+		this.owner = player;
+	}
+	
+	/**
+	 * This method remove the ownership of this area to a player.
+	 * To do so the area should be owned by the player. It updates
+	 * the owned groups and squares on the Player object, the Group
+	 * owner of that area and the area owner at once.
+	 * @param player - the player who gets this area removed
+	 */
+	public void removeOwnership(Player player) {
+		// check if the square is owned by the player. if yes:
+		if (this.owner.equals(player)) {
+			// retrieve the group of this square
+			Group group = GameSystem.board.getGroup(this);
+			
+			// the group
+				// remove ownership in group
+			group.setOwner(null);
+				// remove ownership in player
+			group.getOwner().removeOwnership(group);
+			
+			// the square
+				// remove ownership in player
+			player.removeOwnership(this);
+				// remove ownership in Area
+			this.owner = player;
 		}
 	}
 
