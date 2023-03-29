@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -368,7 +369,7 @@ public class Area extends Square implements GeneratesIncome2 {
 		Group group = GameSystem.board.getGroup(this);
 		
 		// check if the square is in a group owned by someone. if yes:
-		if (group.getOwner().equals(null)) {
+		if (!Objects.equals(group.getOwner(), null)) {
 			// remove ownership in group
 			group.setOwner(null);
 			// remove ownership in player
@@ -382,7 +383,7 @@ public class Area extends Square implements GeneratesIncome2 {
 		}
 		
 		// check if the square is owned. if yes:
-		if (this.owner != null) {
+		if (!Objects.equals(this.owner, null)) {
 			// remove ownership in player
 			player.removeOwnership(this);
 		}
@@ -400,7 +401,7 @@ public class Area extends Square implements GeneratesIncome2 {
 	 */
 	public void removeOwnership(Player player) {
 		// check if the square is owned by the player. if yes:
-		if (this.owner.equals(player)) {
+		if (!Objects.equals(this.owner, player)) {
 			// retrieve the group of this square
 			Group group = GameSystem.board.getGroup(this);
 			
