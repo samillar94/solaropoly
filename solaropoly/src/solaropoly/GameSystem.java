@@ -99,6 +99,9 @@ public class GameSystem {
     public static final String WHITE_BACKGROUND_BRIGHT = "\033[0;107m";   // WHITE
 
 
+	/// design language colours
+	public static final String COLOUR_PLAYER = RED_BOLD_BRIGHT;
+	
 	/// essential components
     
     public static Board board = new Board();
@@ -161,7 +164,7 @@ public class GameSystem {
 				}
 				
 				System.out.printf("%s%s%s has £%,d cash and owns £%,d of assets %s for a total of £%,d.%n", 
-						RED_BRIGHT, player.getName(), RESET, 
+						COLOUR_PLAYER, player.getName(), RESET, 
 						player.getBalance(), 
 						propertyValue, 
 						player.getOwnedSquares().toString(), 
@@ -316,7 +319,7 @@ public class GameSystem {
 						playersBuilder.add(new Player(name, STARTING_BALANCE, 0));
 						names.add(name);
 						resolved = true;
-						System.out.printf("Welcome %s%s%s! You start the game with a balance of %s%,d%s.%n", RED_BRIGHT, playersBuilder.get(playerNum-1).getName(), RESET, PRE, STARTING_BALANCE, SUF);
+						System.out.printf("Welcome %s%s%s! You start the game with a balance of %s%,d%s.%n", COLOUR_PLAYER, playersBuilder.get(playerNum-1).getName(), RESET, PRE, STARTING_BALANCE, SUF);
 					
 					}
 					

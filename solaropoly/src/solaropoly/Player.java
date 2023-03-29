@@ -139,7 +139,7 @@ public class Player {
 	
 	@Override
 	public String toString() {
-		return "Player [name=" + GameSystem.RED_BRIGHT + name + GameSystem.RESET + ", balance=" + balance + ", position=" + position + ", ownedSquares="
+		return "Player [name=" + GameSystem.COLOUR_PLAYER + name + GameSystem.RESET + ", balance=" + balance + ", position=" + position + ", ownedSquares="
 				+ ownedSquares + ", ownedGroups=" + ownedGroups + "]";
 	}
 	
@@ -159,7 +159,7 @@ public class Player {
             // Ignore the exception and use the default console width
         }
         System.out.println(String.valueOf(SEPARATOR_CHAR).repeat(consoleWidth));
-        System.out.printf("Player %s, take action!%n%n", this.name);
+        System.out.printf("%s%s%s, take action!%n%n", GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET);
 	}
 	
 	/**
@@ -199,10 +199,10 @@ public class Player {
 			}
 			
 			if (input.equalsIgnoreCase("Develop")) {
-				System.out.println("You choosed to develop area");
+				System.out.println("You chose to develop an area");
 				//GameSystem.developArea();
 			} else if (input.equalsIgnoreCase("Trade")) {
-				System.out.println("You choosed to trade");
+				System.out.println("You chose to trade");
 				//Area.dutchAuctionSystem(this);
 			}
 			
@@ -213,7 +213,7 @@ public class Player {
 	}
 	
 	public void displayBalance() {
-		System.out.printf("%s%s%s, your current balance is %s%,d%s.%n", GameSystem.RED_BRIGHT, this.name, GameSystem.RESET, GameSystem.PRE, this.balance, GameSystem.SUF);
+		System.out.printf("%s%s%s, your current balance is %s%,d%s.%n", GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET, GameSystem.PRE, this.balance, GameSystem.SUF);
 		// TODO another version showing properties too
 	}
 	

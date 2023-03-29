@@ -313,7 +313,7 @@ public class Area extends Square implements GeneratesIncome2 {
 				
 				player.getAttention();
 				if (accepters.isEmpty()) {
-					System.out.println(player.getName() + ", no one wants your square. Skip the turn.");
+					System.out.println(player.getName() + ", no one wants your square, so it will be offered to the next person who lands on it.");
 				} else if (accepters.size() == 1) {
 					System.out.println(player.getName() + " congratulations, your square was sold to "
 							+ accepters.get(0).getName());
