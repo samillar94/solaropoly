@@ -198,7 +198,7 @@ public class Board {
 		oldPosition = (oldPosition < 0) ? 0 : oldPosition;
 		diceRoll = (diceRoll < 0) ? 0 : diceRoll;
 		int overrunPosition = oldPosition + diceRoll;
-        int startPassed = overrunPosition / getSize();
+        int startPassed = (overrunPosition-1) / getSize(); // -1 ensures landing on Go doesn't count
         int newPosition = overrunPosition % getSize();
 		Square newSquare = this.squares.get(newPosition);
 		return new BoardPosition(newSquare, startPassed, newPosition);

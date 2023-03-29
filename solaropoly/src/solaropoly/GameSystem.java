@@ -356,6 +356,7 @@ public class GameSystem {
 //			trade(player);
 		
 		} else {
+			
 			playersInGame.remove(player);
 			
 			System.out.println("You quit the game - all your properties will now be made available.");

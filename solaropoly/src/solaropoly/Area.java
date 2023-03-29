@@ -163,7 +163,7 @@ public class Area extends Square implements GeneratesIncome2 {
 			String name = entry.getKey();
 			ArrayList<Integer> rents = entry.getValue();
 
-			sb.append(name + ": ");
+			sb.append("  "+name + ": ");
 			for (Integer rent : rents) {
 				sb.append(rent + ", ");
 			}
@@ -176,7 +176,7 @@ public class Area extends Square implements GeneratesIncome2 {
 	public String toString() {
 		// return String.format("%s (%s, value £%,d)", this.getName(), this.group, this.cost);
 		return ""
-			+ "Name: " + this.getName() + "\n"
+			+ "Area name: " + this.getName() + "\n"
 			+ "Group name: " + this.group.getName() + "\n"
 			+ "Base rent: " + this.getBaseRent() + "\n"
 			+ "Rent profile:" + this.getRentProfileString() + "\n"
@@ -185,7 +185,7 @@ public class Area extends Square implements GeneratesIncome2 {
 			//+ "Owner: " + this.owner.getName() + "\n"
 			+ "Base rent: " + this.getBaseRent() + "\n"
 			+ "Current rent: " + this.getCurrentRent() + "\n"
-			+ "Cost area: " + this.cost + "\n";
+			+ "Area cost: " + this.cost + "\n";
 	}
 
 	/// methods
@@ -436,10 +436,10 @@ public class Area extends Square implements GeneratesIncome2 {
 		if (p1.getBalance() < a1.getCurrentRent()) {
 
 			System.out.println(
-					"Sorry for that you do not have enough money to pay it. You are forced to enter AUCTION SYSTEM");
+					"Sorry, you don't have enough money to pay rent. You are forced to enter the AUCTION SYSTEM");
 			do {
 				if (p1.getOwnedSquares().isEmpty()) {
-					System.out.println("You have no more properties for sell. You bankrupted!");
+					System.out.println("You have no more properties to sell. You're bankrupted!");
 					GameSystem.players.remove(p1);
 				} else {
 					dutchAuctionSystem(p1);
@@ -479,7 +479,7 @@ public class Area extends Square implements GeneratesIncome2 {
 			auctionnerSet = auctioneer.getOwnedSquares();
 			Area tradeArea = new Area();
 			System.out.println(
-					"Welcome to Dutch auction system,which item would you like to aucion? please enter the name");
+					"Welcome to Dutch auction system, which item would you like to aucion? Please enter the name");
 			// show the list of owners' estates
 			for (Square s : auctionnerSet) {
 				Area area = new Area();
@@ -541,7 +541,7 @@ public class Area extends Square implements GeneratesIncome2 {
 
 					}
 					if (!legalInput) {
-						System.out.println("Plz enter legal input");
+						System.out.println("Please enter valid input");
 						System.out.println();
 					}
 				}

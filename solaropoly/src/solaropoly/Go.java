@@ -35,10 +35,16 @@ public class Go extends Square {
 	@Override
 	public void act(Player player) {
 		player.increaseBalance(PASS_GO_RESOURCE);
-		if (player.getLandedSquare().equals(this)) {
-			System.out.printf("Welcome back to Go! You've received %s%,d%s.%n", GameSystem.PRE, PASS_GO_RESOURCE, GameSystem.SUF);
-		} else {
-			System.out.printf("You passed Go and received %s%,d%s. ", GameSystem.PRE, PASS_GO_RESOURCE, GameSystem.SUF);
-		}
+		System.out.printf("Welcome back to Go! You've received %s%,d%s.%n", GameSystem.PRE, PASS_GO_RESOURCE, GameSystem.SUF);
+
+	}
+	
+	/**
+	 * Static method called when the player passes, but does not land on, Go
+	 * @param player
+	 */
+	public static void passAct(Player player) {
+		player.increaseBalance(PASS_GO_RESOURCE);
+		System.out.printf("You passed Go and received %s%,d%s. ", GameSystem.PRE, PASS_GO_RESOURCE, GameSystem.SUF);
 	}
 }

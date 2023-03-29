@@ -177,8 +177,9 @@ public class Player {
 			BoardPosition boardPosition = GameSystem.board.getBoardPosition(this.position, roll);
 			
 			for (int i = 0; i < boardPosition.getStartPassed(); i++) {
-				GameSystem.board.getSquare(0).act(this);
+				Go.passAct(this);
 			}
+			
 			this.setPosition(boardPosition.getPosition());
 			boardPosition.getSquare().act(this);
 			
@@ -193,7 +194,7 @@ public class Player {
 				if (input.equalsIgnoreCase("Trade") || input.equalsIgnoreCase("Develop") || input.equalsIgnoreCase("Skip")) {
 					break;
 				} else {
-					System.out.println("Wrong imput. please choose between Trade, Develop and Skip (case is ignored).");
+					System.out.println("Wrong input. please choose between Trade, Develop and Skip (case is ignored).");
 				}
 			}
 			
