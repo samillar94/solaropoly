@@ -5,9 +5,6 @@ package solaropoly;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * This class holds properties about the player's status in game, including name, balance, position
@@ -54,6 +51,7 @@ public class Player {
 		this.balance = balance;
 		this.setPosition(position);
 		this.ownedSquares = new HashSet<Square>();
+		this.ownedGroups = new ArrayList<Group>();
 	}
 	
 	/**

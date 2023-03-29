@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -159,15 +160,15 @@ public class Area extends Square implements GeneratesIncome2 {
 		StringBuilder sb = new StringBuilder();
 
 		for (HashMap.Entry<String, ArrayList<Integer>> entry : this.rentProfile.entrySet()) {
-			sb.append("\n");
 			String name = entry.getKey();
 			ArrayList<Integer> rents = entry.getValue();
 
-			sb.append("  "+name + ": ");
+			sb.append(name + ": ");
 			for (Integer rent : rents) {
 				sb.append(rent + ", ");
 			}
 			sb.setLength(sb.length() - 2); // Remove the last ", "
+			sb.append("\n");
 		}
 		return sb.toString();
 	}
@@ -176,16 +177,16 @@ public class Area extends Square implements GeneratesIncome2 {
 	public String toString() {
 		// return String.format("%s (%s, value £%,d)", this.getName(), this.group, this.cost);
 		return ""
-			+ "Area name: " + this.getName() + "\n"
+			+ "Name: " + this.getName() + "\n"
 			+ "Group name: " + this.group.getName() + "\n"
 			+ "Base rent: " + this.getBaseRent() + "\n"
-			+ "Rent profile:" + this.getRentProfileString() + "\n"
+			+ "Rent profile:\n" + this.getRentProfileString() + "\n"
 			+ "Development level: " + this.developmentLevel + "\n"
 			+ "Monopoly level: " + this.monopolyLevel + "\n"
 			//+ "Owner: " + this.owner.getName() + "\n"
 			+ "Base rent: " + this.getBaseRent() + "\n"
 			+ "Current rent: " + this.getCurrentRent() + "\n"
-			+ "Area cost: " + this.cost + "\n";
+			+ "Cost area: " + this.cost + "\n";
 	}
 
 	/// methods
@@ -246,9 +247,9 @@ public class Area extends Square implements GeneratesIncome2 {
 	private void purchaseArea(Player player) {
 		try {
 			System.out.printf(
-					"Would you like to buy this square for %s%,d%s?%n" + "Type Buy and Enter to buy%n"
+					"Would you like to buy this square for %s%d?%n" + "Type Buy and Enter to buy%n"
 							+ "Type Sell and Enter to sell%n" + "Type None to end the turn%n",
-					GameSystem.PRE, this.cost, GameSystem.SUF);
+					GameSystem.SUF, this.cost);
 			String input = "";
 
 			while (true) {
@@ -257,7 +258,7 @@ public class Area extends Square implements GeneratesIncome2 {
 				if (input.equalsIgnoreCase("Buy") || input.equalsIgnoreCase("Sell") || input.equalsIgnoreCase("None")) {
 					break;
 				} else {
-					System.out.println("Wrong input. please choose between Buy, Sell and None (case is ignored)...");
+					System.out.println("Wrong imput. please choose between Buy, Sell and None (case is ignored)...");
 				}
 			}
 
@@ -277,7 +278,7 @@ public class Area extends Square implements GeneratesIncome2 {
 					if (input.equalsIgnoreCase("Sell") || input.equalsIgnoreCase("None")) {
 						break;
 					} else {
-						System.out.println("Wrong input. please choose between Sell and None (case is ignored)...");
+						System.out.println("Wrong imput. please choose between Sell and None (case is ignored)...");
 					}
 				}
 			}
@@ -302,7 +303,7 @@ public class Area extends Square implements GeneratesIncome2 {
 							break;
 						} else {
 							System.out.println(
-									"Wrong input. please choose between Accept and Refuse (case is ignored)...");
+									"Wrong imput. please choose between Accept and Refuse (case is ignored)...");
 						}
 					}
 
@@ -315,7 +316,7 @@ public class Area extends Square implements GeneratesIncome2 {
 				if (accepters.isEmpty()) {
 					System.out.println(player.getName() + ", no one wants your square, so it will be offered to the next person who lands on it.");
 				} else if (accepters.size() == 1) {
-					System.out.println(player.getName() + " congratulations, your square was sold to "
+					System.out.println(player.getName() + " congratulation, your square was sold to "
 							+ accepters.get(0).getName());
 				} else {
 					System.out.printf("%s, there are %s players that are willing to buy your square.%n"
@@ -343,7 +344,7 @@ public class Area extends Square implements GeneratesIncome2 {
 						if (flag) {
 							break;
 						} else {
-							System.out.println("Wrong input. please choose between one of the valid names...");
+							System.out.println("Wrong imput. please choose between one of the valid names...");
 						}
 					}
 
@@ -369,33 +370,27 @@ public class Area extends Square implements GeneratesIncome2 {
 		Group group = GameSystem.board.getGroup(this);
 		
 		// check if the square is in a group owned by someone. if yes:
-		if (group.getOwner() != null) {
-			// remove ownership in player
-			group.getOwner().removeOwnership(group);
+		if (!Objects.equals(group.getOwner(), null)) {
 			// remove ownership in group
 			group.setOwner(null);
+			// remove ownership in player
+			group.getOwner().removeOwnership(group);
+		// if the player has all the squares of the group:
+		} else if (group.getAreas().containsAll(player.getOwnedSquares())) {
+			// add ownership in group
+			group.setOwner(player);
+			// add ownership in player
+			player.gainOwnership(group);
 		}
 		
-		// QUARANTINED UNTIL I FIGURE THIS SHIT OUT
-		
-		// if the player has all the squares of the group:
-//		} else if (player.getOwnedSquares().containsAll(group.getAreas())) {
-//			// add ownership in group
-//			group.setOwner(player);
-//			// add ownership in player
-//			player.gainOwnership(group);
-//		}
-//		
 		// check if the square is owned. if yes:
-		if (this.owner != null) {
+		if (!Objects.equals(this.owner, null)) {
 			// remove ownership in player
 			player.removeOwnership(this);
 		}
 		
 		// change ownership in Area
 		this.owner = player;
-		
-		
 	}
 	
 	/**
@@ -407,7 +402,7 @@ public class Area extends Square implements GeneratesIncome2 {
 	 */
 	public void removeOwnership(Player player) {
 		// check if the square is owned by the player. if yes:
-		if (this.owner.equals(player)) {
+		if (!Objects.equals(this.owner, player)) {
 			// retrieve the group of this square
 			Group group = GameSystem.board.getGroup(this);
 			
@@ -436,26 +431,24 @@ public class Area extends Square implements GeneratesIncome2 {
 		if (p1.getBalance() < a1.getCurrentRent()) {
 
 			System.out.println(
-					"Sorry, you don't have enough money to pay rent. You are forced to enter the AUCTION SYSTEM");
+					"Sorry for that you do not have enough money to pay it. You are forced to enter AUCTION SYSTEM");
 			do {
 				if (p1.getOwnedSquares().isEmpty()) {
-					System.out.println("You have no more properties to sell. You're bankrupted!");
+					System.out.println("You have no more properties for sell. You bankrupted!");
 					GameSystem.players.remove(p1);
 				} else {
 					dutchAuctionSystem(p1);
 				}
 			} while (p1.getBalance() < a1.getCurrentRent());
 			if (GameSystem.players.contains(p1)) {
-				p1.decreaseBalance(a1.getCurrentRent());
-				a1.getOwner().increaseBalance(a1.getCurrentRent());
-				System.out.printf("Rent fee %s%,d%s paid successfully to %s.", 
-						GameSystem.PRE, a1.getCurrentRent(), GameSystem.SUF, a1.getOwner());
+				p1.setBalance(-a1.getCurrentRent());
+				a1.getOwner().setBalance(+a1.getCurrentRent());
+				System.out.printf("Rent fee paid successfully \nLandowner %s received %d\n You paid %d", a1.getOwner(),
+						a1.getCurrentRent(), a1.getCurrentRent());
 			}
 		} else {
-			p1.decreaseBalance(a1.getCurrentRent());
-			a1.getOwner().increaseBalance(a1.getCurrentRent());
-			System.out.printf("Rent fee %s%,d%s paid successfully to %s.", 
-					GameSystem.PRE, a1.getCurrentRent(), GameSystem.SUF, a1.getOwner());
+			p1.setBalance(-a1.getCurrentRent());
+			a1.getOwner().setBalance(+a1.getCurrentRent());
 		}
 
 	}
@@ -479,7 +472,7 @@ public class Area extends Square implements GeneratesIncome2 {
 			auctionnerSet = auctioneer.getOwnedSquares();
 			Area tradeArea = new Area();
 			System.out.println(
-					"Welcome to Dutch auction system, which item would you like to aucion? Please enter the name");
+					"Welcome to Dutch auction system,which item would you like to aucion? please enter the name");
 			// show the list of owners' estates
 			for (Square s : auctionnerSet) {
 				Area area = new Area();
@@ -541,7 +534,7 @@ public class Area extends Square implements GeneratesIncome2 {
 
 					}
 					if (!legalInput) {
-						System.out.println("Please enter valid input");
+						System.out.println("Plz enter legal input");
 						System.out.println();
 					}
 				}
