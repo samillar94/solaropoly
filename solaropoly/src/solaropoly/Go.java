@@ -36,9 +36,9 @@ public class Go extends Square {
 	public void act(Player player) {
 		player.increaseBalance(PASS_GO_RESOURCE);
 		if (player.getLandedSquare().equals(this)) {
-			System.out.printf("Welcome back to Go, increase %s by: %d%n", GameSystem.SUF, PASS_GO_RESOURCE);
+			System.out.printf("Welcome back to Go! You've received %s%,d%s.%n", GameSystem.PRE, PASS_GO_RESOURCE, GameSystem.SUF);
 		} else {
-			System.out.printf("You passed from Go, increase %s by: %d%n", GameSystem.SUF, PASS_GO_RESOURCE);
+			System.out.printf("You passed Go and received %s%,d%s. ", GameSystem.PRE, PASS_GO_RESOURCE, GameSystem.SUF);
 		}
 	}
 }

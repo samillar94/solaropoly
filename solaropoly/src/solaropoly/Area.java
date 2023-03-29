@@ -159,6 +159,7 @@ public class Area extends Square implements GeneratesIncome2 {
 		StringBuilder sb = new StringBuilder();
 
 		for (HashMap.Entry<String, ArrayList<Integer>> entry : this.rentProfile.entrySet()) {
+			sb.append("\n");
 			String name = entry.getKey();
 			ArrayList<Integer> rents = entry.getValue();
 
@@ -167,7 +168,6 @@ public class Area extends Square implements GeneratesIncome2 {
 				sb.append(rent + ", ");
 			}
 			sb.setLength(sb.length() - 2); // Remove the last ", "
-			sb.append("\n");
 		}
 		return sb.toString();
 	}
@@ -179,7 +179,7 @@ public class Area extends Square implements GeneratesIncome2 {
 			+ "Name: " + this.getName() + "\n"
 			+ "Group name: " + this.group.getName() + "\n"
 			+ "Base rent: " + this.getBaseRent() + "\n"
-			+ "Rent profile:\n" + this.getRentProfileString() + "\n"
+			+ "Rent profile:" + this.getRentProfileString() + "\n"
 			+ "Development level: " + this.developmentLevel + "\n"
 			+ "Monopoly level: " + this.monopolyLevel + "\n"
 			//+ "Owner: " + this.owner.getName() + "\n"
@@ -302,7 +302,7 @@ public class Area extends Square implements GeneratesIncome2 {
 							break;
 						} else {
 							System.out.println(
-									"Wrong imput. please choose between Accept and Refuse (case is ignored)...");
+									"Wrong input. please choose between Accept and Refuse (case is ignored)...");
 						}
 					}
 
@@ -315,7 +315,7 @@ public class Area extends Square implements GeneratesIncome2 {
 				if (accepters.isEmpty()) {
 					System.out.println(player.getName() + ", no one wants your square. Skip the turn.");
 				} else if (accepters.size() == 1) {
-					System.out.println(player.getName() + " congratulation, your square was sold to "
+					System.out.println(player.getName() + " congratulations, your square was sold to "
 							+ accepters.get(0).getName());
 				} else {
 					System.out.printf("%s, there are %s players that are willing to buy your square.%n"
@@ -446,10 +446,10 @@ public class Area extends Square implements GeneratesIncome2 {
 				}
 			} while (p1.getBalance() < a1.getCurrentRent());
 			if (GameSystem.players.contains(p1)) {
-				p1.setBalance(-a1.getCurrentRent());
-				a1.getOwner().setBalance(+a1.getCurrentRent());
-				System.out.printf("Rent fee paid successfully \nLandowner %s received %d\n You paid %d", a1.getOwner(),
-						a1.getCurrentRent(), a1.getCurrentRent());
+				p1.decreaseBalance(a1.getCurrentRent());
+				a1.getOwner().increaseBalance(a1.getCurrentRent());
+				System.out.printf("Rent fee %s%,d%s paid successfully to %s.", 
+						GameSystem.PRE, a1.getCurrentRent(), GameSystem.SUF, a1.getOwner());
 			}
 		} else {
 			p1.decreaseBalance(a1.getCurrentRent());
