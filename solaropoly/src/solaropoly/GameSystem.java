@@ -101,6 +101,10 @@ public class GameSystem {
 
 	/// design language colours
 	public static final String COLOUR_PLAYER = RED_BOLD_BRIGHT;
+	public static final String COLOUR_OTHERPLAYER = RED_BOLD;
+	public static final String COLOUR_INPUT = YELLOW;
+	public static final String COLOUR_OPTION = YELLOW_BRIGHT;
+	public static final String COLOUR_RESOURCE = GREEN_BRIGHT;
 	
 	/// essential components
     
@@ -163,12 +167,12 @@ public class GameSystem {
 					propertyValue += ((Area) area).getCost();
 				}
 				
-				System.out.printf("%s%s%s has £%,d cash and owns £%,d of assets %s for a total of £%,d.%n", 
+				System.out.printf("%s%s%s has %s%s%,d%s%s and owns %s%s%,d%s%s of assets %s for a total of %s%s%,d%s%s.%n", 
 						COLOUR_PLAYER, player.getName(), RESET, 
-						player.getBalance(), 
-						propertyValue, 
+						COLOUR_RESOURCE, PRE, player.getBalance(), SUF, RESET,
+						COLOUR_RESOURCE, PRE, propertyValue, SUF, RESET,
 						player.getOwnedSquares().toString(), 
-						player.getBalance()+propertyValue);
+						COLOUR_RESOURCE, PRE, player.getBalance()+propertyValue, SUF, RESET);
 				
 			}
 			
@@ -270,14 +274,14 @@ public class GameSystem {
 		int num = 0;
 		
 		while (num == 0) {
-			System.out.println("How many are playing? Type a number between "+MIN_PLAYERS
-				+" and "+MAX_PLAYERS+" and press Enter.");
+			System.out.println(RESET+"How many are playing? Type a number between "+COLOUR_OPTION+MIN_PLAYERS+RESET
+				+" and "+COLOUR_OPTION+MAX_PLAYERS+RESET+" and press Enter."+COLOUR_INPUT);
 			try {
 				num = SCANNER.nextInt();
 			} catch (InputMismatchException e) {
-				System.out.println("Sorry, need a whole number.");
+				System.out.println(RESET+"Sorry, need a whole number."+COLOUR_INPUT);
 			} catch (Exception e) {
-				System.out.println("Sorry, try again.");
+				System.out.println(RESET+"Sorry, try again."+COLOUR_INPUT);
 			}
 		
 		}
@@ -306,26 +310,26 @@ public class GameSystem {
 				
 				try {
 					
-					System.out.printf("%nPlayer %d, please enter your name: ", playerNum);	
+					System.out.printf("%n%sPlayer %d, please enter your name: %s", RESET, playerNum, COLOUR_INPUT);	
 
 					String name = SCANNER.nextLine();
 					
 					if (names.contains(name)) {
 						
-						System.out.printf("Sorry, %s, players need unique names - maybe call yourself 'Funky %s'?%n", name, name);
+						System.out.printf("%sSorry, %s, players need unique names - maybe call yourself 'Funky %s'?%n%s", RESET, name, name, COLOUR_INPUT);
 						
 					} else {
 					
 						playersBuilder.add(new Player(name, STARTING_BALANCE, 0));
 						names.add(name);
 						resolved = true;
-						System.out.printf("Welcome %s%s%s! You start the game with a balance of %s%,d%s.%n", COLOUR_PLAYER, playersBuilder.get(playerNum-1).getName(), RESET, PRE, STARTING_BALANCE, SUF);
+						System.out.printf("%sWelcome %s%s%s! You start the game with a balance of %s%s%,d%s%s.%n", RESET, COLOUR_PLAYER, playersBuilder.get(playerNum-1).getName(), RESET, COLOUR_RESOURCE, PRE, STARTING_BALANCE, SUF, RESET);
 					
 					}
 					
 				} catch (Exception e) {
 					
-					System.out.println("Sorry, that wasn't a valid name.");
+					System.out.println(RESET+"Sorry, that wasn't a valid name."+COLOUR_INPUT);
 					e.printStackTrace();
 				}
 				
@@ -333,7 +337,7 @@ public class GameSystem {
 			
 		}
 		
-		System.out.println("Welcome, all, to SOLAROPOLY");
+		System.out.println(RESET+"Welcome, all, to SOLAROPOLY");
 		
 		return playersBuilder;
 	}
@@ -353,16 +357,12 @@ public class GameSystem {
 		if (consent) {
 			
 			player.move(rollDice(player));
-			
-		/// TODO	
-//			develop(player);
-//			trade(player);
 		
 		} else {
 			
 			playersInGame.remove(player);
 			
-			System.out.println("You quit the game - all your properties will now be made available.");
+			System.out.println(RESET+"You quit the game - all your properties will now be made available.");
 			
 			for (Square square : player.getOwnedSquares()) {
 				((Area)square).removeOwnership(player);
@@ -384,8 +384,8 @@ public class GameSystem {
 		player.getAttention();
 		player.displayBalance();
 		String input = "";
-		System.out.printf("If you would like to take your turn, press Enter.%n"
-				+ "Otherwise, type Quit and press Enter to leave the game. ", player.getName());
+		System.out.printf("%sIf you would like to take your turn, press Enter.%n"
+				+ "Otherwise, type %sQuit%s and press Enter to leave the game. %n%s", RESET, COLOUR_OPTION, RESET, COLOUR_INPUT);
 		
 		while (true) {
 			input = GameSystem.SCANNER.nextLine();
@@ -393,7 +393,7 @@ public class GameSystem {
 			if (input.equalsIgnoreCase("Quit") || input.equalsIgnoreCase("")) {
 				break;
 			} else {
-				System.out.println("Wrong input. please choose Quit (case is ignored) or just press Enter to continue");
+				System.out.printf("%sWrong input - please either type %sQuit%s or press Enter to continue:%s", RESET, COLOUR_OPTION, RESET, COLOUR_INPUT);
 			}
 		}
 		
@@ -415,7 +415,7 @@ public class GameSystem {
 		
 		int total = rollA+rollB;
 
-		System.out.printf("%n%s, you've rolled a %d and a %d for %d total, landing you in position %d.%n", player.getName(), rollA, rollB, total, player.getPosition()+total);
+		System.out.printf("%s%s%s, you've rolled a %d and a %d for %d total, landing you in position %d.%n", COLOUR_PLAYER, player.getName(), RESET, rollA, rollB, total, ((player.getPosition()-1+total)%board.getSize())+1);
 		
 		return total;
 	}

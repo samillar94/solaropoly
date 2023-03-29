@@ -35,7 +35,7 @@ public class Go extends Square {
 	@Override
 	public void act(Player player) {
 		player.increaseBalance(PASS_GO_RESOURCE);
-		System.out.printf("Welcome back to Go! You've received %s%,d%s.%n", GameSystem.PRE, PASS_GO_RESOURCE, GameSystem.SUF);
+		System.out.printf("Welcome back to Go! You've received %s%s%,d%s%s.%n", GameSystem.COLOUR_RESOURCE, GameSystem.PRE, PASS_GO_RESOURCE, GameSystem.SUF, GameSystem.RESET);
 
 	}
 	

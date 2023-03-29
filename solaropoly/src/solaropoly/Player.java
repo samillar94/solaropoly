@@ -71,7 +71,7 @@ public class Player {
 			throw new IllegalArgumentException("Need at least one non-whitespace character");
 		} else if (name.length() > 20) {
 			this.name = name.substring(0, 19);
-			System.out.println("We did have to shorten that - sorry!");
+			System.out.println(GameSystem.RESET+"We did have to shorten that - sorry!");
 		} else {
 			this.name = name;
 		}
@@ -185,8 +185,12 @@ public class Player {
 			
 			// develop area and trade actions
 			String input = "";
-			System.out.println("If you would like to Trade or Develop an area type Trade or Develop and press Enter.\n"
-					+ "Otherwise, just press Enter to skip the turn.");
+			System.out.printf("%sIf you would like to trade or develop an area type %sTrade%s or %sDevelop%s and press Enter.%n"
+					+ "Otherwise, just press Enter to end your turn:%s%n",
+					GameSystem.RESET,
+					GameSystem.COLOUR_OPTION, GameSystem.RESET,
+					GameSystem.COLOUR_OPTION, GameSystem.RESET,
+					GameSystem.COLOUR_INPUT);
 			
 			while (true) {
 				input = GameSystem.SCANNER.nextLine();
@@ -194,27 +198,35 @@ public class Player {
 				if (input.equalsIgnoreCase("Trade") || input.equalsIgnoreCase("Develop") || input == null || input.equals("")) {
 					break;
 				} else {
-					System.out.println("Wrong input. please choose between Trade, Develop and Skip (Enter).");
+					System.out.printf("%sWrong input - please choose between %sTrade%s, %sDevelop%s and continue (Enter):%n%s",
+							GameSystem.RESET,
+							GameSystem.COLOUR_OPTION, GameSystem.RESET,
+							GameSystem.COLOUR_OPTION, GameSystem.RESET,
+							GameSystem.COLOUR_INPUT);
 				}
 			}
 			
 			if (input.equalsIgnoreCase("Develop")) {
-				System.out.println("You chose to develop an area");
+				System.out.println(GameSystem.RESET+"You chose to develop an area.");
 				//GameSystem.developArea();
 			} else if (input.equalsIgnoreCase("Trade")) {
-				System.out.println("You chose to trade");
+				System.out.println(GameSystem.RESET+"You chose to trade.");
 				//Area.dutchAuctionSystem(this);
 			}
 			
-			System.out.println("Turn ended. Next player...");
+			System.out.println(GameSystem.RESET+"Turn ended. Next player...");
 		} else {
 			throw new IllegalArgumentException("Invalid dice roll. Try to change the number of dice to roll");
 		}
 	}
 	
 	public void displayBalance() {
-		System.out.printf("%s%s%s, your current balance is %s%,d%s.%n", GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET, GameSystem.PRE, this.balance, GameSystem.SUF);
-		// TODO another version showing properties too
+		System.out.printf("%s%s%s, your current balance is %s%s%,d%s%s and you own:%n", GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET, GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.balance, GameSystem.SUF, GameSystem.RESET);
+		System.out.println("Areas: "+this.getOwnedSquares());
+		System.out.println("Groups: "+this.getOwnedGroups());
+		for (Square square: this.getOwnedSquares()) {
+			System.out.print(square.getName()+"   ");
+		}
 	}
 	
 	public void increaseBalance(int credit) {
@@ -266,8 +278,11 @@ public class Player {
 			player.increaseBalance(amount);
 			this.decreaseBalance(amount);
 		} else {
-			System.out.printf("Sorry %s, you don't have enough resource to transfer to %s, your balance is %d%n"
-					, this.name, player.getName(), this.balance);
+			System.out.printf("Sorry %s%s%s, you don't have enough resource to transfer to %s%s%s, your balance is %s%s%,d%s%s.%n",
+					GameSystem.RESET, 
+					GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET, 
+					GameSystem.COLOUR_OTHERPLAYER, player.getName(), GameSystem.RESET, 
+					GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.balance, GameSystem.SUF, GameSystem.RESET);
 		}
 	}
 }

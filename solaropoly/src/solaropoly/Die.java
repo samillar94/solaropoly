@@ -51,7 +51,7 @@ public class Die {
 		if (sides > 0) {
 			this.sides = sides;
 		} else {
-			throw new IllegalArgumentException("The sides of a dice can be a number upper than 1");
+			throw new IllegalArgumentException("The sides of a dice must be a number greater than 1");
 		}
 	}
 
