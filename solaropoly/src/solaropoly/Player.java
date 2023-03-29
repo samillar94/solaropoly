@@ -5,9 +5,6 @@ package solaropoly;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * This class holds properties about the player's status in game, including name, balance, position
@@ -177,23 +174,24 @@ public class Player {
 			BoardPosition boardPosition = GameSystem.board.getBoardPosition(this.position, roll);
 			
 			for (int i = 0; i < boardPosition.getStartPassed(); i++) {
-				((Go)GameSystem.board.getSquare(0)).actPass(this);
+				Go.passAct(this);
 			}
+			
 			this.setPosition(boardPosition.getPosition());
 			boardPosition.getSquare().act(this);
 			
 			// develop area and trade actions
 			String input = "";
 			System.out.println("If you would like to Trade or Develop an area type Trade or Develop and press Enter.\n"
-					+ "Otherwise, type Skip and press Enter to skip the turn.");
+					+ "Otherwise, just press Enter to skip the turn.");
 			
 			while (true) {
 				input = GameSystem.SCANNER.nextLine();
 				
-				if (input.equalsIgnoreCase("Trade") || input.equalsIgnoreCase("Develop") || input.equalsIgnoreCase("Skip")) {
+				if (input.equalsIgnoreCase("Trade") || input.equalsIgnoreCase("Develop") || input == null || input.equals("")) {
 					break;
 				} else {
-					System.out.println("Wrong imput. please choose between Trade, Develop and Skip (case is ignored).");
+					System.out.println("Wrong input. please choose between Trade, Develop and Skip (Enter).");
 				}
 			}
 			
@@ -212,7 +210,7 @@ public class Player {
 	}
 	
 	public void displayBalance() {
-		System.out.printf("%s%s%s, your current balance is £%,d.%n", GameSystem.RED_BRIGHT, this.name, GameSystem.RESET, this.balance);
+		System.out.printf("%s%s%s, your current balance is %s%,d%s.%n", GameSystem.RED_BRIGHT, this.name, GameSystem.RESET, GameSystem.PRE, this.balance, GameSystem.SUF);
 		// TODO another version showing properties too
 	}
 	
