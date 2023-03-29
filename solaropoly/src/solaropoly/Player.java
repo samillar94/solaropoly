@@ -212,7 +212,7 @@ public class Player {
 	}
 	
 	public void displayBalance() {
-		System.out.printf("%s%s%s, your current balance is £%,d.%n", GameSystem.RED_BRIGHT, this.name, GameSystem.RESET, this.balance);
+		System.out.printf("%s%s%s, your current balance is %s%,d%s.%n", GameSystem.RED_BRIGHT, this.name, GameSystem.RESET, GameSystem.PRE, this.balance, GameSystem.SUF);
 		// TODO another version showing properties too
 	}
 	

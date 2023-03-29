@@ -246,9 +246,9 @@ public class Area extends Square implements GeneratesIncome2 {
 	private void purchaseArea(Player player) {
 		try {
 			System.out.printf(
-					"Would you like to buy this square for %s%d?%n" + "Type Buy and Enter to buy%n"
+					"Would you like to buy this square for %s%,d%s?%n" + "Type Buy and Enter to buy%n"
 							+ "Type Sell and Enter to sell%n" + "Type None to end the turn%n",
-					GameSystem.SUF, this.cost);
+					GameSystem.PRE, this.cost, GameSystem.SUF);
 			String input = "";
 
 			while (true) {
@@ -257,7 +257,7 @@ public class Area extends Square implements GeneratesIncome2 {
 				if (input.equalsIgnoreCase("Buy") || input.equalsIgnoreCase("Sell") || input.equalsIgnoreCase("None")) {
 					break;
 				} else {
-					System.out.println("Wrong imput. please choose between Buy, Sell and None (case is ignored)...");
+					System.out.println("Wrong input. please choose between Buy, Sell and None (case is ignored)...");
 				}
 			}
 
@@ -277,7 +277,7 @@ public class Area extends Square implements GeneratesIncome2 {
 					if (input.equalsIgnoreCase("Sell") || input.equalsIgnoreCase("None")) {
 						break;
 					} else {
-						System.out.println("Wrong imput. please choose between Sell and None (case is ignored)...");
+						System.out.println("Wrong input. please choose between Sell and None (case is ignored)...");
 					}
 				}
 			}
@@ -343,7 +343,7 @@ public class Area extends Square implements GeneratesIncome2 {
 						if (flag) {
 							break;
 						} else {
-							System.out.println("Wrong imput. please choose between one of the valid names...");
+							System.out.println("Wrong input. please choose between one of the valid names...");
 						}
 					}
 
@@ -352,6 +352,7 @@ public class Area extends Square implements GeneratesIncome2 {
 			}
 		} catch (Exception e) {
 			System.err.println("We had a problem, skip turn.");
+			e.printStackTrace();
 			GameSystem.SCANNER.nextLine(); // clean the scanner to avoid other errors in GameSystem
 		}
 	}
@@ -368,19 +369,23 @@ public class Area extends Square implements GeneratesIncome2 {
 		Group group = GameSystem.board.getGroup(this);
 		
 		// check if the square is in a group owned by someone. if yes:
-		if (group.getOwner().equals(null)) {
-			// remove ownership in group
-			group.setOwner(null);
+		if (group.getOwner() != null) {
 			// remove ownership in player
 			group.getOwner().removeOwnership(group);
-		// if the player has all the squares of the group:
-		} else if (group.getAreas().containsAll(player.getOwnedSquares())) {
-			// add ownership in group
-			group.setOwner(player);
-			// add ownership in player
-			player.gainOwnership(group);
+			// remove ownership in group
+			group.setOwner(null);
 		}
 		
+		// QUARANTINED UNTIL I FIGURE THIS SHIT OUT
+		
+		// if the player has all the squares of the group:
+//		} else if (player.getOwnedSquares().containsAll(group.getAreas())) {
+//			// add ownership in group
+//			group.setOwner(player);
+//			// add ownership in player
+//			player.gainOwnership(group);
+//		}
+//		
 		// check if the square is owned. if yes:
 		if (this.owner != null) {
 			// remove ownership in player
@@ -389,6 +394,8 @@ public class Area extends Square implements GeneratesIncome2 {
 		
 		// change ownership in Area
 		this.owner = player;
+		
+		
 	}
 	
 	/**
@@ -445,8 +452,10 @@ public class Area extends Square implements GeneratesIncome2 {
 						a1.getCurrentRent(), a1.getCurrentRent());
 			}
 		} else {
-			p1.setBalance(-a1.getCurrentRent());
-			a1.getOwner().setBalance(+a1.getCurrentRent());
+			p1.decreaseBalance(a1.getCurrentRent());
+			a1.getOwner().increaseBalance(a1.getCurrentRent());
+			System.out.printf("Rent fee %s%,d%s paid successfully to %s.", 
+					GameSystem.PRE, a1.getCurrentRent(), GameSystem.SUF, a1.getOwner());
 		}
 
 	}
