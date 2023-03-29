@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -159,15 +160,15 @@ public class Area extends Square implements GeneratesIncome2 {
 		StringBuilder sb = new StringBuilder();
 
 		for (HashMap.Entry<String, ArrayList<Integer>> entry : this.rentProfile.entrySet()) {
-			sb.append("\n");
 			String name = entry.getKey();
 			ArrayList<Integer> rents = entry.getValue();
 
-			sb.append("  "+name + ": ");
+			sb.append(name + ": ");
 			for (Integer rent : rents) {
 				sb.append(rent + ", ");
 			}
 			sb.setLength(sb.length() - 2); // Remove the last ", "
+			sb.append("\n");
 		}
 		return sb.toString();
 	}
@@ -176,16 +177,16 @@ public class Area extends Square implements GeneratesIncome2 {
 	public String toString() {
 		// return String.format("%s (%s, value £%,d)", this.getName(), this.group, this.cost);
 		return ""
-			+ "Area name: " + this.getName() + "\n"
+			+ "Name: " + this.getName() + "\n"
 			+ "Group name: " + this.group.getName() + "\n"
 			+ "Base rent: " + this.getBaseRent() + "\n"
-			+ "Rent profile:" + this.getRentProfileString() + "\n"
+			+ "Rent profile:\n" + this.getRentProfileString() + "\n"
 			+ "Development level: " + this.developmentLevel + "\n"
 			+ "Monopoly level: " + this.monopolyLevel + "\n"
 			//+ "Owner: " + this.owner.getName() + "\n"
 			+ "Base rent: " + this.getBaseRent() + "\n"
 			+ "Current rent: " + this.getCurrentRent() + "\n"
-			+ "Area cost: " + this.cost + "\n";
+			+ "Cost area: " + this.cost + "\n";
 	}
 
 	/// methods
@@ -345,6 +346,7 @@ public class Area extends Square implements GeneratesIncome2 {
 				} else if (accepters.size() == 1) {
 					System.out.println(GameSystem.COLOUR_PLAYER+player.getName()+GameSystem.RESET + " congratulations, your square was sold to "
 							+ GameSystem.COLOUR_OTHERPLAYER+accepters.get(0).getName()+GameSystem.RESET);
+
 				} else {
 					System.out.printf("%s%s%s, there are %s players that are willing to buy your square.%n"
 							+ "Please enter the name of the one you prefer to sell the square.%n"
@@ -404,33 +406,27 @@ public class Area extends Square implements GeneratesIncome2 {
 		Group group = GameSystem.board.getGroup(this);
 		
 		// check if the square is in a group owned by someone. if yes:
-		if (group.getOwner() != null) {
-			// remove ownership in player
-			group.getOwner().removeOwnership(group);
+		if (!Objects.equals(group.getOwner(), null)) {
 			// remove ownership in group
 			group.setOwner(null);
+			// remove ownership in player
+			group.getOwner().removeOwnership(group);
+		// if the player has all the squares of the group:
+		} else if (group.getAreas().containsAll(player.getOwnedSquares())) {
+			// add ownership in group
+			group.setOwner(player);
+			// add ownership in player
+			player.gainOwnership(group);
 		}
 		
-		// QUARANTINED UNTIL I FIGURE THIS SHIT OUT
-		
-		// if the player has all the squares of the group:
-//		} else if (player.getOwnedSquares().containsAll(group.getAreas())) {
-//			// add ownership in group
-//			group.setOwner(player);
-//			// add ownership in player
-//			player.gainOwnership(group);
-//		}
-//		
 		// check if the square is owned. if yes:
-		if (this.owner != null) {
+		if (!Objects.equals(this.owner, null)) {
 			// remove ownership in player
 			player.removeOwnership(this);
 		}
 		
 		// change ownership in Area
 		this.owner = player;
-		
-		
 	}
 	
 	/**
@@ -442,7 +438,7 @@ public class Area extends Square implements GeneratesIncome2 {
 	 */
 	public void removeOwnership(Player player) {
 		// check if the square is owned by the player. if yes:
-		if (this.owner.equals(player)) {
+		if (!Objects.equals(this.owner, player)) {
 			// retrieve the group of this square
 			Group group = GameSystem.board.getGroup(this);
 			
@@ -474,7 +470,7 @@ public class Area extends Square implements GeneratesIncome2 {
 					GameSystem.RESET+ "Sorry, you don't have enough money to pay rent. You are forced to enter the AUCTION SYSTEM");
 			do {
 				if (p1.getOwnedSquares().isEmpty()) {
-					System.out.println("You have no more properties to sell. You're bankrupted!");
+					System.out.println("You have no more properties for sell. You bankrupted!");
 					GameSystem.players.remove(p1);
 				} else {
 					dutchAuctionSystem(p1);
@@ -517,7 +513,7 @@ public class Area extends Square implements GeneratesIncome2 {
 			auctionnerSet = auctioneer.getOwnedSquares();
 			Area tradeArea = new Area();
 			System.out.println(
-					"Welcome to Dutch auction system, which item would you like to aucion? Please enter the name");
+					"Welcome to Dutch auction system,which item would you like to aucion? please enter the name");
 			// show the list of owners' estates
 			for (Square s : auctionnerSet) {
 				Area area = new Area();
@@ -579,7 +575,7 @@ public class Area extends Square implements GeneratesIncome2 {
 
 					}
 					if (!legalInput) {
-						System.out.println("Please enter valid input");
+						System.out.println("Plz enter legal input");
 						System.out.println();
 					}
 				}

@@ -30,12 +30,13 @@ public class Go extends Square {
 	}
 	
 	/**
-	 * Increase the player's resource when he lands on this square
+	 * Do nothing actually, just print a message
 	 */
 	@Override
 	public void act(Player player) {
 		player.increaseBalance(PASS_GO_RESOURCE);
 		System.out.printf("Welcome back to Go! You've received %s%s%,d%s%s.%n", GameSystem.COLOUR_RESOURCE, GameSystem.PRE, PASS_GO_RESOURCE, GameSystem.SUF, GameSystem.RESET);
+		System.out.println("Nothing to do here...");
 
 	}
 	
