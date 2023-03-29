@@ -173,8 +173,11 @@ public class Area extends Square implements GeneratesIncome2 {
 		return sb.toString();
 	}
 
-	@Override
-	public String toString() {
+	/**
+	 * It prints all the informations of the Area
+	 * @return
+	 */
+	public String detailsArea() {
 		// return String.format("%s (%s, value £%,d)", this.getName(), this.group, this.cost);
 		return ""
 			+ "Name: " + this.getName() + "\n"
@@ -183,10 +186,15 @@ public class Area extends Square implements GeneratesIncome2 {
 			+ "Rent profile:\n" + this.getRentProfileString() + "\n"
 			+ "Development level: " + this.developmentLevel + "\n"
 			+ "Monopoly level: " + this.monopolyLevel + "\n"
-			//+ "Owner: " + this.owner.getName() + "\n"
+			+ "Owner: " + ((this.owner != null) ? this.owner.getName() : null) + "\n"
 			+ "Base rent: " + this.getBaseRent() + "\n"
 			+ "Current rent: " + this.getCurrentRent() + "\n"
 			+ "Cost area: " + this.cost + "\n";
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("%n%s (%s, value £%,d),%n", this.getName(), this.group, this.cost);
 	}
 
 	/// methods
@@ -219,7 +227,7 @@ public class Area extends Square implements GeneratesIncome2 {
 	@Override
 	public void act(Player player) {
 		System.out
-				.println("You landed in: " + this.getName() + "\n" + "This square information:\n\n" + this.toString());
+				.println("You landed in: " + this.getName() + "\n" + "This square information:\n\n" + this.detailsArea());
 
 		if (this.owner == null) {
 			purchaseArea(player);
@@ -412,7 +420,7 @@ public class Area extends Square implements GeneratesIncome2 {
 			// remove ownership in player
 			group.getOwner().removeOwnership(group);
 		// if the player has all the squares of the group:
-		} else if (group.getAreas().containsAll(player.getOwnedSquares())) {
+		} else if (player.getOwnedSquares().containsAll(group.getAreas())) {
 			// add ownership in group
 			group.setOwner(player);
 			// add ownership in player
@@ -422,11 +430,13 @@ public class Area extends Square implements GeneratesIncome2 {
 		// check if the square is owned. if yes:
 		if (!Objects.equals(this.owner, null)) {
 			// remove ownership in player
-			player.removeOwnership(this);
+			this.owner.removeOwnership(this);
 		}
 		
 		// change ownership in Area
 		this.owner = player;
+		// change ownership in player
+		player.gainOwnership(this);
 	}
 	
 	/**
@@ -438,7 +448,7 @@ public class Area extends Square implements GeneratesIncome2 {
 	 */
 	public void removeOwnership(Player player) {
 		// check if the square is owned by the player. if yes:
-		if (!Objects.equals(this.owner, player)) {
+		if (Objects.equals(this.owner, player)) {
 			// retrieve the group of this square
 			Group group = GameSystem.board.getGroup(this);
 			
@@ -446,13 +456,13 @@ public class Area extends Square implements GeneratesIncome2 {
 				// remove ownership in group
 			group.setOwner(null);
 				// remove ownership in player
-			group.getOwner().removeOwnership(group);
+			player.removeOwnership(group);
 			
 			// the square
 				// remove ownership in player
 			player.removeOwnership(this);
 				// remove ownership in Area
-			this.owner = player;
+			this.owner = null;
 		}
 	}
 
