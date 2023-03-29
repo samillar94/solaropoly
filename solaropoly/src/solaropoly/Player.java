@@ -186,15 +186,15 @@ public class Player {
 			// develop area and trade actions
 			String input = "";
 			System.out.println("If you would like to Trade or Develop an area type Trade or Develop and press Enter.\n"
-					+ "Otherwise, type Skip and press Enter to skip the turn.");
+					+ "Otherwise, just press Enter to skip the turn.");
 			
 			while (true) {
 				input = GameSystem.SCANNER.nextLine();
 				
-				if (input.equalsIgnoreCase("Trade") || input.equalsIgnoreCase("Develop") || input.equalsIgnoreCase("Skip")) {
+				if (input.equalsIgnoreCase("Trade") || input.equalsIgnoreCase("Develop") || input == null || input.equals("")) {
 					break;
 				} else {
-					System.out.println("Wrong input. please choose between Trade, Develop and Skip (case is ignored).");
+					System.out.println("Wrong input. please choose between Trade, Develop and Skip (Enter).");
 				}
 			}
 			

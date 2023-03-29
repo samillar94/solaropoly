@@ -390,7 +390,7 @@ public class GameSystem {
 			if (input.equalsIgnoreCase("Quit") || input.equalsIgnoreCase("")) {
 				break;
 			} else {
-				System.out.println("Wrong imput. please choose Quit (case is ignored) or just press Enter to continue");
+				System.out.println("Wrong input. please choose Quit (case is ignored) or just press Enter to continue");
 			}
 		}
 		
