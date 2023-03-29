@@ -353,6 +353,7 @@ public class Area extends Square implements GeneratesIncome2 {
 			}
 		} catch (Exception e) {
 			System.err.println("We had a problem, skip turn.");
+			e.printStackTrace();
 			GameSystem.SCANNER.nextLine(); // clean the scanner to avoid other errors in GameSystem
 		}
 	}

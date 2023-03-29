@@ -51,6 +51,7 @@ public class Player {
 		this.balance = balance;
 		this.setPosition(position);
 		this.ownedSquares = new HashSet<Square>();
+		this.ownedGroups = new ArrayList<Group>();
 	}
 	
 	/**
