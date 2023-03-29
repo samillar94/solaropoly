@@ -224,7 +224,49 @@ public class Player {
 		this.setBalance(this.balance - debit);
 	}
 	
+	/**
+	 * Add a new owned square
+	 * @param square
+	 */
 	public void gainOwnership(Square square) {
 		this.ownedSquares.add(square);
+	}
+	/**
+	 * Add a new owned group
+	 * @param group
+	 */
+	public void gainOwnership(Group group) {
+		this.ownedGroups.add(group);
+	}
+	
+	/**
+	 * Remove a square from the owned squares
+	 * @param square
+	 */
+	public void removeOwnership(Square square) {
+		this.ownedSquares.remove(square);
+	}
+	
+	/**
+	 * Remove a group from the owned groups
+	 * @param group
+	 */
+	public void removeOwnership(Group group) {
+		this.ownedGroups.remove(group);
+	}
+	
+	/**
+	 * This method is used to transfer resources between players.
+	 * @param player - the player that receive the transaction.
+	 * @param amount - the amount of the transaction.
+	 */
+	public void transaction(Player player, int amount) {
+		if (this.balance >= amount) {
+			player.increaseBalance(amount);
+			this.decreaseBalance(amount);
+		} else {
+			System.out.printf("Sorry %s, you don't have enough resource to transfer to %s, your balance is %d%n"
+					, this.name, player.getName(), this.balance);
+		}
 	}
 }

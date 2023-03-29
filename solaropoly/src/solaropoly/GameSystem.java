@@ -360,22 +360,10 @@ public class GameSystem {
 			
 			System.out.println("You quit the game - all your properties will now be made available.");
 			
-			// reset ownership in all the system.
-			// TODO: Roberto suggestion: I don't really like this way. Too confusing. We should consider to set the ownership and check it only from one class like player.
-			player.setOwnedGroups(null);
-			player.setOwnedSquares(null);
-			for (Group group : board.getGroups()) {
-				if (group.getOwner().equals(player)) {
-					group.setOwner(null);
-				}
+			for (Square square : player.getOwnedSquares()) {
+				((Area)square).removeOwnership(player);
 			}
-			for (Square square : board.getSquares()) {
-				if (square instanceof Area || true /*here the other classes if square extend new squares*/) {
-					if (((Area) square).getOwner().equals(player)) {
-						((Area) square).setOwner(null);
-					}
-				}/* else if (here the other classes if square extend new squares) {}*/
-			}
+			
 		}
 		
 		if (players.size() < 2 || playersInGame.size() < 2) {
