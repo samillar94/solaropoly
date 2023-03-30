@@ -5,16 +5,28 @@ package solaropoly;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * This class holds properties about the player's status in game, including name, balance, position
  * and assets
- * @author Roberto Lo Duca 40386172
+ * @author G17
  */
 public class Player {
+	
+	/**
+	 * Separator to use in the getPlayerAttention to separate the action for each player
+	 */
+	private static final char SEPARATOR_CHAR = '_';
+	
+	/**
+	 * Force the business rule if required to stop the game if there's a limit of loops on the board
+	 */
+	private static final int LOOPS_LIMIT = 1;
+	
+	/**
+	 * The result of a die should be minimum 1. Set the limit based on the number of dice the game should use
+	 */
+	private static final int DICE_NUMBER = 2;
 	
 	// instance vars
 	private String name;
@@ -34,12 +46,13 @@ public class Player {
 	 * @param balance
 	 * @param position
 	 */
-	public Player(String name, int balance, int position) {
+	public Player(String name, int balance, int position) throws IllegalArgumentException, IllegalStateException {
 		this.setName(name);
 		this.balance = balance;
 		this.setPosition(position);
 		this.ownedSquares = new ArrayList<Square>();
-	};
+		this.ownedGroups = new ArrayList<Group>();
+	}
 	
 	/**
 	 * @return the name
@@ -56,7 +69,7 @@ public class Player {
 			throw new IllegalArgumentException("Need at least one non-whitespace character");
 		} else if (name.length() > 20) {
 			this.name = name.substring(0, 19);
-			System.out.println("We did have to shorten that - sorry!");
+			System.out.println(GameSystem.RESET+"We did have to shorten that - sorry!");
 		} else {
 			this.name = name;
 		}
@@ -86,10 +99,9 @@ public class Player {
 	/**
 	 * @param position the position to set
 	 */
-	public void setPosition(int position) {
-		/// TODO use Board size
-		if (position >= 12 /*GameSystem.board.size()*/ || position < 0) {
-			throw new IllegalArgumentException("Invalid player position");
+	public void setPosition(int position) throws IllegalArgumentException {
+		if (position >= (GameSystem.board.getSize() * LOOPS_LIMIT) || position < 0) {
+			throw new IllegalArgumentException("Invalid player position. Try to reduce the dice sides or the number of dice");
 		} else {
 			this.position = position;
 		}
@@ -123,17 +135,96 @@ public class Player {
 		this.ownedGroups = ownedGroups;
 	}
 	
-	// methods
-	
 	@Override
 	public String toString() {
-		return "Player [name=" + GameSystem.RED_BRIGHT + name + GameSystem.RESET + ", balance=" + balance + ", position=" + position + ", ownedSquares="
+		return "Player [name=" + GameSystem.COLOUR_PLAYER + name + GameSystem.RESET + ", balance=" + balance + ", position=" + position + ", ownedSquares="
 				+ ownedSquares + ", ownedGroups=" + ownedGroups + "]";
 	}
-
+	
+	// Methods
+	
+	/**
+	 * This method prints in console a long line that cover the width of the terminal automatically.
+	 * It uses the current terminal width and prints the line separation to apply when the player
+	 * attention should be caught because an action is required. Then it prints the name of the player
+	 * asking to take an action.
+	 */
+	public void getAttention() {
+		int consoleWidth = 80; // Default console width
+        try {
+            consoleWidth = Integer.parseInt(System.getenv("COLUMNS"));
+        } catch (NumberFormatException e) {
+            // Ignore the exception and use the default console width
+        }
+        System.out.println(String.valueOf(SEPARATOR_CHAR).repeat(consoleWidth));
+        System.out.printf("%s%s%s, take action!%n%n", GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET);
+	}
+	
+	/**
+	 * This method returns the square where the player actually is.
+	 */
+	public Square getLandedSquare() {
+		return GameSystem.board.getSquare(this.position);
+	}
+	
+	/**
+	 * This method move the player by a given valid dice result value and start his turn
+	 */
+	public void move(int roll) throws IllegalArgumentException {
+		if (roll >= DICE_NUMBER) {
+			BoardPosition boardPosition = GameSystem.board.getBoardPosition(this.position, roll);
+			
+			for (int i = 0; i < boardPosition.getStartPassed(); i++) {
+				Go.passAct(this);
+			}
+			
+			this.setPosition(boardPosition.getPosition());
+			boardPosition.getSquare().act(this);
+			
+			// develop area and trade actions
+			String input = "";
+			System.out.printf("%sIf you would like to trade or develop an area type %sTrade%s or %sDevelop%s and press Enter.%n"
+					+ "Otherwise, just press Enter to end your turn:%s%n",
+					GameSystem.RESET,
+					GameSystem.COLOUR_OPTION, GameSystem.RESET,
+					GameSystem.COLOUR_OPTION, GameSystem.RESET,
+					GameSystem.COLOUR_INPUT);
+			
+			while (true) {
+				input = GameSystem.SCANNER.nextLine();
+				
+				if (input.equalsIgnoreCase("Trade") || input.equalsIgnoreCase("Develop") || input == null || input.equals("")) {
+					break;
+				} else {
+					System.out.printf("%sWrong input - please choose between %sTrade%s, %sDevelop%s and continue (Enter):%n%s",
+							GameSystem.RESET,
+							GameSystem.COLOUR_OPTION, GameSystem.RESET,
+							GameSystem.COLOUR_OPTION, GameSystem.RESET,
+							GameSystem.COLOUR_INPUT);
+				}
+			}
+			
+			if (input.equalsIgnoreCase("Develop")) {
+				System.out.println(GameSystem.RESET+"You chose to develop an area.");
+				//GameSystem.developArea();
+			} else if (input.equalsIgnoreCase("Trade")) {
+				System.out.println(GameSystem.RESET+"You chose to trade.");
+				//Area.dutchAuctionSystem(this);
+			}
+			
+			System.out.println(GameSystem.RESET+"Turn ended. Next player...");
+		} else {
+			throw new IllegalArgumentException("Invalid dice roll. Try to change the number of dice to roll");
+		}
+	}
+	
 	public void displayBalance() {
-		System.out.printf("%s%s%s, your current balance is £%,d.%n", GameSystem.RED_BRIGHT, this.name, GameSystem.RESET, this.balance);
-		// TODO another version showing properties too
+		System.out.printf("%s%s%s, your current balance is %s%s%,d%s%s and you own:%n", GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET, GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.balance, GameSystem.SUF, GameSystem.RESET);
+		System.out.println("Areas: "+this.getOwnedSquares());
+		System.out.println("Groups: "+this.getOwnedGroups());
+		for (Square square: this.getOwnedSquares()) {
+			System.out.print(square.getName()+"   ");
+		}
 	}
 	
 	public void increaseBalance(int credit) {
@@ -144,7 +235,52 @@ public class Player {
 		this.setBalance(this.balance - debit);
 	}
 	
+	/**
+	 * Add a new owned square
+	 * @param square
+	 */
 	public void gainOwnership(Square square) {
 		this.ownedSquares.add(square);
+	}
+	/**
+	 * Add a new owned group
+	 * @param group
+	 */
+	public void gainOwnership(Group group) {
+		this.ownedGroups.add(group);
+	}
+	
+	/**
+	 * Remove a square from the owned squares
+	 * @param square
+	 */
+	public void removeOwnership(Square square) {
+		this.ownedSquares.remove(square);
+	}
+	
+	/**
+	 * Remove a group from the owned groups
+	 * @param group
+	 */
+	public void removeOwnership(Group group) {
+		this.ownedGroups.remove(group);
+	}
+	
+	/**
+	 * This method is used to transfer resources between players.
+	 * @param player - the player that receive the transaction.
+	 * @param amount - the amount of the transaction.
+	 */
+	public void transaction(Player player, int amount) {
+		if (this.balance >= amount) {
+			player.increaseBalance(amount);
+			this.decreaseBalance(amount);
+		} else {
+			System.out.printf("Sorry %s%s%s, you don't have enough resource to transfer to %s%s%s, your balance is %s%s%,d%s%s.%n",
+					GameSystem.RESET, 
+					GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET, 
+					GameSystem.COLOUR_OTHERPLAYER, player.getName(), GameSystem.RESET, 
+					GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.balance, GameSystem.SUF, GameSystem.RESET);
+		}
 	}
 }

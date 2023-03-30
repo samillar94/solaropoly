@@ -1,5 +1,5 @@
 /**
- * 
+ * Solaropoly game
  */
 package solaropoly;
 
@@ -10,23 +10,42 @@ package solaropoly;
  * @author G17
  */
 public class Go extends Square {
+	
+	/**
+	 * resource to take after one loop of the board
+	 */
+	public static final int PASS_GO_RESOURCE = 1000000;
 
 	/**
-	 * 
+	 * Default constructor.
 	 */
-	public Go() {
-		
-	}
+	public Go() {}
 	
+	/**
+	 * Constructor with arguments.
+	 * @param name
+	 */
 	public Go(String name) {
 		super.setName(name);
 	}
-
+	
+	/**
+	 * Do nothing actually, just print a message
+	 */
 	@Override
 	public void act(Player player) {
-
-		System.out.println("Welcome back to Go :)");
+		player.increaseBalance(PASS_GO_RESOURCE);
+		System.out.printf("Welcome back to Go! You've received %s%s%,d%s%s.%n", GameSystem.COLOUR_RESOURCE, GameSystem.PRE, PASS_GO_RESOURCE, GameSystem.SUF, GameSystem.RESET);
+		System.out.println("Nothing to do here...");
 
 	}
-
+	
+	/**
+	 * Static method called when the player passes, but does not land on, Go
+	 * @param player
+	 */
+	public static void passAct(Player player) {
+		player.increaseBalance(PASS_GO_RESOURCE);
+		System.out.printf("You passed Go and received %s%,d%s. ", GameSystem.PRE, PASS_GO_RESOURCE, GameSystem.SUF);
+	}
 }

@@ -5,9 +5,15 @@ package solaropoly;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * The executable class of the system, starting the Solaropoly command-line
@@ -17,14 +23,12 @@ import java.util.Scanner;
  */
 public class GameSystem {
 
-	/// game parameter constants
-
+	/// game parameter constants (rules)
 	public static final int STARTING_BALANCE = 15000000;
 	public static final int MIN_PLAYERS = 2;
 	public static final int MAX_PLAYERS = 4;
 	public static final String PRE = ""; /// resource prefix
 	public static final String SUF = " kWh"; /// resource suffix
-
 	/// console colour keys
 	// Regular
 	public static final String RESET = "\u001B[0m";
@@ -97,13 +101,27 @@ public class GameSystem {
 	public static final String CYAN_BACKGROUND_BRIGHT = "\033[0;106m"; // CYAN
 	public static final String WHITE_BACKGROUND_BRIGHT = "\033[0;107m"; // WHITE
 
+	/// design language colours
+	public static final String COLOUR_PLAYER = RED_BOLD_BRIGHT;
+	public static final String COLOUR_OTHERPLAYER = RED_BOLD;
+	public static final String COLOUR_INPUT = YELLOW;
+	public static final String COLOUR_OPTION = YELLOW_BRIGHT;
+	public static final String COLOUR_RESOURCE = GREEN_BRIGHT;
+	
 	/// essential components
+    
+    public static Board board = new Board();
 
 	public static final Scanner SCANNER = new Scanner(System.in);
 
 	public static boolean gameEndTrigger = false;
 
 	public static ArrayList<Player> players = new ArrayList<Player>();
+	
+	/**
+	 * Stores only players that are still in game
+	 */
+	public static ArrayList<Player> playersInGame = new ArrayList<Player>();;
 
 	/// executable code
 
@@ -115,26 +133,26 @@ public class GameSystem {
 	public static void main(String[] args) {
 
 		try {
-
+			setupBoard();
 			/// set number of players
 			int numPlayers = setNumPlayers();
 
 			/// register players
 			players = registerPlayers(numPlayers);
+			playersInGame.addAll(players);
 
 			/// game starts - do while (and try-catch?), cycling through players until game
 			/// end triggered
 			while (!gameEndTrigger) {
 
-				for (int playerIndex = 0; playerIndex < players.size(); playerIndex++) {
-
-					Thread.sleep(2000);
-
-					turn(players.get(playerIndex));
-
-					if (gameEndTrigger)
-						break;
-
+				for (Player player : players) {
+					if (playersInGame.contains(player)) {
+						
+						Thread.sleep(2000); 
+						
+						turn(player);
+					}
+					if (gameEndTrigger)	break;
 				}
 
 			}
@@ -151,11 +169,14 @@ public class GameSystem {
 				for (Square area : player.getOwnedSquares()) {
 					propertyValue += ((Area) area).getCost();
 				}
-
-				System.out.printf("%s%s%s has £%,d cash and owns £%,d of assets %s for a total of £%,d.%n", RED_BRIGHT,
-						player.getName(), RESET, player.getBalance(), propertyValue,
-						player.getOwnedSquares().toString(), player.getBalance() + propertyValue);
-
+				
+				System.out.printf("%s%s%s has %s%s%,d%s%s and owns %s%s%,d%s%s of assets %s for a total of %s%s%,d%s%s.%n", 
+						COLOUR_PLAYER, player.getName(), RESET, 
+						COLOUR_RESOURCE, PRE, player.getBalance(), SUF, RESET,
+						COLOUR_RESOURCE, PRE, propertyValue, SUF, RESET,
+						player.getOwnedSquares().toString(), 
+						COLOUR_RESOURCE, PRE, player.getBalance()+propertyValue, SUF, RESET);
+				
 			}
 
 			System.out.println("Thank you for playing SOLAROPOLY");
@@ -173,6 +194,78 @@ public class GameSystem {
 		}
 
 	}
+	
+	/**
+	* reads from csv file rent prices
+	*/
+	private static void setupBoard() {
+		
+		ArrayList<Square> squares = new ArrayList<Square>(12);
+		ArrayList<Area> areas = new ArrayList<Area>(10);
+		ArrayList<Group> groups = new ArrayList<Group>(4);
+		
+		squares.add(new Go("Go"));
+		squares.add(new Parking("The Sea"));
+		
+		groups.add(new Group("Field A"));
+		groups.add(new Group("Field B"));
+		groups.add(new Group("Field C"));
+		groups.add(new Group("Field D"));
+
+	
+		File file = new File("Solaropoly.csv");
+		
+		try {
+			
+			FileReader fr = new FileReader(file);
+			BufferedReader br = new BufferedReader(fr);
+			String line;
+			br.readLine();
+			line = br.readLine();
+			
+			while(line!=null) {
+				
+				String[] data = line.split(",");
+				int baseRent = Integer.parseInt(data[0]);
+				int oneHouse = Integer.parseInt(data[1]);
+				int twoHouse = Integer.parseInt(data[2]);
+				int threeHouse = Integer.parseInt(data[3]);
+				int oneHotel = Integer.parseInt(data[4]);
+				String areaName = data[5];
+				int groupIndex = Integer.parseInt(data[6]);
+				int cost = Integer.parseInt(data[7]);
+				
+				int[] monopolyProfile = {baseRent, baseRent*2};
+				int[] developmentProfile = {baseRent, oneHouse, twoHouse, threeHouse, oneHotel};
+				
+				Area area = new Area(areaName, groups.get(groupIndex), cost, monopolyProfile, developmentProfile);
+				areas.add(area);
+				
+				line = br.readLine();	
+				
+			}
+			
+			squares.addAll(areas);
+			
+			for (Group group : groups) {
+				group.setAreas(areas);
+			}
+			
+			board.setSquares(squares);
+			board.setGroups(new HashSet<Group>(groups));
+			
+			br.close();
+	
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
 	/**
 	 * Takes user input at the start of the game to set the number of players whose
@@ -185,14 +278,14 @@ public class GameSystem {
 		int num = 0;
 
 		while (num == 0) {
-			System.out.println("How many are playing? Type a number between " + MIN_PLAYERS + " and " + MAX_PLAYERS
-					+ " and press Enter.");
+			System.out.println(RESET+"How many are playing? Type a number between "+COLOUR_OPTION+MIN_PLAYERS+RESET
+				+" and "+COLOUR_OPTION+MAX_PLAYERS+RESET+" and press Enter."+COLOUR_INPUT);
 			try {
 				num = SCANNER.nextInt();
 			} catch (InputMismatchException e) {
-				System.out.println("Sorry, need a whole number.");
+				System.out.println(RESET+"Sorry, need a whole number."+COLOUR_INPUT);
 			} catch (Exception e) {
-				System.out.println("Sorry, try again.");
+				System.out.println(RESET+"Sorry, try again."+COLOUR_INPUT);
 			}
 
 		}
@@ -221,47 +314,45 @@ public class GameSystem {
 			while (!resolved) {
 
 				try {
-
-					System.out.printf("%nPlayer %d, please enter your name: ", playerNum);
+					
+					System.out.printf("%n%sPlayer %d, please enter your name: %s", RESET, playerNum, COLOUR_INPUT);	
 
 					String name = SCANNER.nextLine();
 
 					if (names.contains(name)) {
-
-						System.out.printf("Sorry, %s, players need unique names - maybe call yourself 'Funky %s'?%n",
-								name, name);
-
+						
+						System.out.printf("%sSorry, %s, players need unique names - maybe call yourself 'Funky %s'?%n%s", RESET, name, name, COLOUR_INPUT);
+						
 					} else {
 
 						playersBuilder.add(new Player(name, STARTING_BALANCE, 0));
 						names.add(name);
 						resolved = true;
-						System.out.printf("Welcome %s%s%s! You start the game with a balance of %s%,d%s.%n", RED_BRIGHT,
-								playersBuilder.get(playerNum - 1).getName(), RESET, PRE, STARTING_BALANCE, SUF);
-
+						System.out.printf("%sWelcome %s%s%s! You start the game with a balance of %s%s%,d%s%s.%n", RESET, COLOUR_PLAYER, playersBuilder.get(playerNum-1).getName(), RESET, COLOUR_RESOURCE, PRE, STARTING_BALANCE, SUF, RESET);
+					
 					}
 
 				} catch (Exception e) {
-
-					System.out.println("Sorry, that wasn't a valid name.");
-
+					
+					System.out.println(RESET+"Sorry, that wasn't a valid name."+COLOUR_INPUT);
+					e.printStackTrace();
 				}
 
 			}
 
 		}
-
-		System.out.println("Welcome, all, to SOLAROPOLY");
-
+		
+		System.out.println(RESET+"Welcome, all, to SOLAROPOLY");
+		
 		return playersBuilder;
 	}
 
 	/**
-	 * This method is called for each player in turn from the main method, and
-	 * organises the inputs and results that will be a part of their turn, including
-	 * (1) deciding whether to abandon the game or roll and move; (2) developing any
-	 * fields they have monopolised; and (3) trading assets with other players
-	 * 
+	 * This method is called for each player in turn from the main method, and organizes 
+	 * the inputs and results that will be a part of their turn, including 
+	 * (1) deciding whether to abandon the game or roll and move;
+	 * (2) developing any fields they have monopolized; and 
+	 * (3) trading assets with other players
 	 * @param player
 	 */
 	private static void turn(Player player) {
@@ -269,56 +360,53 @@ public class GameSystem {
 		boolean consent = consent(player);
 
 		if (consent) {
-
-			move(player);
-			/// TODO
-//			develop(player);
-//			trade(player);
-
+			
+			player.move(rollDice(player));
+		
 		} else {
-
-			players.remove(player);
-			/// TODO print player assets
-			/// TODO remove their ownerships from assets
-
+			
+			playersInGame.remove(player);
+			
+			System.out.println(RESET+"You quit the game - all your properties will now be made available.");
+			
+			for (Square square : player.getOwnedSquares()) {
+				((Area)square).removeOwnership(player);
+			}
+			
 		}
-
-		if (players.size() == 1)
+		
+		if (players.size() < 2 || playersInGame.size() < 2) {
 			gameEndTrigger = true;
-
+		}
 	}
 
 	/**
-	 * This method is called before each turn to ask the player if they want to
-	 * continue or leave the game.
-	 * 
-	 * @param player
-	 * @return
+	 * This method is called before each turn to ask the player if they want to continue or leave the game.
+	 * @param player - the player that needs to consent the turn
+	 * @return boolean - the decision
 	 */
 	private static boolean consent(Player player) {
-
-		System.out.println();
+		player.getAttention();
 		player.displayBalance();
-
-		System.out.printf(
-				"If you would like to take your turn, press Enter.%nOtherwise, enter any character and press Enter to leave the game. ",
-				player.getName());
-
-		String input = SCANNER.nextLine();
-
-		if (input == null || input == "") {
+		String input = "";
+		System.out.printf("%sIf you would like to take your turn, press Enter.%n"
+				+ "Otherwise, type %sQuit%s and press Enter to leave the game. %n%s", RESET, COLOUR_OPTION, RESET, COLOUR_INPUT);
+		
+		while (true) {
+			input = GameSystem.SCANNER.nextLine();
+			
+			if (input.equalsIgnoreCase("Quit") || input.equalsIgnoreCase("")) {
+				break;
+			} else {
+				System.out.printf("%sWrong input - please either type %sQuit%s or press Enter to continue:%s", RESET, COLOUR_OPTION, RESET, COLOUR_INPUT);
+			}
+		}
+		
+		if (input.equals("")) {
 			return true;
 		} else {
 			return false;
 		}
-
-	}
-
-	private static void move(Player player) {
-		/// TODO
-//		int roll = rollDice();
-
-		/// TODO movement on board
 
 	}
 
@@ -540,6 +628,22 @@ public class GameSystem {
 		public int getUpgradeCost() {
 			return upgradeCost;
 		}
+	}
+	
+	/**
+	 * rollDice method called from turn method. imitates 2 dice.
+	 */
+	private static int rollDice(Player player) {
+		Die die1 = new Die(), die2 = new Die();
+
+		int rollA = die1.roll();
+		int rollB = die2.roll();
+		
+		int total = rollA+rollB;
+
+		System.out.printf("%s%s%s, you've rolled a %d and a %d for %d total, landing you in position %d.%n", COLOUR_PLAYER, player.getName(), RESET, rollA, rollB, total, ((player.getPosition()-1+total)%board.getSize())+1);
+		
+		return total;
 	}
 	
 

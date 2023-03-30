@@ -61,7 +61,7 @@ public class Group {
 		ArrayList<Area> thissAreas = new ArrayList<Area>();
 		
 		for (Area area : areas) {
-			if (area.getGroup().getName() == this.getName()) {
+			if (area.getGroup() == this) {
 				thissAreas.add(area);
 			}
 		}

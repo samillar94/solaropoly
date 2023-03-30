@@ -3,31 +3,31 @@
  */
 package solaropoly;
 
-import java.util.Map;
-
 /**
- * BoardPosition is the pair of the square and the position that needs to be returned from a method.
+ * BoardPosition is the collection of the landing square, the number of times the player crossed the first square and his new position.
  * It doesn't have a default constructor because the class should be never instantiate without values on it.
- * This Class implement the Map.Entry class to allow to access the key and the value.
- * We can access the key and the value with getSquare and getStartPassed
- * It is not allowed to use setters because the pair should be changed only by calling the constructor
+ * We can access the player informations values with getSquare() getStartPassed() and getPosition().
+ * The collection should be changed only by calling the constructor.
  * 
  * @author Roberto Lo Duca 40386172
  *
  */
-public class BoardPosition implements Map.Entry<Square, Integer> {
+public class BoardPosition {
 	
     private Square square;
-    private Integer startPassed;
+    private int startPassed;
+    private int position;
     
     /**
      * Constructor with arguments
-	 * @param square - The square
+	 * @param square - The square where the player landed
 	 * @param startPassed - The number of times the player passed the starting square to reach that specific square.
+	 * @param position - The new position of the player
 	 */
-	public BoardPosition(Square square, Integer startPassed) {
+	public BoardPosition(Square square, int startPassed, int position) {
 		this.square = square;
 		this.startPassed = startPassed;
+		this.position = position;
 	}
 	
 	/**
@@ -38,27 +38,21 @@ public class BoardPosition implements Map.Entry<Square, Integer> {
 	}
 	
 	/**
-	 * @return the startPassed
+	 * @return the number of times the player passed the starting square
 	 */
-	public Integer getStartPassed() {
+	public int getStartPassed() {
 		return startPassed;
 	}
-	
-	// Implement Map.Entry methods
-    @Override
-    public Square getKey() {
-        return square;
-    }
-    
-    @Override
-    public Integer getValue() {
-        return startPassed;
-    }
-    
-    @Override
-    public Integer setValue(Integer value) {
-        Integer oldValue = startPassed;
-        startPassed = value;
-        return oldValue;
-    }
+
+	/**
+	 * @return the position
+	 */
+	public int getPosition() {
+		return position;
+	}
+
+	@Override
+	public String toString() {
+		return "BoardPosition [square=" + square + ", startPassed=" + startPassed + ", position=" + position + "]";
+	}
 }
