@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * 
  * @author G17
  */
-public class Area extends Square implements GeneratesIncome2 {
+public class Area extends Square implements GeneratesIncome3 {
 
 	private Group group;
 	private Player owner;
@@ -24,6 +24,12 @@ public class Area extends Square implements GeneratesIncome2 {
 	private HashMap<String, ArrayList<Integer>> rentProfile = new HashMap<>(2);
 	private int monopolyLevel = 0;
 	private int developmentLevel = 0;
+	private int minorDevelopmentCost, majorDevelopmentCost;
+	private static final int MAX_LEVEL = 3;
+	private static final int MIN_LEVEL = 0;
+	
+	
+	
 
 	/// constr
 
@@ -66,6 +72,34 @@ public class Area extends Square implements GeneratesIncome2 {
 	 */
 	public void setGroup(Group group) {
 		this.group = group;
+	}
+
+	/**
+	 * @return the minorDevelopmentCost
+	 */
+	public int getMinorDevelopmentCost() {
+		return minorDevelopmentCost;
+	}
+
+	/**
+	 * @param minorDevelopmentCost the minorDevelopmentCost to set
+	 */
+	public void setMinorDevelopmentCost(int minorDevelopmentCost) {
+		this.minorDevelopmentCost = minorDevelopmentCost;
+	}
+
+	/**
+	 * @return the majorDevelopmentCost
+	 */
+	public int getMajorDevelopmentCost() {
+		return majorDevelopmentCost;
+	}
+
+	/**
+	 * @param majorDevelopmentCost the majorDevelopmentCost to set
+	 */
+	public void setMajorDevelopmentCost(int majorDevelopmentCost) {
+		this.majorDevelopmentCost = majorDevelopmentCost;
 	}
 
 	/**
@@ -133,7 +167,11 @@ public class Area extends Square implements GeneratesIncome2 {
 	 */
 	public void setMonopolyLevel(int monopolyLevel) {
 		// TODO validate 0+
+		if(monopolyLevel<MIN_LEVEL ) {
+			throw new IllegalArgumentException("Monopoly level must be greater or equal than " + MIN_LEVEL);
+		} else {
 		this.monopolyLevel = monopolyLevel;
+		}
 	}
 
 	/**
@@ -146,9 +184,14 @@ public class Area extends Square implements GeneratesIncome2 {
 	/**
 	 * @param developmentLevel the developmentLevel to set
 	 */
-	public void setDevelopmentLevel(int developmentLevel) {
-		// TODO validate 0+
-		this.developmentLevel = developmentLevel;
+	public int setDevelopmentLevel() {
+		int developmentLevel =0;
+		developmentLevel++;
+		if(developmentLevel<MIN_LEVEL || developmentLevel > MAX_LEVEL) {
+			throw new IllegalArgumentException("Development level level must be greater or equal than " + MIN_LEVEL +  " or less than or equal to "+ MAX_LEVEL);
+					
+		} 
+		return developmentLevel;
 	}
 
 	/// show details
@@ -371,7 +414,7 @@ public class Area extends Square implements GeneratesIncome2 {
 					boolean flag = false;
 					while (true) {
 						input = GameSystem.SCANNER.nextLine();
-
+						//TODO accepter not getting area
 						for (Player accepter : accepters) {
 							if (input.equalsIgnoreCase(accepter.getName())) {
 								accepter.decreaseBalance(this.cost);
@@ -510,7 +553,7 @@ public class Area extends Square implements GeneratesIncome2 {
 	 *                   DutchAuctionSystem
 	 * @throws Exception
 	 */
-	public void dutchAuctionSystem(Player auctioneer) {
+	public static void dutchAuctionSystem(Player auctioneer) {
 		if (auctioneer.getOwnedSquares().isEmpty()) {
 			System.out.println(GameSystem.RESET+ "You don't have any property, auction system closed");
 			return;
@@ -519,9 +562,11 @@ public class Area extends Square implements GeneratesIncome2 {
 			boolean getResult = false;
 			int gamerInput;
 			boolean legalInput = false;
-			HashSet<Square> auctionnerSet = new HashSet<>();
+			ArrayList<Square> auctionnerSet = new ArrayList<>();
 			auctionnerSet = auctioneer.getOwnedSquares();
 			Area tradeArea = new Area();
+			
+			//TODO givess plz enter legal input, looping error?
 			System.out.println(
 					"Welcome to Dutch auction system,which item would you like to aucion? please enter the name");
 			// show the list of owners' estates
@@ -569,10 +614,10 @@ public class Area extends Square implements GeneratesIncome2 {
 						if (p.getBalance() > gamerInput) {
 							p.decreaseBalance(gamerInput);
 							tradeArea.getOwner().increaseBalance(gamerInput);
-							HashSet<Square> demoSquare = tradeArea.getOwner().getOwnedSquares();
+							ArrayList<Square> demoSquare = tradeArea.getOwner().getOwnedSquares();
 							demoSquare.remove(tradeArea);
 							tradeArea.getOwner().setOwnedSquares(demoSquare);
-							HashSet<Square> Demo = p.getOwnedSquares();
+							ArrayList<Square> Demo = p.getOwnedSquares();
 							Demo.add(tradeArea);
 							p.setOwnedSquares(Demo);
 							System.out.println("Deal! Do you want to auction another property? Y/N");

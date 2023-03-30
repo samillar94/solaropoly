@@ -10,7 +10,7 @@ import java.util.HashMap;
  * @author samil
  *
  */
-public interface GeneratesIncome2 {
+public interface GeneratesIncome3 {
 	
 	public void setCost(int cost);
 	public int getCost();
