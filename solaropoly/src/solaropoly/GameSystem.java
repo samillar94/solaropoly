@@ -6,6 +6,7 @@ package solaropoly;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -333,6 +334,7 @@ public class GameSystem {
 		if (player.getOwnedGroups().size() > 0) {
 
 			do {
+				displayMenu(player);
 				System.out.println();
 				System.out.println(
 						"If you wish to develop within a group please enter the group name, else, to skip just press Enter");
@@ -433,4 +435,113 @@ public class GameSystem {
 			} while (groupStatus != false);
 		}
 	}
+
+	/**
+	 * generates the menu using the getmenuitems method
+	 * @param player
+	 */
+	private static void displayMenu(Player player) {
+		
+		System.out.println("Player balance: $" + player.getBalance());
+		System.out.format("%-15s%-15s%-15s%s%n", "Field", "Square", "Level", "Upgrade Cost");
+		
+		List<MenuItem> menuItems = getMenuItems(player);
+		
+		for (MenuItem menuItem : menuItems) {
+			System.out.format("%-15s%-15s%-15s$%d%n", menuItem.getField(), menuItem.getSquare(), menuItem.getLevel(),
+					menuItem.getUpgradeCost());
+		}
+
+	}
+	
+	/**
+	 * generates a each row for each property owned by each player during development to see their 
+	 * owned properties and associated costs with development 
+	 * 
+	 * @param player
+	 * @return
+	 */
+	public static List<MenuItem> getMenuItems(Player player) {
+		
+	    List<MenuItem> menuItems = new ArrayList<>();
+	    
+	    int playerBalance = player.getBalance();
+	    
+	    for (Group group : player.getOwnedGroups()) {
+	    	
+	    	// is each square mapped to a group somewhere?
+	        for (Square square : player.getOwnedSquares()) {
+	        	
+	            if (square instanceof Area) {
+	                Area area = (Area) square;
+	                String groupName = group.getName();
+	                String squareName = square.getName();
+	                String developmentLevel = "";
+	                int developmentCost = 0; // if costs are in an array, can iterate through them for each cost
+	                
+	                if (player.getOwnedSquares().contains(area)) {
+	                    developmentLevel = Integer.toString(area.getDevelopmentLevel());
+	                    developmentCost = area.getMinorDevelopmentCost();
+	                }
+	                
+	                menuItems.add(new MenuItem(groupName, squareName, developmentLevel, developmentCost));
+	                
+	            } else {
+	            	// so this is basically if someone owns a square thats like a train station
+	            	// so not sure it has a group or a development level etc?
+	                String groupName = group.getName();
+	                String squareName = square.getName();
+	                String developmentLevel = "";
+	                
+	               
+	                menuItems.add(new MenuItem("", squareName, "", 0));
+	            }
+	        }
+	    }
+	    System.out.println("Player balance: " + playerBalance);
+	    
+	    return menuItems;
+	}
+
+
+
+	/**
+	 * 
+	 * @author andrewscott
+	 *class to store the menu item objects
+	 */
+	private static class MenuItem {
+		private String field;
+		private String square;
+		private String level;
+		private int upgradeCost;
+
+		// contructor with args
+		public MenuItem(String field, String square, String level, int upgradeCost) {
+			this.field = field;
+			this.square = square;
+			this.level = level;
+			this.upgradeCost = upgradeCost;
+		}
+
+		// getters and setters
+		public String getField() {
+			return field;
+		}
+
+		public String getSquare() {
+			return square;
+		}
+
+		public String getLevel() {
+			return level;
+		}
+
+		public int getUpgradeCost() {
+			return upgradeCost;
+		}
+	}
+	
+
+
 }

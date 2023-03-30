@@ -45,4 +45,6 @@ public abstract class Square {
 
 	public abstract void act(Player player);
 
+
+
 }
