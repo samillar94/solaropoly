@@ -364,7 +364,8 @@ public class Area extends Square implements GeneratesIncome {
 					System.out.printf("%s%s%s, do you want to accept the square %s%s%s that %s%s%s refused to buy?%n"
 							+ "Type %sAccept%s and Enter to accept%n"
 							+ "Type %sRefuse%s and Enter to refuse:%n%s",
-							GameSystem.COLOUR_PLAYER, competitor.getName(), GameSystem.RESET, GameSystem.COLOUR_RESOURCE, this.getName(), GameSystem.RESET,
+							GameSystem.COLOUR_PLAYER, competitor.getName(), GameSystem.RESET,
+							GameSystem.COLOUR_RESOURCE, this.getName(), GameSystem.RESET,
 							GameSystem.COLOUR_OTHERPLAYER, player.getName(), GameSystem.RESET,
 							GameSystem.COLOUR_OPTION, GameSystem.RESET,
 							GameSystem.COLOUR_OPTION, GameSystem.RESET,
