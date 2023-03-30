@@ -469,10 +469,10 @@ public class Area extends Square implements GeneratesIncome {
 		
 		// check if the square is in a group owned by someone. if yes:
 		if (!Objects.equals(group.getOwner(), null)) {
-			// remove ownership in group
-			group.setOwner(null);
 			// remove ownership in player
 			group.getOwner().removeOwnership(group);
+			// remove ownership in group
+			group.setOwner(null);
 		// if the player has all the squares of the group:
 		} else if (player.getOwnedSquares().containsAll(group.getAreas())) {
 			// add ownership in group
@@ -506,6 +506,8 @@ public class Area extends Square implements GeneratesIncome {
 			player.removeOwnership(this);
 				// remove ownership in Area
 			this.owner = null;
+		} else {
+			System.err.println("This player doesn't own this square");
 		}
 	}
 
