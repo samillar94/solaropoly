@@ -209,7 +209,7 @@ public class Player {
 				GameSystem.developArea(this);
 			} else if (input.equalsIgnoreCase("Trade")) {
 				System.out.println(GameSystem.RESET+"You chose to trade.");
-				//Area.dutchAuctionSystem(this);
+				Area.dutchAuctionSystem(this);
 			}
 			
 			System.out.println(GameSystem.RESET+"Turn ended. Next player...");

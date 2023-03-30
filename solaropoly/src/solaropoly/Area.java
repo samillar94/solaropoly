@@ -553,7 +553,7 @@ public class Area extends Square implements GeneratesIncome3 {
 	 *                   DutchAuctionSystem
 	 * @throws Exception
 	 */
-	public void dutchAuctionSystem(Player auctioneer) {
+	public static void dutchAuctionSystem(Player auctioneer) {
 		if (auctioneer.getOwnedSquares().isEmpty()) {
 			System.out.println(GameSystem.RESET+ "You don't have any property, auction system closed");
 			return;
@@ -565,6 +565,8 @@ public class Area extends Square implements GeneratesIncome3 {
 			ArrayList<Square> auctionnerSet = new ArrayList<>();
 			auctionnerSet = auctioneer.getOwnedSquares();
 			Area tradeArea = new Area();
+			
+			//TODO givess plz enter legal input, looping error?
 			System.out.println(
 					"Welcome to Dutch auction system,which item would you like to aucion? please enter the name");
 			// show the list of owners' estates
