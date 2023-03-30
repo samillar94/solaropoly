@@ -242,6 +242,7 @@ public class Player {
 	public void gainOwnership(Square square) {
 		this.ownedSquares.add(square);
 	}
+	
 	/**
 	 * Add a new owned group
 	 * @param group
