@@ -6,75 +6,108 @@ package solaropoly;
 import java.util.ArrayList;
 
 /**
- * The Group class represents a "field" in the requirements, containing two or three Areas.
+ * The Group class represents a "field" in the requirements, containing two or
+ * three Areas.
+ * 
  * @author G17
  */
 public class Group {
-	
+
 	/**
-	 * Maximum number of squares that a group can contain from the requirements of the game.
-	 * It represent the maximum size of the group.
+	 * Maximum number of squares that a group can contain from the requirements of
+	 * the game. It represent the maximum size of the group.
 	 */
 	private static final int MAX_AREAS = 3;
-	
+
 	/**
-	 * Minimum number of squares that a group can contain from the requirements of the game.
-	 * It represent the maximum size of the group.
+	 * Minimum number of squares that a group can contain from the requirements of
+	 * the game. It represent the maximum size of the group.
 	 */
 	private static final int MIN_AREAS = 2;
-	
+
 	/// variables
 	private String name;
 	private ArrayList<Area> areas;
 	private Player owner;
-	
-	
+	private int minorDevelopmentCost, majorDevelopmentCost;
+
 	/// setget
-	
+
 	/**
 	 * @return the name
 	 */
 	public String getName() {
 		return name;
 	}
-	
+
 	/**
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getMinorDevelopmentCost() {
+		return minorDevelopmentCost;
+	}
+
+	/**
+	 * 
+	 * @param minorDevelopmentCost
+	 */
+	public void setMinorDevelopmentCost(int minorDevelopmentCost) {
+		this.minorDevelopmentCost = minorDevelopmentCost;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public int getMajorDevelopmentCost() {
+		return majorDevelopmentCost;
+	}
+
+	/**
+	 * 
+	 * @param majorDevelopmentCost
+	 */
+	public void setMajorDevelopmentCost(int majorDevelopmentCost) {
+		this.majorDevelopmentCost = majorDevelopmentCost;
+	}
+
 	/**
 	 * @return the areas
 	 */
 	public ArrayList<Area> getAreas() {
 		return areas;
 	}
-	
+
 	/**
-	 * @param areas an ArrayList of areas - only those of this field 
-	 * will be added
+	 * @param areas an ArrayList of areas - only those of this field will be added
 	 */
 	public void setAreas(ArrayList<Area> areas) {
-		
+
 		ArrayList<Area> thissAreas = new ArrayList<Area>();
-		
+
 		for (Area area : areas) {
 			if (area.getGroup() == this) {
 				thissAreas.add(area);
 			}
 		}
-		
-		//System.out.println(this.name + " matches: " + thissAreas.toString());
-		if (thissAreas.size()<MIN_AREAS || thissAreas.size()>MAX_AREAS) {
+
+		// System.out.println(this.name + " matches: " + thissAreas.toString());
+		if (thissAreas.size() < MIN_AREAS || thissAreas.size() > MAX_AREAS) {
 			throw new IllegalArgumentException("Fields must have " + MIN_AREAS + "–" + MAX_AREAS + " areas.");
 		} else {
 			this.areas = thissAreas;
 		}
-		
+
 	}
-	
+
 	/**
 	 * @return the owner
 	 */
@@ -89,26 +122,41 @@ public class Group {
 		this.owner = owner;
 	}
 
-
 	/// constr
-	
-	public Group() {}
-	
+
+	public Group() {
+	}
+
 	/**
 	 * A Group is set up with a name and areas added afterward
+	 * 
 	 * @param name
 	 */
 	public Group(String name) {
 		this.setName(name);
 	}
-	
-	
-	/// methods	
-	
+
+	/// methods
+
 	@Override
 	public String toString() {
 		return this.name;
 	}
-	
+
+	/**
+	 * 
+	 * @param area
+	 * @param group
+	 * @return
+	 */
+	public boolean canAreaBeDeveloped(Area area, Group group) {
+		int areaDevLevel = area.getDevelopmentLevel();
+		for (Area otherArea : group.getAreas()) {
+			if (otherArea != area && otherArea.getDevelopmentLevel() >= areaDevLevel) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 }
