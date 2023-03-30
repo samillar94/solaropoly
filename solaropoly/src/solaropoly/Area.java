@@ -396,7 +396,8 @@ public class Area extends Square implements GeneratesIncome {
 				} else if (accepters.size() == 1) {
 					System.out.println(GameSystem.COLOUR_PLAYER+player.getName()+GameSystem.RESET + " congratulations, your square was sold to "
 							+ GameSystem.COLOUR_OTHERPLAYER+accepters.get(0).getName()+GameSystem.RESET);
-
+					
+					changeOwnership(accepters.get(0));
 				} else {
 					System.out.printf("%s%s%s, there are %s players that are willing to buy your square.%n"
 							+ "Please enter the name of the one you prefer to sell the square.%n"
@@ -413,14 +414,13 @@ public class Area extends Square implements GeneratesIncome {
 					boolean flag = false;
 					while (true) {
 						input = GameSystem.SCANNER.nextLine();
-						//TODO accepter not getting area
 						for (Player accepter : accepters) {
 							if (input.equalsIgnoreCase(accepter.getName())) {
 								accepter.decreaseBalance(this.cost);
 								changeOwnership(accepter);
 								System.out.printf("%sOk, %s%s%s bought %s! %n%n", 
 										GameSystem.RESET,
-										GameSystem.COLOUR_OTHERPLAYER, accepter.getName(), GameSystem.RESET, 
+										GameSystem.COLOUR_OTHERPLAYER, accepter.getName(), GameSystem.RESET,
 										this.getName());
 								accepter.displayBalance();
 								flag = true;
