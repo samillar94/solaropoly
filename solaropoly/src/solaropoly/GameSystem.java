@@ -368,7 +368,7 @@ public class GameSystem {
 			playersInGame.remove(player);
 			
 			System.out.println(RESET+"You quit the game - all your properties will now be made available.");
-			
+			//TODO not handling a player leaving the game
 			for (Square square : player.getOwnedSquares()) {
 				((Area)square).removeOwnership(player);
 			}
@@ -415,12 +415,12 @@ public class GameSystem {
 	 * 
 	 * @param player
 	 */
-	private static void developArea(Player player) {
+	public static void developArea(Player player) {
 		boolean groupStatus = true;
 		boolean areaStatus = true;
 		ArrayList<Area> fullyDevelopedAreaStatus = new ArrayList<Area>();
 		if (player.getOwnedGroups().size() > 0) {
-
+			//TODO add a message for dont own full group
 			do {
 				displayMenu(player);
 				System.out.println();

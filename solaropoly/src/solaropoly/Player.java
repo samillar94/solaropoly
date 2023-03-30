@@ -206,7 +206,7 @@ public class Player {
 			
 			if (input.equalsIgnoreCase("Develop")) {
 				System.out.println(GameSystem.RESET+"You chose to develop an area.");
-				//GameSystem.developArea();
+				GameSystem.developArea(this);
 			} else if (input.equalsIgnoreCase("Trade")) {
 				System.out.println(GameSystem.RESET+"You chose to trade.");
 				//Area.dutchAuctionSystem(this);

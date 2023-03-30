@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * 
  * @author G17
  */
-public class Area extends Square implements GeneratesIncome2 {
+public class Area extends Square implements GeneratesIncome3 {
 
 	private Group group;
 	private Player owner;
@@ -414,7 +414,7 @@ public class Area extends Square implements GeneratesIncome2 {
 					boolean flag = false;
 					while (true) {
 						input = GameSystem.SCANNER.nextLine();
-
+						//TODO accepter not getting area
 						for (Player accepter : accepters) {
 							if (input.equalsIgnoreCase(accepter.getName())) {
 								accepter.decreaseBalance(this.cost);
