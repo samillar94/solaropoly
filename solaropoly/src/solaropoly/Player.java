@@ -32,7 +32,7 @@ public class Player {
 	private String name;
 	private int balance;
 	private int position;
-	private HashSet<Square> ownedSquares; // TODO make this TreeSet/ArrayList
+	private ArrayList<Square> ownedSquares; // TODO make this TreeSet/ArrayList
 	private ArrayList<Group> ownedGroups;
 	
 	/**
@@ -50,7 +50,7 @@ public class Player {
 		this.setName(name);
 		this.balance = balance;
 		this.setPosition(position);
-		this.ownedSquares = new HashSet<Square>();
+		this.ownedSquares = new ArrayList<Square>();
 		this.ownedGroups = new ArrayList<Group>();
 	}
 	
@@ -110,14 +110,14 @@ public class Player {
 	/**
 	 * @return the ownedSquares
 	 */
-	public HashSet<Square> getOwnedSquares() {
+	public ArrayList<Square> getOwnedSquares() {
 		return ownedSquares;
 	}
 	
 	/**
 	 * @param ownedSquares the ownedSquares to set
 	 */
-	public void setOwnedSquares(HashSet<Square> ownedSquares) {
+	public void setOwnedSquares(ArrayList<Square> ownedSquares) {
 		this.ownedSquares = ownedSquares;
 	}
 	
@@ -206,10 +206,10 @@ public class Player {
 			
 			if (input.equalsIgnoreCase("Develop")) {
 				System.out.println(GameSystem.RESET+"You chose to develop an area.");
-				//GameSystem.developArea();
+				GameSystem.developArea(this);
 			} else if (input.equalsIgnoreCase("Trade")) {
 				System.out.println(GameSystem.RESET+"You chose to trade.");
-				//Area.dutchAuctionSystem(this);
+				Area.dutchAuctionSystem(this);
 			}
 			
 			System.out.println(GameSystem.RESET+"Turn ended. Next player...");
