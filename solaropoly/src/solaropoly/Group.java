@@ -144,19 +144,35 @@ public class Group {
 	}
 
 	/**
+	 * Checks if an area can be developed by checking the development level of the
+	 * other areas within the group. ie all ensuring areas are developed equaly
 	 * 
 	 * @param area
 	 * @param group
 	 * @return
 	 */
 	public boolean canAreaBeDeveloped(Area area, Group group) {
-		int areaDevLevel = area.getDevelopmentLevel();
-		for (Area otherArea : group.getAreas()) {
-			if (otherArea != area && otherArea.getDevelopmentLevel() >= areaDevLevel) {
-				return false;
+		int targetDevLevel = area.getDevelopmentLevel();
+
+	
+		for (Area a : group.getAreas()) {
+			if (a != area) {
+				int devLevelDiff = Math.abs(targetDevLevel - a.getDevelopmentLevel());
+				if (devLevelDiff > 1) {
+					return false;
+				}
+			}
+		}
+		// Check that all areas in the group have development levels within 1 of each
+		// other
+		for (int i = 0; i < group.getAreas().size(); i++) {
+			for (int j = i + 1; j < group.getAreas().size(); j++) {
+				int devLevelDiff = Math.abs(group.getAreas().get(i).getDevelopmentLevel() - group.getAreas().get(j).getDevelopmentLevel());
+				if (devLevelDiff > 1) {
+					return false;
+				}
 			}
 		}
 		return true;
 	}
-
 }
