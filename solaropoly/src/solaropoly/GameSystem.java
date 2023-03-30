@@ -283,6 +283,7 @@ public class GameSystem {
 				num = SCANNER.nextInt();
 			} catch (InputMismatchException e) {
 				System.out.println(RESET+"Sorry, need a whole number."+COLOUR_INPUT);
+				SCANNER.nextLine();
 			} catch (Exception e) {
 				System.out.println(RESET+"Sorry, try again."+COLOUR_INPUT);
 			}

@@ -236,7 +236,7 @@ public class Area extends Square implements GeneratesIncome {
 	
 	@Override
 	public String toString() {
-		return String.format("%n%s (%s, value £%,d),%n", this.getName(), this.group, this.cost);
+		return String.format("%n%s (%s, value £%,d)", this.getName(), this.group, this.cost);
 	}
 
 	/// methods
@@ -344,7 +344,7 @@ public class Area extends Square implements GeneratesIncome {
 					if (input.equalsIgnoreCase("Sell") || input.equalsIgnoreCase("None")) {
 						break;
 					} else {
-						System.out.printf("%sWrong input - please choose between %sSell%s and %sNone%s: %s",
+						System.out.printf("%sWrong input - please choose between %sSell%s and %sNone%s:%n%s",
 								GameSystem.RESET,
 								GameSystem.COLOUR_OPTION, GameSystem.RESET,
 								GameSystem.COLOUR_OPTION, GameSystem.RESET,
@@ -361,10 +361,10 @@ public class Area extends Square implements GeneratesIncome {
 				
 				for (Player competitor : competitors) {
 					competitor.getAttention();
-					System.out.printf("%s%s%s, do you want to accept the square that %s%s%s refused to buy?%n"
+					System.out.printf("%s%s%s, do you want to accept the square %s%s%s that %s%s%s refused to buy?%n"
 							+ "Type %sAccept%s and Enter to accept%n"
-							+ "Type %sRefuse%s and Enter to refuse:%n %s",
-							GameSystem.COLOUR_PLAYER, competitor.getName(), GameSystem.RESET, 
+							+ "Type %sRefuse%s and Enter to refuse:%n%s",
+							GameSystem.COLOUR_PLAYER, competitor.getName(), GameSystem.RESET, GameSystem.COLOUR_RESOURCE, this.getName(), GameSystem.RESET,
 							GameSystem.COLOUR_OTHERPLAYER, player.getName(), GameSystem.RESET,
 							GameSystem.COLOUR_OPTION, GameSystem.RESET,
 							GameSystem.COLOUR_OPTION, GameSystem.RESET,
@@ -377,7 +377,7 @@ public class Area extends Square implements GeneratesIncome {
 							break;
 						} else {
 							System.out.printf(
-									"%sWrong input - please choose between %sAccept%s and %sRefuse%s: %s",
+									"%sWrong input - please choose between %sAccept%s and %sRefuse%s:%n%s",
 									GameSystem.RESET, 
 									GameSystem.COLOUR_OPTION, GameSystem.RESET,
 									GameSystem.COLOUR_OPTION, GameSystem.RESET,
@@ -455,6 +455,17 @@ public class Area extends Square implements GeneratesIncome {
 		// retrieve the group of this square
 		Group group = GameSystem.board.getGroup(this);
 		
+		// check if the square is owned. if yes:
+		if (!Objects.equals(this.owner, null)) {
+			// remove ownership in player
+			this.owner.removeOwnership(this);
+		}
+		
+		// change ownership in Area
+		this.owner = player;
+		// change ownership in player
+		player.gainOwnership(this);
+		
 		// check if the square is in a group owned by someone. if yes:
 		if (!Objects.equals(group.getOwner(), null)) {
 			// remove ownership in group
@@ -468,17 +479,6 @@ public class Area extends Square implements GeneratesIncome {
 			// add ownership in player
 			player.gainOwnership(group);
 		}
-		
-		// check if the square is owned. if yes:
-		if (!Objects.equals(this.owner, null)) {
-			// remove ownership in player
-			this.owner.removeOwnership(this);
-		}
-		
-		// change ownership in Area
-		this.owner = player;
-		// change ownership in player
-		player.gainOwnership(this);
 	}
 	
 	/**
