@@ -222,9 +222,6 @@ public class Player {
 		System.out.printf("%s%s%s, your current balance is %s%s%,d%s%s and you own:%n", GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET, GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.balance, GameSystem.SUF, GameSystem.RESET);
 		System.out.println("Areas: "+this.getOwnedSquares());
 		System.out.println("Groups: "+this.getOwnedGroups());
-		for (Square square: this.getOwnedSquares()) {
-			System.out.print(square.getName()+"   ");
-		}
 	}
 	
 	public void increaseBalance(int credit) {
