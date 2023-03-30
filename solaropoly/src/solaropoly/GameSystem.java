@@ -435,6 +435,7 @@ public class GameSystem {
 		boolean groupStatus = true;
 		boolean areaStatus = true;
 		ArrayList<Area> fullyDevelopedAreaStatus = new ArrayList<Area>();
+		try{
 		if (player.getOwnedGroups().size() > 0) {
 
 			do {
@@ -450,7 +451,7 @@ public class GameSystem {
 				} else {
 
 					for (Group group : player.getOwnedGroups()) {
-
+						try{
 						if (group.getName().equalsIgnoreCase(inputGroup)) {
 							do {
 
@@ -465,58 +466,62 @@ public class GameSystem {
 								} else {
 									// developing areas loop
 									for (Square square : player.getOwnedSquares()) {
-
+										try{
 										if (square.getName().equalsIgnoreCase(inputArea)) {
 
 											Area area;
-
+											try{
 											if (square instanceof Area) {
 												area = (Area) square;
+												try {
+													if (group.canAreaBeDeveloped(area, group)) {
 
-												if (group.canAreaBeDeveloped(area, group)) {
+														if (area.getDevelopmentLevel() < 2) {
+															try {
+																if (player.getBalance() >= area.getGroup()
+																		.getMinorDevelopmentCost()) {
+																	area.setDevelopmentLevel();
+																	System.out.println(area.getName() + " level: "
+																			+ area.getDevelopmentLevel());
+																}
+															} catch (Exception e) {
+																System.out.println("Insufficient funds");
+															}
 
-													if (area.getDevelopmentLevel() < 2) {
+														} else if (area.getDevelopmentLevel() == 2) {
+															try {
+																if (player.getBalance() >= area.getGroup()
+																		.getMajorDevelopmentCost()) {
+																	area.setDevelopmentLevel();
+																	System.out.println("Major development achieved."
+																			+ area.getName() + " developed "
+																			+ area.getDevelopmentLevel() + " times");
+																}
+															} catch (Exception e) {
+																System.out.println("Insufficient funds");
+															}
 
-														if (player.getBalance() >= area.getGroup()
-																.getMinorDevelopmentCost()) {
-															area.setDevelopmentLevel();
-															System.out.println(area.getName() + " level: "
-																	+ area.getDevelopmentLevel());
 														} else {
-															throw new IllegalArgumentException("Insufficient funds");
+															throw new IllegalArgumentException(
+																	"Error: not able to develop area.");
 
 														}
-
-													} else if (area.getDevelopmentLevel() == 2) {
-														if (player.getBalance() >= area.getGroup()
-																.getMajorDevelopmentCost()) {
-															area.setDevelopmentLevel();
-															System.out.println("Major development achieved."
-																	+ area.getName() + " developed "
-																	+ area.getDevelopmentLevel() + " times");
-														} else {
-															throw new IllegalArgumentException("Insufficient funds");
-														}
-
-													} else {
-														throw new IllegalArgumentException(
-																"Error: not able to develop area.");
 
 													}
-
-												} else {
-													throw new IllegalArgumentException(
-															"Areas must be developed equally");
+												} catch (Exception e) {
+													System.out.println("Areas must be developed equally");
 												}
 
-											} else {
-												throw new IllegalArgumentException("Please enter a square that is an area");
+											}
+										 	} catch (Exception e) {
+												System.out.println("Please enter a square that is an area");
 											}
 
-										}	else {
-											throw new IllegalArgumentException(
-													"Please enter a square that is an area");
 										}
+										}catch (Exception e) {
+											System.out.println("Please enter an area that you own");
+										}
+										 
 									}
 									// condition for all areas fully developed
 									do {
@@ -541,17 +546,17 @@ public class GameSystem {
 
 							} while (areaStatus != false);
 
-						} else {
-							throw new IllegalArgumentException(
-									"Please enter a valid group name or a group that you own");
-
+						} 
+						}catch (Exception e) {
+							System.out.println("Please enter a group that you own");
 						}
 					}
 				}
 
 			} while (groupStatus != false);
-		} else {
-			throw new IllegalArgumentException("You do not own any groups");
+		}
+	 	} catch (Exception e) {
+			System.out.println("You do not own any groups");
 		}
 	}
 
