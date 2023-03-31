@@ -236,7 +236,7 @@ public class Player {
 	 * Add a new owned square
 	 * @param square
 	 */
-	public void gainOwnership(Square square) {
+	public void gainProperty(Square square) {
 		this.ownedSquares.add(square);
 	}
 	
@@ -244,7 +244,7 @@ public class Player {
 	 * Add a new owned group
 	 * @param group
 	 */
-	public void gainOwnership(Group group) {
+	public void gainProperty(Group group) {
 		this.ownedGroups.add(group);
 	}
 	
@@ -252,7 +252,7 @@ public class Player {
 	 * Remove a square from the owned squares
 	 * @param square
 	 */
-	public void removeOwnership(Square square) {
+	public void removeProperty(Square square) {
 		this.ownedSquares.remove(square);
 	}
 	
@@ -260,8 +260,60 @@ public class Player {
 	 * Remove a group from the owned groups
 	 * @param group
 	 */
-	public void removeOwnership(Group group) {
+	public void removeProperty(Group group) {
 		this.ownedGroups.remove(group);
+	}
+	
+	/**
+	 * This method transfer or assign the ownership of a given Area to this player.
+	 * To do so the method modifies the ownership in the Group object if all the areas are owned
+	 * by one player after the transfer of the ownership, sets the new owner of the area and updates
+	 * the owned groups and squares on this object at once.
+	 * @param area - the area to gain.
+	 */
+	public void gainOwnership(Area area) {
+		area.changeOwnership(this);
+	}
+	
+	/**
+	 * This method transfer or assign the ownership of a given Group to this player.
+	 * To do so the method modifies the ownership in the Group, sets the new owner
+	 * of the areas of the group and updates the owned groups and squares on this object at once.
+	 * It also resets the ownership to other players if they had one of the areas of the group.
+	 * @param group - the whole group to gain.
+	 */
+	public void gainOwnership(Group group) {
+		for (Area area : group.getAreas()) {
+			area.changeOwnership(this);
+		}
+	}
+	
+	/**
+	 * This method remove the ownership of a given Area to this player.
+	 * To do so the Area should be owned by this player. It updates
+	 * the owned groups and squares on this object, the Group
+	 * owner of that area and the area owner at once.
+	 * @param area - the area to remove
+	 */
+	public void removeOwnership(Area area) {
+		area.removeOwnership(this);
+	}
+	
+	/**
+	 * This method remove the ownership of a given Group to this player.
+	 * To do so the Area should be owned by this player. It updates
+	 * the owned groups and squares on this object, the Group
+	 * owner of that area and the area owner at once.
+	 * @param group - the whole group to remove
+	 */
+	public void removeOwnership(Group group) {
+		if (this.getOwnedSquares().containsAll(group.getAreas())) {
+			for (Area area : group.getAreas()) {
+				area.removeOwnership(this);
+			}
+		} else {
+			System.err.println("This player doesn't own all the squares of this group");
+		}
 	}
 	
 	/**
