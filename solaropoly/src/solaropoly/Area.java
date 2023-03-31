@@ -635,13 +635,7 @@ continue;
 						if (p.getBalance() > gamerInput) {
 							p.decreaseBalance(gamerInput);
 							tradeArea.getOwner().increaseBalance(gamerInput);
-							ArrayList<Square> updatedArea = new ArrayList<>();
-							auctionnerSet.remove(tradeArea);
-							updatedArea = auctionnerSet;
-							ArrayList<Square> updatedArea2 = new ArrayList<>();
-							p.getOwnedSquares().add(tradeArea);
-							p.setOwnedSquares(updatedArea2);
-							tradeArea.getOwner().setOwnedSquares(updatedArea);
+							tradeArea.changeOwnership(p);
 							System.out.println("Deal! Do you want to auction another property? Y/N");
 							legalInput = true;
 						} else {
