@@ -9,10 +9,6 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import maths.examples.Area;
-import maths.examples.Player;
-import maths.examples.Square;
-
 /**
  * This is the square that actually does stuff! Areas can be owned and developed
  * by players.

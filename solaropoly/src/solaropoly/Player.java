@@ -321,10 +321,11 @@ public class Player {
 	 * @param player - the player that receive the transaction.
 	 * @param amount - the amount of the transaction.
 	 */
-	public void transaction(Player player, int amount) {
+	public boolean transaction(Player player, int amount) {
 		if (this.balance >= amount) {
 			player.increaseBalance(amount);
 			this.decreaseBalance(amount);
+			return true;
 		} else {
 			System.out.printf("Sorry %s%s%s, you don't have enough resource to transfer to %s%s%s, your balance is %s%s%,d%s%s.%n",
 					GameSystem.RESET, 
@@ -332,5 +333,6 @@ public class Player {
 					GameSystem.COLOUR_OTHERPLAYER, player.getName(), GameSystem.RESET, 
 					GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.balance, GameSystem.SUF, GameSystem.RESET);
 		}
+		return false;
 	}
 }
