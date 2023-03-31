@@ -317,7 +317,7 @@ public class Player {
 	}
 	
 	/**
-	 * This method is used to transfer resources between players.
+	 * This method is used to transfer {@value GameSystem#SUF} between players.
 	 * @param player - the player that receive the transaction.
 	 * @param amount - the amount of the transaction.
 	 * @return boolean - if the transaction goes well returns true
@@ -332,7 +332,6 @@ public class Player {
 				e.printStackTrace();
 				System.err.println("Transaction aborted...");
 			}
-			
 		} else {
 			System.out.printf("Sorry %s%s%s, you don't have enough resource to transfer to %s%s%s, your balance is %s%s%,d%s%s.%n",
 					GameSystem.RESET, 
