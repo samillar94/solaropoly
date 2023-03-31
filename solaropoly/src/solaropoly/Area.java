@@ -220,7 +220,6 @@ public class Area extends Square implements GeneratesIncome {
 	 * @return
 	 */
 	public String detailsArea() {
-		// return String.format("%s (%s, value £%,d)", this.getName(), this.group, this.cost);
 		return ""
 			+ "Name: " + this.getName() + "\n"
 			+ "Group name: " + this.group.getName() + "\n"
