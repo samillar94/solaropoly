@@ -74,9 +74,9 @@ public class Board {
 		int totalsize = squares.size();
 		
 		if (totalsize >= MIN_SQUARES && totalsize <= MAX_SQUARES) {
-			this.squares = (ArrayList<Square>) squares;
+			this.squares = new ArrayList<>(squares);
 		} else if (totalsize > MAX_SQUARES) {
-			this.squares = (ArrayList<Square>) squares.subList(MAX_SQUARES + 1, totalsize);
+			this.squares = new ArrayList<>(squares.subList(0, MAX_SQUARES));
 			System.err.printf("The List of squares was too long, and we need to comply with the rules.\n"
 					+ "%d is the maximum number of squares allowed, but %d squares were provided.\n"
 					+ "%d squares were truncated from the end of the List and the board.\n",
@@ -118,7 +118,7 @@ public class Board {
 		
 		int totalsize = groups.size();
 		if (totalsize >= MIN_GROUPS && totalsize <= MAX_GROUPS) {
-			this.groups = (HashSet<Group>) groups;
+			this.groups = new HashSet<Group>(groups);
 		} else if (totalsize > MAX_GROUPS) {
 			throw new IllegalArgumentException("The Set of groups was too long, and we need to comply with the rules.\n"
 					+ MAX_GROUPS + "is the maximum number of groups allowed, but " + totalsize + " groups were provided.\n");
