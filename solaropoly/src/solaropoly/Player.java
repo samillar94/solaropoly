@@ -320,6 +320,7 @@ public class Player {
 	 * This method is used to transfer resources between players.
 	 * @param player - the player that receive the transaction.
 	 * @param amount - the amount of the transaction.
+	 * @return boolean - if the transaction goes well returns true
 	 */
 	public boolean transaction(Player player, int amount) {
 		if (this.balance >= amount) {
