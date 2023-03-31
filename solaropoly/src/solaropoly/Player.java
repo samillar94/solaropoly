@@ -324,9 +324,15 @@ public class Player {
 	 */
 	public boolean transaction(Player player, int amount) {
 		if (this.balance >= amount) {
-			player.increaseBalance(amount);
-			this.decreaseBalance(amount);
-			return true;
+			try {
+				player.increaseBalance(amount);
+				this.decreaseBalance(amount);
+				return true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.err.println("Transaction aborted...");
+			}
+			
 		} else {
 			System.out.printf("Sorry %s%s%s, you don't have enough resource to transfer to %s%s%s, your balance is %s%s%,d%s%s.%n",
 					GameSystem.RESET, 
