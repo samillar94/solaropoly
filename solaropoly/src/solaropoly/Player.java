@@ -34,6 +34,7 @@ public class Player {
 	private int position;
 	private ArrayList<Square> ownedSquares; // TODO make this TreeSet/ArrayList
 	private ArrayList<Group> ownedGroups;
+	private int turns; // TODO turn system for pause move or move more times
 	
 	/**
 	 * Default constructor
@@ -52,6 +53,22 @@ public class Player {
 		this.setPosition(position);
 		this.ownedSquares = new ArrayList<Square>();
 		this.ownedGroups = new ArrayList<Group>();
+		this.turns = 0;
+	}
+	
+	/**
+	 * @return the turns
+	 */
+	public int getTurns() {
+		return turns;
+	}
+
+	/**
+	 * it gives if positive or stop if negative a certain amount of turns to the player.
+	 * @param turns the turns to set
+	 */
+	public void setTurns(int turns) {
+		this.turns = turns;
 	}
 	
 	/**
