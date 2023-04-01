@@ -267,7 +267,7 @@ public class Area extends Square implements GeneratesIncome {
 	@Override
 	public void act(Player player) {
 		System.out
-				.println("You landed in: " + this.getName() + "\n" + "This square information:\n\n" + this.detailsArea());
+				.println("You landed in: " + this.getName() + " (position " + player.getPosition() + ")\n" + "This square information:\n\n" + this.detailsArea());
 
 		if (this.owner == null) {
 			purchaseArea(player);

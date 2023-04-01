@@ -640,7 +640,7 @@ public class GameSystem {
 		
 		int total = rollA+rollB;
 
-		System.out.printf("%s%s%s, you've rolled a %d and a %d for %d total, landing you in position %d.%n", COLOUR_PLAYER, player.getName(), RESET, rollA, rollB, total, ((player.getPosition()-1+total)%board.getSize())+1);
+		System.out.printf("%s%s%s, you've rolled a %d and a %d for %d total.%n", COLOUR_PLAYER, player.getName(), RESET, rollA, rollB, total);
 		
 		return total;
 	}

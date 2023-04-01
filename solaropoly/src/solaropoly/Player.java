@@ -180,6 +180,7 @@ public class Player {
 			}
 			
 			this.setPosition(boardPosition.getPosition());
+			
 			boardPosition.getSquare().act(this);
 			
 			// develop area and trade actions
@@ -318,16 +319,21 @@ public class Player {
 	}
 	
 	/**
-	 * This method is used to transfer resources between players.
+	 * This method is used to transfer {@value GameSystem#SUF} between players.
 	 * @param player - the player that receive the transaction.
 	 * @param amount - the amount of the transaction.
 	 * @return boolean - if the transaction goes well returns true
 	 */
 	public boolean transaction(Player player, int amount) {
 		if (this.balance >= amount) {
-			player.increaseBalance(amount);
-			this.decreaseBalance(amount);
-			return true;
+			try {
+				player.increaseBalance(amount);
+				this.decreaseBalance(amount);
+				return true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.err.println("Transaction aborted...");
+			}
 		} else {
 			System.out.printf("Sorry %s%s%s, you don't have enough resource to transfer to %s%s%s, your balance is %s%s%,d%s%s.%n",
 					GameSystem.RESET, 
