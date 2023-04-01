@@ -267,7 +267,7 @@ public class Area extends Square implements GeneratesIncome {
 	@Override
 	public void act(Player player) {
 		System.out
-				.println("You landed in: " + this.getName() + "\n" + "This square information:\n\n" + this.detailsArea());
+				.println("You landed in: " + this.getName() + " (position " + player.getPosition() + ")\n" + "This square information:\n\n" + this.detailsArea());
 
 		if (this.owner == null) {
 			purchaseArea(player);
@@ -524,7 +524,7 @@ public class Area extends Square implements GeneratesIncome {
 			do {
 				if (p1.getOwnedSquares().isEmpty()) {
 					System.out.println("You have no more properties for sell. You bankrupted!");
-					GameSystem.players.remove(p1);
+					GameSystem.playersInGame.remove(p1);
 				} else {
 					dutchAuctionSystem(p1);
 				}
@@ -566,8 +566,9 @@ public class Area extends Square implements GeneratesIncome {
 			ArrayList<Square> auctionnerSet = new ArrayList<>();
 			auctionnerSet = auctioneer.getOwnedSquares();
 			Area tradeArea = new Area();
-
-			// TODO givess plz enter legal input, looping error?
+			System.out.println("Welcome to Dutch auction system. Here is the basic rules of Duction auction system\n"
+			+"A Dutch auction (also called a descending price auction) refers to a type of auction in which"
+			+ " an auctioneer starts with a very high price, incrementally lowering the price until someone places a bid.");
 			System.out.println(
 					"Welcome to Dutch auction system,which item would you like to aucion? please enter the name");
 			// show the list of owners' estates
