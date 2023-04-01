@@ -34,6 +34,7 @@ public class Player {
 	private int position;
 	private ArrayList<Square> ownedSquares; // TODO make this TreeSet/ArrayList
 	private ArrayList<Group> ownedGroups;
+	private int turns; // TODO turn system for pause move or move more times
 	
 	/**
 	 * Default constructor
@@ -52,6 +53,22 @@ public class Player {
 		this.setPosition(position);
 		this.ownedSquares = new ArrayList<Square>();
 		this.ownedGroups = new ArrayList<Group>();
+		this.turns = 0;
+	}
+	
+	/**
+	 * @return the turns
+	 */
+	public int getTurns() {
+		return turns;
+	}
+
+	/**
+	 * it gives if positive or stop if negative a certain amount of turns to the player.
+	 * @param turns the turns to set
+	 */
+	public void setTurns(int turns) {
+		this.turns = turns;
 	}
 	
 	/**
@@ -171,6 +188,7 @@ public class Player {
 	 * This method move the player by a given valid dice result value and start his turn
 	 */
 	public void move(int roll) throws IllegalArgumentException {
+		Board.visualMap();
 		if (roll >= DICE_NUMBER) {
 			BoardPosition boardPosition = GameSystem.board.getBoardPosition(this.position, roll);
 			
@@ -179,6 +197,7 @@ public class Player {
 			}
 			
 			this.setPosition(boardPosition.getPosition());
+			
 			boardPosition.getSquare().act(this);
 			
 			// develop area and trade actions
