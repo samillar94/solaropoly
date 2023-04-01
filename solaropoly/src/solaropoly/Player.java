@@ -179,6 +179,7 @@ public class Player {
 			}
 			
 			this.setPosition(boardPosition.getPosition());
+			
 			boardPosition.getSquare().act(this);
 			
 			// develop area and trade actions
