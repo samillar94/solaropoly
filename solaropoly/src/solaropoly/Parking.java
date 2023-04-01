@@ -27,7 +27,7 @@ public class Parking extends Square {
 	@Override
 	public void act(Player player) {
 
-		System.out.println("Just Parking :)");
+		System.out.println("You've landed in the spa!\nRelax and bask in the sun like a solar panel 😎\n");
 
 	}
 

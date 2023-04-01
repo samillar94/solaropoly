@@ -107,7 +107,7 @@ public class Group {
 	
 	@Override
 	public String toString() {
-		return this.name;
+		return GameSystem.COLOUR_LOCATION + this.name + GameSystem.RESET;
 	}
 	
 
