@@ -276,11 +276,12 @@ public class GameSystem {
 
 		int num = 0;
 
-		while (num == 0) {
+		while (num<MIN_PLAYERS || num>MAX_PLAYERS) {
 			System.out.println(RESET+"How many are playing? Type a number between "+COLOUR_OPTION+MIN_PLAYERS+RESET
 				+" and "+COLOUR_OPTION+MAX_PLAYERS+RESET+" and press Enter."+COLOUR_INPUT);
 			try {
 				num = SCANNER.nextInt();
+				if (num<MIN_PLAYERS || num>MAX_PLAYERS) System.out.println(RESET+"Sorry, invalid number.");
 			} catch (InputMismatchException e) {
 				System.out.println(RESET+"Sorry, need a whole number."+COLOUR_INPUT);
 				SCANNER.nextLine();
