@@ -130,16 +130,17 @@ public class GameSystem {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-
+		
 		try {
 			setupBoard();
+			
 			/// set number of players
 			int numPlayers = setNumPlayers();
-
+			
 			/// register players
 			players = registerPlayers(numPlayers);
 			playersInGame.addAll(players);
-
+			Board.visualMap();
 			/// game starts - do while (and try-catch?), cycling through players until game
 			/// end triggered
 			while (!gameEndTrigger) {
@@ -252,7 +253,6 @@ public class GameSystem {
 			
 			board.setSquares(squares);
 			board.setGroups(new HashSet<Group>(groups));
-			
 			br.close();
 	
 			
@@ -275,7 +275,6 @@ public class GameSystem {
 	private static int setNumPlayers() {
 
 		int num = 0;
-
 		while (num == 0) {
 			System.out.println(RESET+"How many are playing? Type a number between "+COLOUR_OPTION+MIN_PLAYERS+RESET
 				+" and "+COLOUR_OPTION+MAX_PLAYERS+RESET+" and press Enter."+COLOUR_INPUT);

@@ -171,6 +171,7 @@ public class Player {
 	 * This method move the player by a given valid dice result value and start his turn
 	 */
 	public void move(int roll) throws IllegalArgumentException {
+		Board.visualMap();
 		if (roll >= DICE_NUMBER) {
 			BoardPosition boardPosition = GameSystem.board.getBoardPosition(this.position, roll);
 			
