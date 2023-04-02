@@ -216,27 +216,6 @@ public class Board {
 		int oldPosition = 0;
 		return this.getBoardPosition(oldPosition, index).getSquare();
 	}
-
-	/**
-	 * This method returns the square on the board, the number of times the player has passed the first square and his new position.
-	 * It uses the player's current position and the dice roll result to calculate the new position.
-	 * @param oldPosition - the player's current position on the board. The dice roll result will be added to this value.
-	 * @param diceRoll - the result of the dice roll or a number to be added to the player's current position.
-	 * @return BoardPosition - a container class called BoardPosition consisting of a Square object of the new position, an integer
-	 * 						   representing the number of times the player has looped around the board and an integer with the new index position.
-	 * 						   The values can be accessed using the getSquare() getStartPassed() and getPosition() methods from the class.
-	 * @throws IndexOutOfBoundsException - if there is an error with the calculation of the index or if the squares List is empty.
-	public BoardPosition getBoardPosition(int oldPosition, int diceRoll) throws IndexOutOfBoundsException {
-		checkSquaresList();
-		oldPosition = (oldPosition < 0) ? 0 : oldPosition;
-		diceRoll = (diceRoll < 0) ? 0 : diceRoll;
-		int overrunPosition = oldPosition + diceRoll;
-        int startPassed = (overrunPosition - 1) / getSize(); // -1 ensures landing on Go doesn't count
-        int newPosition = overrunPosition % getSize();
-		Square newSquare = this.squares.get(newPosition);
-		return new BoardPosition(newSquare, startPassed, newPosition);
-	}
-	*/
 	
 	/**
 	 * This method returns the square on the board, the number of times the player has passed the first square and his new position.
@@ -370,6 +349,5 @@ public class Board {
 		sb.append(String.format("%92s\n","|"));
 		sb.append(String.format("%-36s",areaInfor.get(7)) + " ———— "+String.format("%-36s",areaInfor.get(6))+"——"+String.format("%-37s",areaInfor.get(5))+"———"+String.format("%-40s",areaInfor.get(4)));
 		System.out.println(sb);
-		
 	}
 }

@@ -148,11 +148,25 @@ public class GameSystem {
 				for (Player player : players) {
 					if (playersInGame.contains(player)) {
 						
-						Thread.sleep(2000); 
+						player.getAttention();
+						Thread.sleep(2000);
 						
-						turn(player);
+						if (player.getTurns() < 0) {
+							System.out.println("Number of turns to skip: " + Math.abs(player.getTurns()) + ". Turn skipped...");
+							player.increaseTurns();
+							continue;
+						}
+						
+						player.increaseTurns();
+						
+						do {
+							turn(player);
+							player.decreaseTurns();
+						} while (player.getTurns() > 0);
+						
 					}
 					if (gameEndTrigger)	break;
+					System.out.println(GameSystem.RESET + "Turn ended. Next player...");
 				}
 
 			}
@@ -360,6 +374,7 @@ public class GameSystem {
 
 		if (consent) {
 			
+			Board.visualMap();
 			player.move(rollDice(player));
 		
 		} else {
@@ -385,7 +400,6 @@ public class GameSystem {
 	 * @return boolean - the decision
 	 */
 	private static boolean consent(Player player) {
-		player.getAttention();
 		player.displayBalance();
 		String input = "";
 		System.out.printf("%sIf you would like to take your turn, press Enter.%n"
