@@ -37,8 +37,9 @@ public class Event extends Square {
 	 */
 	public Event(String name, List<Card> cards) {
 		super(name);
-		Collections.shuffle(cards); // Shuffle the list
-		this.cards.addAll(cards);
+		if (cards != null) {
+			this.addCards(cards);
+		}
 	}
 
 	/**
@@ -59,10 +60,17 @@ public class Event extends Square {
 	/**
 	 * This method add a card at the end of the Queue
 	 */
-	public void setCard(Card card) {
+	public void addCard(Card card) {
 		this.cards.add(card);
 	}
 	
+	/**
+	 * This method shuffles and adds cards at the end of the Queue
+	 */
+	public void addCards(List<Card> cards) {
+		Collections.shuffle(cards); // Shuffle the list
+		this.cards.addAll(cards);
+	}
 	/**
 	 * This method will loop the Queue of cards and apply their properties
 	 * to the player who landed on the Event square.

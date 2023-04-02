@@ -5,10 +5,8 @@ package solaropoly;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * This class represents the game board, which consists of a number of squares
@@ -302,7 +300,7 @@ public class Board {
 	/**
 	 * This method give players visualized map
 	 */
-	public static void visualMap() {
+	public void visualMap() {
 		// Map<Area,Integer> areaInfor=new HashMap<>();
 		// for(int loop=2;loop<10;loop++) {
 		// areaInfor.put((Area)GameSystem.board.getSquare(loop),0);

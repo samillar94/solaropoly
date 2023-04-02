@@ -212,7 +212,8 @@ public class Player {
 			BoardPosition boardPosition = GameSystem.board.getBoardPosition(this.position, roll);
 			
 			for (int i = 0; i < boardPosition.getStartPassed(); i++) {
-				Go.passAct(this);
+				Go go = (Go) GameSystem.board.getSquare(0);
+				go.passAct(this);
 			}
 			
 			this.setPosition(boardPosition.getPosition());

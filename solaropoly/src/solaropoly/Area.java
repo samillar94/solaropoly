@@ -109,11 +109,12 @@ public class Area extends Square implements GeneratesIncome {
 	}
 
 	/**
+	 * This is deactivated to prevent invalid transactions
 	 * @param owner the owner to set
 	 */
-	public void setOwner(Player owner) {
-		this.owner = owner;
-	}
+//	public void setOwner(Player owner) {
+//		this.owner = owner;
+//	}
 
 	/**
 	 * @return the cost
