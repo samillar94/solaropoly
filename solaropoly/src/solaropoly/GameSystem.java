@@ -115,8 +115,6 @@ public class GameSystem {
 
 	public static final Scanner SCANNER = new Scanner(System.in);
 
-	public static boolean gameEndTrigger = false;
-
 	public static ArrayList<Player> players = new ArrayList<Player>();
 	
 	public static final String BOARD_FILE = "solaropoly-london.csv";
@@ -153,7 +151,7 @@ public class GameSystem {
 			/// game starts - cycling through players until game
 			/// end triggered
 			int firstPlayerIndex = 0;
-			for (int playerIndex = firstPlayerIndex; !gameEndTrigger; playerIndex = playerIndex%numPlayers) {
+			for (int playerIndex = firstPlayerIndex; !gameEndTrigger(); playerIndex = playerIndex%numPlayers) {
 
 				if (playersInGame.contains(players.get(playerIndex))) {
 					
@@ -477,9 +475,7 @@ public class GameSystem {
 			
 		}
 		
-		if (players.size() < 2 || playersInGame.size() < 2) {
-			gameEndTrigger = true;
-		}
+
 	}
 
 	/**
@@ -747,6 +743,20 @@ public class GameSystem {
 		return total;
 	}
 	
-
+	/**
+	 * Game end trigger - called before every turn
+	 * @return
+	 */
+	public static boolean gameEndTrigger() {
+		
+		// trigger game end if only one player
+		if (players.size() < 2 || playersInGame.size() < 2) return true;
+		
+		// trigger game end if productionGoal reached
+		int totalResource = 0;
+		for (Player player : players) totalResource += player.getBalance();
+		return (totalResource >= productionGoal);
+		
+	}
 
 }
