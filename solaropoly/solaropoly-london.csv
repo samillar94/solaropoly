@@ -1,0 +1,21 @@
+﻿data,index,type,name,value,d0 rent,d1 rent,d2 rent,d3 rent,d4 rent,Group index (Area),notes
+Game,,int,startingBalance,15000000,,,,,,,
+Game,,int,productionGoal,200000000,,,,,,,
+Group,0,Group,Brown,,,,,,,,
+Group,1,Group,Pink,,,,,,,,
+Group,2,Group,Yellow,,,,,,,,
+Group,3,Group,Navy,,,,,,,,
+Square,0,Go,Go,1000000,,,,,,,value is set as passGoCredit
+Square,1,Area,Portobello Road Market,600000,20000,100000,300000,900000,1600000,0,
+Square,2,Area,Camden Town,600000,40000,200000,600000,1800000,3200000,0,
+Square,3,Parking,Just Parking,,,,,,,,
+Square,4,Area,Wimbledon,1400000,100000,500000,1500000,4500000,6250000,1,
+Square,5,Area,Oval,1400000,100000,500000,1500000,4500000,6250000,1,
+Square,6,Area,Wembley,1600000,120000,600000,1800000,5000000,7000000,1,
+Square,7,Failure,Jail,-3,,,,,,,value is numTurns
+Square,8,Area,Covent Garden,2600000,220000,1100000,3300000,8000000,9750000,2,
+Square,9,Area,Tottenham Court Road,2600000,220000,1100000,3300000,8000000,9750000,2,
+Square,10,Area,Regent Street,2800000,240000,1200000,3600000,8500000,10250000,2,
+Square,11,Event,Chance,,,,,,,,
+Square,12,Area,Canary Wharf,3500000,350000,1750000,5000000,11000000,13000000,3,
+Square,13,Area,The City,4000000,500000,2000000,6000000,14000000,17000000,3,
