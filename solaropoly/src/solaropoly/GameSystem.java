@@ -106,6 +106,7 @@ public class GameSystem {
 	public static final String COLOUR_INPUT = YELLOW;
 	public static final String COLOUR_OPTION = YELLOW_BRIGHT;
 	public static final String COLOUR_RESOURCE = GREEN_BRIGHT;
+	public static final String COLOUR_LOCATION = CYAN_BOLD;
 	
 	/// essential components
     
@@ -205,7 +206,7 @@ public class GameSystem {
 		ArrayList<Group> groups = new ArrayList<Group>(4);
 		
 		squares.add(new Go("Go"));
-		squares.add(new Parking("The Sea"));
+		squares.add(new Parking("Spa"));
 		
 		groups.add(new Group("Field A"));
 		groups.add(new Group("Field B"));
@@ -362,7 +363,13 @@ public class GameSystem {
 
 		if (consent) {
 			
-			player.move(rollDice(player));
+			int roll = rollDice(player);
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {}
+			
+			player.move(roll);
 		
 		} else {
 			

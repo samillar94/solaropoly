@@ -35,8 +35,11 @@ public class Go extends Square {
 	@Override
 	public void act(Player player) {
 		player.increaseBalance(PASS_GO_RESOURCE);
-		System.out.printf("Welcome back to Go! You've received %s%s%,d%s%s.%n", GameSystem.COLOUR_RESOURCE, GameSystem.PRE, PASS_GO_RESOURCE, GameSystem.SUF, GameSystem.RESET);
-		System.out.println("Nothing to do here...");
+		System.out.printf("Welcome back to %s%s%s! You've received %s%s%,d%s%s.%n"
+				, GameSystem.COLOUR_LOCATION, this.getName(), GameSystem.RESET
+				, GameSystem.COLOUR_RESOURCE, GameSystem.PRE, PASS_GO_RESOURCE, GameSystem.SUF, GameSystem.RESET
+				);
+		System.out.println("Why not tweet inspirationally about the solar energy industry?\n");
 
 	}
 	
@@ -46,6 +49,6 @@ public class Go extends Square {
 	 */
 	public static void passAct(Player player) {
 		player.increaseBalance(PASS_GO_RESOURCE);
-		System.out.printf("You passed Go and received %s%,d%s. ", GameSystem.PRE, PASS_GO_RESOURCE, GameSystem.SUF);
+		System.out.printf("You passed Go and received %s%s%,d%s%s. ", GameSystem.COLOUR_RESOURCE, GameSystem.PRE, PASS_GO_RESOURCE, GameSystem.SUF, GameSystem.RESET);
 	}
 }
