@@ -21,10 +21,12 @@ public class Area extends Square implements GeneratesIncome {
 	private Player owner;
 	private int cost;
 	private HashMap<String, ArrayList<Integer>> rentProfile = new HashMap<>(2);
+	
+
 	private int monopolyLevel = 0;
 	private int developmentLevel = 0;
-	private int minorDevelopmentCost, majorDevelopmentCost;
-	private static final int MAX_LEVEL = 3;
+	public int minorDevelopmentCost, majorDevelopmentCost;
+	public static final int MAX_LEVEL = 3;
 	private static final int MIN_LEVEL = 0;
 	
 	
@@ -73,33 +75,11 @@ public class Area extends Square implements GeneratesIncome {
 		this.group = group;
 	}
 
-	/**
-	 * @return the minorDevelopmentCost
-	 */
-	public int getMinorDevelopmentCost() {
-		return minorDevelopmentCost;
-	}
 
-	/**
-	 * @param minorDevelopmentCost the minorDevelopmentCost to set
-	 */
-	public void setMinorDevelopmentCost(int minorDevelopmentCost) {
-		this.minorDevelopmentCost = minorDevelopmentCost;
-	}
 
-	/**
-	 * @return the majorDevelopmentCost
-	 */
-	public int getMajorDevelopmentCost() {
-		return majorDevelopmentCost;
-	}
 
-	/**
-	 * @param majorDevelopmentCost the majorDevelopmentCost to set
-	 */
-	public void setMajorDevelopmentCost(int majorDevelopmentCost) {
-		this.majorDevelopmentCost = majorDevelopmentCost;
-	}
+
+
 
 	/**
 	 * @return the owner
