@@ -7,22 +7,20 @@ package solaropoly;
  * Second square on the board with no effects - equivalent to Monopoly "Just Parking"
  * @author G17
  */
-public class Parking extends Square {
+public class Holiday extends Square {
 
 	/**
-	 * 
+	 * Default constructor
 	 */
-	public Parking() {
+	public Holiday() {
 	}
 
 	/**
 	 * @param name
 	 */
-	public Parking(String name) {
+	public Holiday(String name) {
 		super(name);
 	}
-
-
 
 	@Override
 	public void act(Player player) {

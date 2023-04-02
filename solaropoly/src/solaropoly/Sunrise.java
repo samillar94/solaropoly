@@ -9,7 +9,7 @@ package solaropoly;
  * of landing here, similar to Parking.
  * @author G17
  */
-public class Go extends Square {
+public class Sunrise extends Square {
 	
 	/**
 	 * resource to take after one loop of the board
@@ -19,13 +19,13 @@ public class Go extends Square {
 	/**
 	 * Default constructor.
 	 */
-	public Go() {}
+	public Sunrise() {}
 	
 	/**
 	 * Constructor with arguments.
 	 * @param name
 	 */
-	public Go(String name) {
+	public Sunrise(String name) {
 		super.setName(name);
 	}
 	

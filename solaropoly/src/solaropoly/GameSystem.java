@@ -219,8 +219,8 @@ public class GameSystem {
 		ArrayList<Area> areas = new ArrayList<Area>(10);
 		ArrayList<Group> groups = new ArrayList<Group>(4);
 		
-		squares.add(new Go("Go"));
-		squares.add(new Parking("Spa"));
+		squares.add(new Sunrise("Go"));
+		squares.add(new Holiday("Spa"));
 		
 		groups.add(new Group("Field A"));
 		groups.add(new Group("Field B"));
