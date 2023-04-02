@@ -150,33 +150,32 @@ public class GameSystem {
 			/// TODO Replace board map with list that can accommodate other than 12 squares
 //			board.visualMap();
 			
-			/// game starts - do while (and try-catch?), cycling through players until game
+			/// game starts - cycling through players until game
 			/// end triggered
-			while (!gameEndTrigger) {
+			int firstPlayerIndex = 0;
+			for (int playerIndex = firstPlayerIndex; !gameEndTrigger; playerIndex = playerIndex%numPlayers) {
 
-				for (Player player : players) {
-					if (playersInGame.contains(player)) {
-						
-						player.getAttention();
-						Thread.sleep(1000);
-						
-						if (player.getTurns() < 0) {
-							System.out.println("Number of turns to skip: " + Math.abs(player.getTurns()) + ". Turn skipped...");
-							player.increaseTurns();
-							continue;
-						}
-						
-						player.increaseTurns();
-						
-						do {
-							turn(player);
-							player.decreaseTurns();
-						} while (player.getTurns() > 0);
-						
+				if (playersInGame.contains(players.get(playerIndex))) {
+					
+					players.get(playerIndex).getAttention();
+					Thread.sleep(1000);
+					
+					if (players.get(playerIndex).getTurns() < 0) {
+						System.out.println("Number of turns to skip: " + Math.abs(players.get(playerIndex).getTurns()) + ". Turn skipped...");
+						players.get(playerIndex).increaseTurns();
+						continue;
 					}
-					if (gameEndTrigger)	break;
-					System.out.println(GameSystem.RESET + "Turn ended. Next player...");
+					
+					players.get(playerIndex).increaseTurns();
+					
+					do {
+						turn(players.get(playerIndex));
+						players.get(playerIndex).decreaseTurns();
+					} while (players.get(playerIndex).getTurns() > 0);
+					
 				}
+				
+				System.out.println(GameSystem.RESET + "Turn ended. Next player...");
 
 			}
 
