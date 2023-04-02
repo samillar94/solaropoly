@@ -29,88 +29,21 @@ public class GameSystem {
 	/// set here
 	public static final int MIN_PLAYERS = 2;
 	public static final int MAX_PLAYERS = 4;
-	public static final String PRE = ""; /// resource prefix
-	public static final String SUF = " GET"; /// resource suffix
+	public static final String RES_PRE = ""; /// resource unit prefix
+	public static final String RES_SUF = " GET"; /// resource unit suffix
+	public static final String OUT_PRE = ""; /// output unit prefix
+	public static final String OUT_SUF = " MW"; /// resource unit suffix
 	
-	/// console colour keys
-	// Regular
-	public static final String RESET = "\u001B[0m";
-	public static final String BLACK = "\u001B[30m";
-	public static final String RED = "\u001B[31m";
-	public static final String GREEN = "\u001B[32m";
-	public static final String YELLOW = "\u001B[33m";
-	public static final String BLUE = "\u001B[34m";
-	public static final String PURPLE = "\u001B[35m";
-	public static final String CYAN = "\u001B[36m";
-	public static final String WHITE = "\u001B[37m";
-
-	// Bold
-	public static final String BLACK_BOLD = "\033[1;30m"; // BLACK
-	public static final String RED_BOLD = "\033[1;31m"; // RED
-	public static final String GREEN_BOLD = "\033[1;32m"; // GREEN
-	public static final String YELLOW_BOLD = "\033[1;33m"; // YELLOW
-	public static final String BLUE_BOLD = "\033[1;34m"; // BLUE
-	public static final String PURPLE_BOLD = "\033[1;35m"; // PURPLE
-	public static final String CYAN_BOLD = "\033[1;36m"; // CYAN
-	public static final String WHITE_BOLD = "\033[1;37m"; // WHITE
-
-	// Underline
-	public static final String BLACK_UNDERLINED = "\033[4;30m"; // BLACK
-	public static final String RED_UNDERLINED = "\033[4;31m"; // RED
-	public static final String GREEN_UNDERLINED = "\033[4;32m"; // GREEN
-	public static final String YELLOW_UNDERLINED = "\033[4;33m"; // YELLOW
-	public static final String BLUE_UNDERLINED = "\033[4;34m"; // BLUE
-	public static final String PURPLE_UNDERLINED = "\033[4;35m"; // PURPLE
-	public static final String CYAN_UNDERLINED = "\033[4;36m"; // CYAN
-	public static final String WHITE_UNDERLINED = "\033[4;37m"; // WHITE
-
-	// Background
-	public static final String BLACK_BACKGROUND = "\033[40m"; // BLACK
-	public static final String RED_BACKGROUND = "\033[41m"; // RED
-	public static final String GREEN_BACKGROUND = "\033[42m"; // GREEN
-	public static final String YELLOW_BACKGROUND = "\033[43m"; // YELLOW
-	public static final String BLUE_BACKGROUND = "\033[44m"; // BLUE
-	public static final String PURPLE_BACKGROUND = "\033[45m"; // PURPLE
-	public static final String CYAN_BACKGROUND = "\033[46m"; // CYAN
-	public static final String WHITE_BACKGROUND = "\033[47m"; // WHITE
-
-	// High Intensity
-	public static final String BLACK_BRIGHT = "\033[0;90m"; // BLACK
-	public static final String RED_BRIGHT = "\033[0;91m"; // RED
-	public static final String GREEN_BRIGHT = "\033[0;92m"; // GREEN
-	public static final String YELLOW_BRIGHT = "\033[0;93m"; // YELLOW
-	public static final String BLUE_BRIGHT = "\033[0;94m"; // BLUE
-	public static final String PURPLE_BRIGHT = "\033[0;95m"; // PURPLE
-	public static final String CYAN_BRIGHT = "\033[0;96m"; // CYAN
-	public static final String WHITE_BRIGHT = "\033[0;97m"; // WHITE
-
-	// Bold High Intensity
-	public static final String BLACK_BOLD_BRIGHT = "\033[1;90m"; // BLACK
-	public static final String RED_BOLD_BRIGHT = "\033[1;91m"; // RED
-	public static final String GREEN_BOLD_BRIGHT = "\033[1;92m"; // GREEN
-	public static final String YELLOW_BOLD_BRIGHT = "\033[1;93m";// YELLOW
-	public static final String BLUE_BOLD_BRIGHT = "\033[1;94m"; // BLUE
-	public static final String PURPLE_BOLD_BRIGHT = "\033[1;95m";// PURPLE
-	public static final String CYAN_BOLD_BRIGHT = "\033[1;96m"; // CYAN
-	public static final String WHITE_BOLD_BRIGHT = "\033[1;97m"; // WHITE
-
-	// High Intensity backgrounds
-	public static final String BLACK_BACKGROUND_BRIGHT = "\033[0;100m";// BLACK
-	public static final String RED_BACKGROUND_BRIGHT = "\033[0;101m";// RED
-	public static final String GREEN_BACKGROUND_BRIGHT = "\033[0;102m";// GREEN
-	public static final String YELLOW_BACKGROUND_BRIGHT = "\033[0;103m";// YELLOW
-	public static final String BLUE_BACKGROUND_BRIGHT = "\033[0;104m";// BLUE
-	public static final String PURPLE_BACKGROUND_BRIGHT = "\033[0;105m"; // PURPLE
-	public static final String CYAN_BACKGROUND_BRIGHT = "\033[0;106m"; // CYAN
-	public static final String WHITE_BACKGROUND_BRIGHT = "\033[0;107m"; // WHITE
 
 	/// design language colours
-	public static final String COLOUR_PLAYER = RED_BOLD_BRIGHT;
-	public static final String COLOUR_OTHERPLAYER = RED_BOLD;
-	public static final String COLOUR_INPUT = YELLOW;
-	public static final String COLOUR_OPTION = YELLOW_BRIGHT;
-	public static final String COLOUR_RESOURCE = GREEN_BRIGHT;
-	public static final String COLOUR_LOCATION = CYAN_BOLD;
+	public static final String RESET = ColourLibrary.RESET;
+	public static final String COLOUR_PLAYER = ColourLibrary.RED_BOLD_BRIGHT;
+	public static final String COLOUR_OTHERPLAYER = ColourLibrary.RED_BOLD;
+	public static final String COLOUR_INPUT = ColourLibrary.YELLOW;
+	public static final String COLOUR_OPTION = ColourLibrary.YELLOW_BRIGHT;
+	public static final String COLOUR_RESOURCE = ColourLibrary.GREEN_BRIGHT;
+	public static final String COLOUR_OUTPUT = ColourLibrary.CYAN_BRIGHT;
+	public static final String COLOUR_LOCATION = ColourLibrary.CYAN_BOLD;
 	
 	/// essential components
 
@@ -120,7 +53,7 @@ public class GameSystem {
 
 	public static ArrayList<Player> players = new ArrayList<Player>();
 	
-	public static final String BOARD_FILE = "solaropoly-london.csv";
+	public static final String BOARD_FILE = "solaropoly-solar.csv";
 	
 	/**
 	 * Stores only players that are still in game
@@ -196,9 +129,9 @@ public class GameSystem {
 
 				System.out.printf(
 						"%s%s%s has %s%s%,d%s%s and owns %s%s%,d%s%s of assets %s for a total of %s%s%,d%s%s.%n",
-						COLOUR_PLAYER, player.getName(), RESET, COLOUR_RESOURCE, PRE, player.getBalance(), SUF, RESET,
-						COLOUR_RESOURCE, PRE, propertyValue, SUF, RESET, player.getOwnedSquares().toString(),
-						COLOUR_RESOURCE, PRE, player.getBalance() + propertyValue, SUF, RESET);
+						COLOUR_PLAYER, player.getName(), RESET, COLOUR_RESOURCE, RES_PRE, player.getBalance(), RES_SUF, RESET,
+						COLOUR_RESOURCE, RES_PRE, propertyValue, RES_SUF, RESET, player.getOwnedSquares().toString(),
+						COLOUR_RESOURCE, RES_PRE, player.getBalance() + propertyValue, RES_SUF, RESET);
 
 			}
 
@@ -220,15 +153,15 @@ public class GameSystem {
 	
 	private static void welcome() {
 		
-		System.out.println(WHITE_BOLD+"\n    Welcome to SOLAROPOLY!    \n\n"+RESET
+		System.out.println(ColourLibrary.WHITE_BOLD+"\n    Welcome to SOLAROPOLY!    \n\n"+RESET
 				+"In this game, you'll each take the role of a solar energy startup competing for "
-				+"space to set up your infrastructure production facilities and solar farms. \n\n"
+				+"space to set up your solar farms, production facilities and grids across the globe. \n\n"
 				+"Starting the game with "
-				+COLOUR_RESOURCE+ PRE+ String.format("%,d",startingBalance)+ SUF+ RESET
+				+COLOUR_RESOURCE+ RES_PRE+ String.format("%,d",startingBalance)+ RES_SUF+ RESET
 				+" (Green Energy Tokens), "
 				+"the goal is to maximise energy production among all players. But the player whose "
 				+"production tips the total energy capture over "
-				+COLOUR_RESOURCE+ PRE+ String.format("%,d",productionGoal)+ SUF+ RESET
+				+COLOUR_OUTPUT+ OUT_PRE+ String.format("%,d",productionGoal)+ OUT_SUF+ RESET
 				+" recieves a legendary commemorative ScamCoin! So compete and collaborate wisely.\n");
 		
 	}
@@ -283,10 +216,13 @@ public class GameSystem {
 				case "Group":
 					
 					String groupName = data[3];
-					int minorDevCost = Integer.parseInt(data[5]);
-					int majorDevCost = Integer.parseInt(data[9]);
+					int minorDevCost = Integer.parseInt(data[12]);
+					int majorDevCost = Integer.parseInt(data[13]);
+					int monopolyOutput = Integer.parseInt(data[14]);
+					int minorDevOutput = Integer.parseInt(data[15]);
+					int majorDevOutput = Integer.parseInt(data[16]);
 					
-					groups.add(new Group(groupName, minorDevCost, majorDevCost));
+					groups.add(new Group(groupName, minorDevCost, majorDevCost, monopolyOutput, minorDevOutput, majorDevOutput));
 					break;
 					
 				case "Square":
@@ -302,12 +238,13 @@ public class GameSystem {
 						int twoDev = Integer.parseInt(data[7]);
 						int threeDev = Integer.parseInt(data[8]);
 						int majorDev = Integer.parseInt(data[9]);
-						int groupIndex = Integer.parseInt(data[10]);
+						int baseOutput = Integer.parseInt(data[10]);
+						int groupIndex = Integer.parseInt(data[11]);
 						
 						int[] monopolyProfile = {baseRent, baseRent*2};
 						int[] developmentProfile = {baseRent, oneDev, twoDev, threeDev, majorDev};
 						
-						Area area = new Area(areaName, groups.get(groupIndex), cost, monopolyProfile, developmentProfile);
+						Area area = new Area(areaName, groups.get(groupIndex), cost, monopolyProfile, developmentProfile, baseOutput);
 						squares.add(area);
 						break;
 						
@@ -343,9 +280,9 @@ public class GameSystem {
 				case "Card":
 					
 					String eventText = data[3];
-					int move = Integer.parseInt(data[11]);
-					int earn = Integer.parseInt(data[12]);
-					int turns = Integer.parseInt(data[13]);
+					int move = Integer.parseInt(data[17]);
+					int earn = Integer.parseInt(data[18]);
+					int turns = Integer.parseInt(data[19]);
 
 					cards.add(new Card(eventText, move, earn, turns));
 					
@@ -375,10 +312,6 @@ public class GameSystem {
 					((Event) square).addCards(cards);
 				}
 			}
-			
-			
-			
-	
 			
 		} catch (FileNotFoundException e) {
 			
@@ -467,7 +400,7 @@ public class GameSystem {
 						playersBuilder.add(new Player(name, startingBalance, 0));
 						names.add(name);
 						resolved = true;
-						System.out.printf("%sWelcome %s%s%s! You start the game with a balance of %s%s%,d%s%s.%n", RESET, COLOUR_PLAYER, playersBuilder.get(playerNum-1).getName(), RESET, COLOUR_RESOURCE, PRE, startingBalance, SUF, RESET);
+						System.out.printf("%sWelcome %s%s%s! You start the game with a balance of %s%s%,d%s%s.%n", RESET, COLOUR_PLAYER, playersBuilder.get(playerNum-1).getName(), RESET, COLOUR_RESOURCE, RES_PRE, startingBalance, RES_SUF, RESET);
 					
 					}
 
@@ -523,7 +456,6 @@ public class GameSystem {
 
 		}
 		
-
 	}
 
 	/**
@@ -613,7 +545,7 @@ public class GameSystem {
 														if (area.getDevelopmentLevel() < 2) {
 															try {
 																if (player.getBalance() >= area.getGroup()
-																		.getMinorDevelopmentCost()) {
+																		.getMinorDevCost()) {
 																	area.setDevelopmentLevel();
 																	System.out.println(area.getName() + " level: "
 																			+ area.getDevelopmentLevel());
@@ -625,7 +557,7 @@ public class GameSystem {
 														} else if (area.getDevelopmentLevel() == 2) {
 															try {
 																if (player.getBalance() >= area.getGroup()
-																		.getMajorDevelopmentCost()) {
+																		.getMajorDevCost()) {
 																	area.setDevelopmentLevel();
 																	System.out.println("Major development achieved."
 																			+ area.getName() + " developed "
@@ -742,9 +674,9 @@ public class GameSystem {
 						developmentLevel = Integer.toString(area.getDevelopmentLevel());
 
 						if (area.getDevelopmentLevel() < 2) {
-							developmentCost = area.getGroup().getMinorDevelopmentCost();
+							developmentCost = area.getGroup().getMinorDevCost();
 						} else if (area.getDevelopmentLevel() == 2) {
-							developmentCost = area.getGroup().getMajorDevelopmentCost();
+							developmentCost = area.getGroup().getMajorDevCost();
 						}
 					}
 

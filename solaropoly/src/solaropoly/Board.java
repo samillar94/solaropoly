@@ -317,31 +317,31 @@ public class Board {
 			String addedInfor = null;
 			if (a.getOwner() != null) {
 				if (a.getOwner().equals(GameSystem.playersInGame.get(0))) {
-					addedInfor = String.format("%s%-25s%d%s", GameSystem.CYAN, a.getName(), a.getDevelopmentLevel(),
+					addedInfor = String.format("%s%-25s%d%s", ColourLibrary.CYAN, a.getName(), a.getDevelopmentLevel(),
 							GameSystem.RESET);
 				} else if (a.getOwner().equals(GameSystem.playersInGame.get(1))) {
-					addedInfor = String.format("%s%-25s%d%s", GameSystem.BLUE, a.getName(), a.getDevelopmentLevel(),
+					addedInfor = String.format("%s%-25s%d%s", ColourLibrary.BLUE, a.getName(), a.getDevelopmentLevel(),
 							GameSystem.RESET);
 				} else if (a.getOwner().equals(GameSystem.playersInGame.get(2))) {
-					addedInfor = String.format("%s%-25s%d%s", GameSystem.GREEN, a.getName(), a.getDevelopmentLevel(),
+					addedInfor = String.format("%s%-25s%d%s", ColourLibrary.GREEN, a.getName(), a.getDevelopmentLevel(),
 							GameSystem.RESET);
 				} else if (a.getOwner().equals(GameSystem.playersInGame.get(3))) {
-					addedInfor = String.format("%s%-25s%d%s", GameSystem.PURPLE, a.getName(), a.getDevelopmentLevel(),
+					addedInfor = String.format("%s%-25s%d%s", ColourLibrary.PURPLE, a.getName(), a.getDevelopmentLevel(),
 							GameSystem.RESET);
 				}
 			} else {
-				addedInfor = String.format("%s%-25s%d%s", GameSystem.WHITE_BOLD_BRIGHT, a.getName(), a.getDevelopmentLevel(),
+				addedInfor = String.format("%s%-25s%d%s", ColourLibrary.WHITE_BOLD_BRIGHT, a.getName(), a.getDevelopmentLevel(),
 						GameSystem.RESET);
 			}
 			areaInfor.add(addedInfor);
 			;
 		}
-		sb.append(String.format("%s%-32s",GameSystem.WHITE_BOLD_BRIGHT,"Starting point") + String.format("%-28s","Holiday Area")+String.format("%-37s",areaInfor.get(0))+"——"+String.format("%30s",areaInfor.get(1)));
+		sb.append(String.format("%s%-32s",ColourLibrary.WHITE_BOLD_BRIGHT,"Starting point") + String.format("%-28s","Holiday Area")+String.format("%-37s",areaInfor.get(0))+"——"+String.format("%30s",areaInfor.get(1)));
 		sb.append("\n");
 		sb.append("\n");
 		sb.append(areaInfor.get(9) + String.format("%62s", "") + areaInfor.get(2));
 		sb.append("\n");
-		sb.append(String.format("%6s", "|")+String.format("%s%64s%s",GameSystem.YELLOW_BOLD, "Welcome to Solaropoly!",GameSystem.RESET)+String.format("%22s\n", "|"));
+		sb.append(String.format("%6s", "|")+String.format("%s%64s%s",ColourLibrary.YELLOW_BOLD, "Welcome to Solaropoly!",GameSystem.RESET)+String.format("%22s\n", "|"));
 		sb.append(areaInfor.get(8) + String.format("%62s", "") + areaInfor.get(3));
 		sb.append("\n");
 		sb.append(String.format("%92s\n","|"));

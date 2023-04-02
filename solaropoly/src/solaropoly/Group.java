@@ -29,7 +29,8 @@ public class Group {
 	private String name;
 	private ArrayList<Area> areas;
 	private Player owner;
-	private int minorDevelopmentCost, majorDevelopmentCost;
+	private int minorDevCost, majorDevCost;
+	private int monopolyOutput, minorDevOutput, majorDevOutput;
 
 	/// setget
 
@@ -51,32 +52,32 @@ public class Group {
 	 * 
 	 * @return
 	 */
-	public int getMinorDevelopmentCost() {
-		return minorDevelopmentCost;
+	public int getMinorDevCost() {
+		return minorDevCost;
 	}
 
 	/**
 	 * 
-	 * @param minorDevelopmentCost
+	 * @param minorDevCost
 	 */
-	public void setMinorDevelopmentCost(int minorDevelopmentCost) {
-		this.minorDevelopmentCost = minorDevelopmentCost;
+	public void setMinorDevCost(int minorDevCost) {
+		this.minorDevCost = minorDevCost;
 	}
 
 	/**
 	 * 
 	 * @return
 	 */
-	public int getMajorDevelopmentCost() {
-		return majorDevelopmentCost;
+	public int getMajorDevCost() {
+		return majorDevCost;
 	}
 
 	/**
 	 * 
-	 * @param majorDevelopmentCost
+	 * @param majorDevCost
 	 */
-	public void setMajorDevelopmentCost(int majorDevelopmentCost) {
-		this.majorDevelopmentCost = majorDevelopmentCost;
+	public void setMajorDevCost(int majorDevCost) {
+		this.majorDevCost = majorDevCost;
 	}
 
 	/**
@@ -124,21 +125,77 @@ public class Group {
 		this.owner = owner;
 	}
 
-	/// constr
 
+	/**
+	 * @return the monopolyOutput
+	 */
+	public int getMonopolyOutput() {
+		return monopolyOutput;
+	}
+
+	/**
+	 * @param monopolyOutput the monopolyOutput to set
+	 */
+	public void setMonopolyOutput(int monopolyOutput) {
+		this.monopolyOutput = monopolyOutput;
+	}
+
+	/**
+	 * @return the minorDevOutput
+	 */
+	public int getMinorDevOutput() {
+		return minorDevOutput;
+	}
+
+	/**
+	 * @param minorDevOutput the minorDevOutput to set
+	 */
+	public void setMinorDevOutput(int minorDevOutput) {
+		this.minorDevOutput = minorDevOutput;
+	}
+
+	/**
+	 * @return the majorDevOutput
+	 */
+	public int getMajorDevOutput() {
+		return majorDevOutput;
+	}
+
+	/**
+	 * @param majorDevOutput the majorDevOutput to set
+	 */
+	public void setMajorDevOutput(int majorDevOutput) {
+		this.majorDevOutput = majorDevOutput;
+	}
+
+	
+	
+	/// constr
+	
 	public Group() {
 	}
 
 	/**
-	 * A Group is set up with a name and areas added afterward
+	 * A Group is set up with a name and general parameters and areas added afterward
 	 * 
 	 * @param name
+	 * @param minorDevCost
+	 * @param majorDevCost
+	 * @param monopolyOutput
+	 * @param minorDevOutput
+	 * @param majorDevOutput
 	 */
-	public Group(String name, int minorDevelopmentCost, int majorDevelopmentCost) {
-		this.setName(name);
-		this.setMinorDevelopmentCost(minorDevelopmentCost);
-		this.setMajorDevelopmentCost(majorDevelopmentCost);
+	public Group(String name, int minorDevCost, int majorDevCost, int monopolyOutput, int minorDevOutput,
+			int majorDevOutput) {
+		this.name = name;
+		this.minorDevCost = minorDevCost;
+		this.majorDevCost = majorDevCost;
+		this.monopolyOutput = monopolyOutput;
+		this.minorDevOutput = minorDevOutput;
+		this.majorDevOutput = majorDevOutput;
 	}
+	
+	
 
 	/// methods
 
@@ -179,4 +236,5 @@ public class Group {
 		}
 		return true;
 	}
+	
 }

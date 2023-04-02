@@ -21,11 +21,10 @@ public class Area extends Square implements GeneratesIncome {
 	private Player owner;
 	private int cost;
 	private HashMap<String, ArrayList<Integer>> rentProfile = new HashMap<>(2);
-	
+	private int baseOutput;
 
 	private int monopolyLevel = 0;
 	private int developmentLevel = 0;
-	public int minorDevelopmentCost, majorDevelopmentCost;
 	public static final int MAX_LEVEL = 3;
 	private static final int MIN_LEVEL = 0;
 	
@@ -48,7 +47,7 @@ public class Area extends Square implements GeneratesIncome {
 	 * 
 	 * @param name
 	 */
-	public Area(String name, Group group, int cost, int[] monopolyProfile, int[] developmentProfile) {
+	public Area(String name, Group group, int cost, int[] monopolyProfile, int[] developmentProfile, int baseOutput) {
 		super(name);
 		this.group = group;
 		this.setCost(cost);
@@ -56,7 +55,7 @@ public class Area extends Square implements GeneratesIncome {
 				(ArrayList<Integer>) Arrays.stream(monopolyProfile).boxed().collect(Collectors.toList()));
 		this.rentProfile.put("Development",
 				(ArrayList<Integer>) Arrays.stream(developmentProfile).boxed().collect(Collectors.toList()));
-
+		this.baseOutput = baseOutput;
 	}
 
 	/// setget
@@ -208,10 +207,10 @@ public class Area extends Square implements GeneratesIncome {
 				//+"  Sale price: %s%s%,d%s%s"
 				, GameSystem.COLOUR_LOCATION, this.group.getName(), GameSystem.RESET
 				, GameSystem.COLOUR_OTHERPLAYER, ((this.owner != null) ? this.owner.getName() : "-"), GameSystem.RESET
-				, GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.getBaseRent(), GameSystem.SUF, GameSystem.RESET
-				, GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.getCurrentRent(), GameSystem.SUF, GameSystem.RESET
-				, GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.getRentProfile().get("Development").get(MAX_LEVEL), GameSystem.SUF, GameSystem.RESET
-				//, GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.getCost(), GameSystem.SUF, GameSystem.RESET
+				, GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.getBaseRent(), GameSystem.RES_SUF, GameSystem.RESET
+				, GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.getCurrentRent(), GameSystem.RES_SUF, GameSystem.RESET
+				, GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.getRentProfile().get("Development").get(MAX_LEVEL), GameSystem.RES_SUF, GameSystem.RESET
+				//, GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.getCost(), GameSystem.RES_SUF, GameSystem.RESET
 				);
 		return details;
 
@@ -222,7 +221,7 @@ public class Area extends Square implements GeneratesIncome {
 		return String.format("%n    %s%s%s (%s, cost %s%s%,d%s%s)"
 				, GameSystem.COLOUR_LOCATION, this.getName(), GameSystem.RESET
 				, this.group 
-				, GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.getCost(), GameSystem.SUF, GameSystem.RESET
+				, GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.getCost(), GameSystem.RES_SUF, GameSystem.RESET
 				);
 	}
 
@@ -291,7 +290,7 @@ public class Area extends Square implements GeneratesIncome {
 						+ "Type %sPass%s and Enter to offer it to the other players%n" 
 						+ "Type %sLeave%s to end the turn%s%n",
 						GameSystem.RESET,
-						GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.cost, GameSystem.SUF, GameSystem.RESET,
+						GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.cost, GameSystem.RES_SUF, GameSystem.RESET,
 						GameSystem.COLOUR_OPTION, GameSystem.RESET,
 						GameSystem.COLOUR_OPTION, GameSystem.RESET,
 						GameSystem.COLOUR_OPTION, GameSystem.RESET,
@@ -524,14 +523,14 @@ public class Area extends Square implements GeneratesIncome {
 				p1.decreaseBalance(a1.getCurrentRent());
 				a1.getOwner().increaseBalance(a1.getCurrentRent());
 				System.out.printf("Rent fee %s%s%,d%s%s paid successfully to %s%s%s.%n%n", 
-						GameSystem.COLOUR_RESOURCE, GameSystem.PRE, a1.getCurrentRent(), GameSystem.SUF, GameSystem.RESET,
+						GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, a1.getCurrentRent(), GameSystem.RES_SUF, GameSystem.RESET,
 						GameSystem.COLOUR_OTHERPLAYER, a1.getOwner().getName(), GameSystem.RESET);
 			}
 		} else {
 			p1.decreaseBalance(a1.getCurrentRent());
 			a1.getOwner().increaseBalance(a1.getCurrentRent());
 			System.out.printf("Rent fee %s%s%,d%s%s paid successfully to %s%s%s.%n", 
-					GameSystem.COLOUR_RESOURCE, GameSystem.PRE, a1.getCurrentRent(), GameSystem.SUF, GameSystem.RESET,
+					GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, a1.getCurrentRent(), GameSystem.RES_SUF, GameSystem.RESET,
 					GameSystem.COLOUR_OTHERPLAYER, a1.getOwner().getName(), GameSystem.RESET);
 			// TODO eliminate code repetition by renaming this method and putting the repeated coade in payRent();
 		}

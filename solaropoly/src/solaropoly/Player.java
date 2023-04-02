@@ -256,7 +256,7 @@ public class Player {
 	}
 	
 	public void displayBalance() {
-		System.out.printf("Your current balance is %s%s%,d%s%s and you own:%n", GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.balance, GameSystem.SUF, GameSystem.RESET);
+		System.out.printf("Your current balance is %s%s%,d%s%s and you own:%n", GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.balance, GameSystem.RES_SUF, GameSystem.RESET);
 		System.out.println("\n  Areas: "+this.getOwnedSquares());
 		System.out.println("  Groups: "+this.getOwnedGroups()+"\n");
 	}
@@ -354,7 +354,7 @@ public class Player {
 	}
 	
 	/**
-	 * This method is used to transfer {@value GameSystem#SUF} between players.
+	 * This method is used to transfer {@value GameSystem#RES_SUF} between players.
 	 * @param player - the player that receive the transaction.
 	 * @param amount - the amount of the transaction.
 	 * @return boolean - if the transaction goes well returns true
@@ -374,7 +374,7 @@ public class Player {
 					GameSystem.RESET, 
 					GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET, 
 					GameSystem.COLOUR_OTHERPLAYER, player.getName(), GameSystem.RESET, 
-					GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.balance, GameSystem.SUF, GameSystem.RESET);
+					GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.balance, GameSystem.RES_SUF, GameSystem.RESET);
 		}
 		return false;
 	}
