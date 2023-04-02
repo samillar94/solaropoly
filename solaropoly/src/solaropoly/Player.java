@@ -4,7 +4,6 @@
 package solaropoly;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 /**
  * This class holds properties about the player's status in game, including name, balance, position
@@ -34,7 +33,7 @@ public class Player {
 	private int position;
 	private ArrayList<Square> ownedSquares; // TODO make this TreeSet/ArrayList
 	private ArrayList<Group> ownedGroups;
-	private int turns; // TODO turn system for pause move or move more times
+	private int turns;
 	
 	/**
 	 * Default constructor
@@ -69,6 +68,20 @@ public class Player {
 	 */
 	public void setTurns(int turns) {
 		this.turns = turns;
+	}
+	
+	/**
+	 * Increase turn number
+	 */
+	public void increaseTurns() {
+		this.turns++;
+	}
+	
+	/**
+	 * Decrease turn number
+	 */
+	public void decreaseTurns() {
+		this.turns--;
 	}
 	
 	/**
@@ -188,7 +201,6 @@ public class Player {
 	 * This method move the player by a given valid dice result value and start his turn
 	 */
 	public void move(int roll) throws IllegalArgumentException {
-		Board.visualMap();
 		if (roll >= DICE_NUMBER) {
 			BoardPosition boardPosition = GameSystem.board.getBoardPosition(this.position, roll);
 			
@@ -224,14 +236,12 @@ public class Player {
 			}
 			
 			if (input.equalsIgnoreCase("Develop")) {
-				System.out.println(GameSystem.RESET+"You chose to develop an area.");
+				System.out.println(GameSystem.RESET + "You chose to develop an area.");
 				GameSystem.developArea(this);
 			} else if (input.equalsIgnoreCase("Trade")) {
-				System.out.println(GameSystem.RESET+"You chose to trade.");
+				System.out.println(GameSystem.RESET + "You chose to trade.");
 				Area.dutchAuctionSystem(this);
 			}
-			
-			System.out.println(GameSystem.RESET+"Turn ended. Next player...");
 		} else {
 			throw new IllegalArgumentException("Invalid dice roll. Try to change the number of dice to roll");
 		}
