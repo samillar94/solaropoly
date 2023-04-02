@@ -4,7 +4,6 @@
 package solaropoly;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 /**
  * This class holds properties about the player's status in game, including name, balance, position
@@ -34,6 +33,7 @@ public class Player {
 	private int position;
 	private ArrayList<Square> ownedSquares; // TODO make this TreeSet/ArrayList
 	private ArrayList<Group> ownedGroups;
+	private int turns;
 	
 	/**
 	 * Default constructor
@@ -52,6 +52,43 @@ public class Player {
 		this.setPosition(position);
 		this.ownedSquares = new ArrayList<Square>();
 		this.ownedGroups = new ArrayList<Group>();
+		this.turns = 0;
+	}
+	
+	/**
+	 * @return the turns
+	 */
+	public int getTurns() {
+		return turns;
+	}
+
+	/**
+	 * it gives if positive or stop if negative a certain amount of turns to the player.
+	 * @param turns the turns to set
+	 */
+	public void setTurns(int turns) {
+		this.turns = turns;
+	}
+	
+	/**
+	 * Increase turn number
+	 */
+	public void increaseTurns() {
+		this.turns++;
+	}
+	
+	/**
+	 * Decrease turn number
+	 */
+	public void decreaseTurns() {
+		this.turns--;
+	}
+	
+	/**
+	 * Decrease turn number
+	 */
+	public void sumTurns(int turns) {
+		this.turns += turns;
 	}
 	
 	/**
@@ -175,10 +212,12 @@ public class Player {
 			BoardPosition boardPosition = GameSystem.board.getBoardPosition(this.position, roll);
 			
 			for (int i = 0; i < boardPosition.getStartPassed(); i++) {
-				Go.passAct(this);
+				Go go = (Go) GameSystem.board.getSquare(0);
+				go.passAct(this);
 			}
 			
 			this.setPosition(boardPosition.getPosition());
+			
 			boardPosition.getSquare().act(this);
 			
 			// develop area and trade actions
@@ -205,26 +244,21 @@ public class Player {
 			}
 			
 			if (input.equalsIgnoreCase("Develop")) {
-				System.out.println(GameSystem.RESET+"You chose to develop an area.");
+				System.out.println(GameSystem.RESET + "You chose to develop an area.");
 				GameSystem.developArea(this);
 			} else if (input.equalsIgnoreCase("Trade")) {
-				System.out.println(GameSystem.RESET+"You chose to trade.");
+				System.out.println(GameSystem.RESET + "You chose to trade.");
 				Area.dutchAuctionSystem(this);
 			}
-			
-			System.out.println(GameSystem.RESET+"Turn ended. Next player...");
 		} else {
 			throw new IllegalArgumentException("Invalid dice roll. Try to change the number of dice to roll");
 		}
 	}
 	
 	public void displayBalance() {
-		System.out.printf("%s%s%s, your current balance is %s%s%,d%s%s and you own:%n", GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET, GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.balance, GameSystem.SUF, GameSystem.RESET);
-		System.out.println("Areas: "+this.getOwnedSquares());
-		System.out.println("Groups: "+this.getOwnedGroups());
-		for (Square square: this.getOwnedSquares()) {
-			System.out.print(square.getName()+"   ");
-		}
+		System.out.printf("Your current balance is %s%s%,d%s%s and you own:%n", GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.balance, GameSystem.SUF, GameSystem.RESET);
+		System.out.println("\n  Areas: "+this.getOwnedSquares());
+		System.out.println("  Groups: "+this.getOwnedGroups()+"\n");
 	}
 	
 	public void increaseBalance(int credit) {
@@ -239,14 +273,15 @@ public class Player {
 	 * Add a new owned square
 	 * @param square
 	 */
-	public void gainOwnership(Square square) {
+	public void gainProperty(Square square) {
 		this.ownedSquares.add(square);
 	}
+	
 	/**
 	 * Add a new owned group
 	 * @param group
 	 */
-	public void gainOwnership(Group group) {
+	public void gainProperty(Group group) {
 		this.ownedGroups.add(group);
 	}
 	
@@ -254,7 +289,7 @@ public class Player {
 	 * Remove a square from the owned squares
 	 * @param square
 	 */
-	public void removeOwnership(Square square) {
+	public void removeProperty(Square square) {
 		this.ownedSquares.remove(square);
 	}
 	
@@ -262,19 +297,78 @@ public class Player {
 	 * Remove a group from the owned groups
 	 * @param group
 	 */
-	public void removeOwnership(Group group) {
+	public void removeProperty(Group group) {
 		this.ownedGroups.remove(group);
 	}
 	
 	/**
-	 * This method is used to transfer resources between players.
+	 * This method transfer or assign the ownership of a given Area to this player.
+	 * To do so the method modifies the ownership in the Group object if all the areas are owned
+	 * by one player after the transfer of the ownership, sets the new owner of the area and updates
+	 * the owned groups and squares on this object at once.
+	 * @param area - the area to gain.
+	 */
+	public void gainOwnership(Area area) {
+		area.changeOwnership(this);
+	}
+	
+	/**
+	 * This method transfer or assign the ownership of a given Group to this player.
+	 * To do so the method modifies the ownership in the Group, sets the new owner
+	 * of the areas of the group and updates the owned groups and squares on this object at once.
+	 * It also resets the ownership to other players if they had one of the areas of the group.
+	 * @param group - the whole group to gain.
+	 */
+	public void gainOwnership(Group group) {
+		for (Area area : group.getAreas()) {
+			area.changeOwnership(this);
+		}
+	}
+	
+	/**
+	 * This method remove the ownership of a given Area to this player.
+	 * To do so the Area should be owned by this player. It updates
+	 * the owned groups and squares on this object, the Group
+	 * owner of that area and the area owner at once.
+	 * @param area - the area to remove
+	 */
+	public void removeOwnership(Area area) {
+		area.removeOwnership(this);
+	}
+	
+	/**
+	 * This method remove the ownership of a given Group to this player.
+	 * To do so the Area should be owned by this player. It updates
+	 * the owned groups and squares on this object, the Group
+	 * owner of that area and the area owner at once.
+	 * @param group - the whole group to remove
+	 */
+	public void removeOwnership(Group group) {
+		if (this.getOwnedSquares().containsAll(group.getAreas())) {
+			for (Area area : group.getAreas()) {
+				area.removeOwnership(this);
+			}
+		} else {
+			System.err.println("This player doesn't own all the squares of this group");
+		}
+	}
+	
+	/**
+	 * This method is used to transfer {@value GameSystem#SUF} between players.
 	 * @param player - the player that receive the transaction.
 	 * @param amount - the amount of the transaction.
+	 * @return boolean - if the transaction goes well returns true
 	 */
-	public void transaction(Player player, int amount) {
+	public boolean transaction(Player player, int amount) {
 		if (this.balance >= amount) {
-			player.increaseBalance(amount);
-			this.decreaseBalance(amount);
+			try {
+				player.increaseBalance(amount);
+				this.decreaseBalance(amount);
+				return true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.err.println("Transaction aborted...");
+			}
 		} else {
 			System.out.printf("Sorry %s%s%s, you don't have enough resource to transfer to %s%s%s, your balance is %s%s%,d%s%s.%n",
 					GameSystem.RESET, 
@@ -282,5 +376,6 @@ public class Player {
 					GameSystem.COLOUR_OTHERPLAYER, player.getName(), GameSystem.RESET, 
 					GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.balance, GameSystem.SUF, GameSystem.RESET);
 		}
+		return false;
 	}
 }

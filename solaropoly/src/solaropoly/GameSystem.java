@@ -1,10 +1,9 @@
 /**
- * 
+ * Solaropoly Game
  */
 package solaropoly;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -24,7 +23,8 @@ import java.io.IOException;
 public class GameSystem {
 
 	/// game parameter constants (rules)
-	public static final int STARTING_BALANCE = 15000000;
+	public static int startingBalance;
+	public static int productionGoal;
 	public static final int MIN_PLAYERS = 2;
 	public static final int MAX_PLAYERS = 4;
 	public static final String PRE = ""; /// resource prefix
@@ -107,17 +107,18 @@ public class GameSystem {
 	public static final String COLOUR_INPUT = YELLOW;
 	public static final String COLOUR_OPTION = YELLOW_BRIGHT;
 	public static final String COLOUR_RESOURCE = GREEN_BRIGHT;
-
+	public static final String COLOUR_LOCATION = CYAN_BOLD;
+	
 	/// essential components
 
 	public static Board board = new Board();
 
 	public static final Scanner SCANNER = new Scanner(System.in);
 
-	public static boolean gameEndTrigger = false;
-
 	public static ArrayList<Player> players = new ArrayList<Player>();
-
+	
+	public static final String BOARD_FILE = "solaropoly-london.csv";
+	
 	/**
 	 * Stores only players that are still in game
 	 */
@@ -131,30 +132,48 @@ public class GameSystem {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-
+		
 		try {
+			
+			welcome();
+			
 			setupBoard();
+			
 			/// set number of players
 			int numPlayers = setNumPlayers();
-
+			
 			/// register players
 			players = registerPlayers(numPlayers);
 			playersInGame.addAll(players);
-
-			/// game starts - do while (and try-catch?), cycling through players until game
+			/// TODO Replace board map with list that can accommodate other than 12 squares
+//			board.visualMap();
+			
+			/// game starts - cycling through players until game
 			/// end triggered
-			while (!gameEndTrigger) {
+			int firstPlayerIndex = 0;
+			for (int playerIndex = firstPlayerIndex; !gameEndTrigger(); playerIndex = playerIndex%numPlayers) {
 
-				for (Player player : players) {
-					if (playersInGame.contains(player)) {
-
-						Thread.sleep(2000);
-
-						turn(player);
+				if (playersInGame.contains(players.get(playerIndex))) {
+					
+					players.get(playerIndex).getAttention();
+					Thread.sleep(1000);
+					
+					if (players.get(playerIndex).getTurns() < 0) {
+						System.out.println("Number of turns to skip: " + Math.abs(players.get(playerIndex).getTurns()) + ". Turn skipped...");
+						players.get(playerIndex).increaseTurns();
+						continue;
 					}
-					if (gameEndTrigger)
-						break;
+					
+					players.get(playerIndex).increaseTurns();
+					
+					do {
+						turn(players.get(playerIndex));
+						players.get(playerIndex).decreaseTurns();
+					} while (players.get(playerIndex).getTurns() > 0);
+					
 				}
+				
+				System.out.println(GameSystem.RESET + "Turn ended. Next player...");
 
 			}
 
@@ -194,81 +213,143 @@ public class GameSystem {
 		}
 
 	}
-
+	
+	private static void welcome() {
+		
+		System.out.println("    Welcome to SOLAROPOLY!    \n\n"
+				+"In this game, you'll each take the role of a solar energy startup competing for "
+				+"space to set up your infrastructure production facilities and solar farms. "
+				+"Starting the game with "+COLOUR_RESOURCE+ PRE+ startingBalance+ SUF+ RESET+" in renewable energy tokens,"
+				+"the goal is to maximise energy production among all players. But the player whose "
+				+"production tips the total energy capture over "+COLOUR_RESOURCE+ PRE+ productionGoal+ SUF+ RESET+" gets an all-expenses paid "
+				+"adventure trip to the Sunshine State, California! So compete and collaborate wisely.\n");
+		
+	}
+	
 	/**
-	 * reads from csv file rent prices
-	 */
+	* Reads game, square and group parameters from csv.
+	* The csv should include Group data before Square data.
+	*/
 	private static void setupBoard() {
 
 		ArrayList<Square> squares = new ArrayList<Square>(12);
-		ArrayList<Area> areas = new ArrayList<Area>(10);
 		ArrayList<Group> groups = new ArrayList<Group>(4);
-
-		squares.add(new Go("Go"));
-		squares.add(new Parking("The Sea"));
-
-		groups.add(new Group("Field A"));
-		groups.add(new Group("Field B"));
-		groups.add(new Group("Field C"));
-		groups.add(new Group("Field D"));
-
-		groups.get(0).setMinorDevelopmentCost(50000);
-		groups.get(0).setMajorDevelopmentCost(100000);
-		groups.get(1).setMinorDevelopmentCost(45000);
-		groups.get(1).setMajorDevelopmentCost(75000);
-		groups.get(2).setMinorDevelopmentCost(80000);
-		groups.get(2).setMajorDevelopmentCost(150000);
-		groups.get(3).setMinorDevelopmentCost(60000);
-		groups.get(3).setMajorDevelopmentCost(120000);
-
-		File file = new File("Solaropoly.csv");
-
-		try {
-
-			FileReader fr = new FileReader(file);
-			BufferedReader br = new BufferedReader(fr);
+	
+		File file = new File(BOARD_FILE);
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+			
 			String line;
 			br.readLine();
 			line = br.readLine();
-
-			while (line != null) {
-
+			
+			while(line!=null) {
+			
 				String[] data = line.split(",");
-				int baseRent = Integer.parseInt(data[0]);
-				int oneHouse = Integer.parseInt(data[1]);
-				int twoHouse = Integer.parseInt(data[2]);
-				int threeHouse = Integer.parseInt(data[3]);
-				int oneHotel = Integer.parseInt(data[4]);
-				String areaName = data[5];
-				int groupIndex = Integer.parseInt(data[6]);
-				int cost = Integer.parseInt(data[7]);
-
-				int[] monopolyProfile = { baseRent, baseRent * 2 };
-				int[] developmentProfile = { baseRent, oneHouse, twoHouse, threeHouse, oneHotel };
-
-				Area area = new Area(areaName, groups.get(groupIndex), cost, monopolyProfile, developmentProfile);
-				areas.add(area);
-
-				line = br.readLine();
-
+	
+				// switch on datatype
+				switch (data[0]) {
+				case "Game":
+					
+					switch (data[3]) {
+					
+					case "startingBalance": 
+						
+						startingBalance = Integer.parseInt(data[4]);
+						break;
+						
+					case "productionGoal":
+						
+						productionGoal = Integer.parseInt(data[4]);
+						break;
+						
+					default:
+						
+						System.out.println("Game line in board setup csv skipped due to invalid \"name\" value");
+					
+					}
+					break;
+					
+				case "Group":
+					
+					groups.add(new Group(data[3]));
+					break;
+					
+				case "Square":
+					
+					switch (data[2]) {
+					
+					case "Area":
+						
+						String areaName = data[3];
+						int cost = Integer.parseInt(data[4]);
+						int baseRent = Integer.parseInt(data[5]);
+						int oneDev = Integer.parseInt(data[6]);
+						int twoDev = Integer.parseInt(data[7]);
+						int threeDev = Integer.parseInt(data[8]);
+						int majorDev = Integer.parseInt(data[9]);
+						int groupIndex = Integer.parseInt(data[10]);
+						
+						int[] monopolyProfile = {baseRent, baseRent*2};
+						int[] developmentProfile = {baseRent, oneDev, twoDev, threeDev, majorDev};
+						
+						Area area = new Area(areaName, groups.get(groupIndex), cost, monopolyProfile, developmentProfile);
+						squares.add(area);
+						break;
+						
+					case "Go":
+						
+						squares.add(new Go(data[3], Integer.parseInt(data[4])));
+						break;
+						
+					case "Parking":
+						
+						squares.add(new Parking(data[3]));
+						break;	
+						
+					case "Failure":
+						
+						squares.add(new Failure(data[3], Integer.parseInt(data[4])));
+						break;	
+						
+					case "Event":
+						
+						// TODO add cards
+						squares.add(new Event(data[3], null));
+						break;	
+						
+					default:
+						
+						System.out.println("Square line in board setup csv skipped due to invalid \"type\" value");
+					
+					}
+					
+					break;
+					
+				default: 
+					
+					System.out.println("Line in board setup csv skipped due to invalid \"data\" value");
+					
+				}
+				
+				line = br.readLine();	
+				
 			}
-
-			squares.addAll(areas);
-
-			for (Group group : groups) {
-				group.setAreas(areas);
-			}
-
+			
 			board.setSquares(squares);
+			
+			for (Group group : groups) {
+				group.setAreas(squares);
+			}
+			
 			board.setGroups(new HashSet<Group>(groups));
-
-			br.close();
-
+	
+			
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			System.out.println("File not found - check BOARD_FILE in Game.java");
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Input exception - check csv file for issues");
 			e.printStackTrace();
 		}
 
@@ -284,13 +365,15 @@ public class GameSystem {
 
 		int num = 0;
 
-		while (num == 0) {
-			System.out.println(RESET + "How many are playing? Type a number between " + COLOUR_OPTION + MIN_PLAYERS
-					+ RESET + " and " + COLOUR_OPTION + MAX_PLAYERS + RESET + " and press Enter." + COLOUR_INPUT);
+		while (num<MIN_PLAYERS || num>MAX_PLAYERS) {
+			System.out.println(RESET+"How many are playing? Type a number between "+COLOUR_OPTION+MIN_PLAYERS+RESET
+				+" and "+COLOUR_OPTION+MAX_PLAYERS+RESET+" and press Enter."+COLOUR_INPUT);
 			try {
 				num = SCANNER.nextInt();
+				if (num<MIN_PLAYERS || num>MAX_PLAYERS) System.out.println(RESET+"Sorry, invalid number.");
 			} catch (InputMismatchException e) {
-				System.out.println(RESET + "Sorry, need a whole number." + COLOUR_INPUT);
+				System.out.println(RESET+"Sorry, need a whole number."+COLOUR_INPUT);
+				SCANNER.nextLine();
 			} catch (Exception e) {
 				System.out.println(RESET + "Sorry, try again." + COLOUR_INPUT);
 			}
@@ -334,13 +417,11 @@ public class GameSystem {
 
 					} else {
 
-						playersBuilder.add(new Player(name, STARTING_BALANCE, 0));
+						playersBuilder.add(new Player(name, startingBalance, 0));
 						names.add(name);
 						resolved = true;
-						System.out.printf("%sWelcome %s%s%s! You start the game with a balance of %s%s%,d%s%s.%n",
-								RESET, COLOUR_PLAYER, playersBuilder.get(playerNum - 1).getName(), RESET,
-								COLOUR_RESOURCE, PRE, STARTING_BALANCE, SUF, RESET);
-
+						System.out.printf("%sWelcome %s%s%s! You start the game with a balance of %s%s%,d%s%s.%n", RESET, COLOUR_PLAYER, playersBuilder.get(playerNum-1).getName(), RESET, COLOUR_RESOURCE, PRE, startingBalance, SUF, RESET);
+					
 					}
 
 				} catch (Exception e) {
@@ -352,9 +433,9 @@ public class GameSystem {
 			}
 
 		}
-
-		System.out.println(RESET + "Welcome, all, to SOLAROPOLY");
-
+		
+		System.out.println(RESET+"Right everyone, let's go catch some rays!");
+		
 		return playersBuilder;
 	}
 
@@ -371,9 +452,18 @@ public class GameSystem {
 		boolean consent = consent(player);
 
 		if (consent) {
+			
+			// TODO Replace map with list that can accommodate other than 12 Squares
+//			board.visualMap();
 
-			player.move(rollDice(player));
-
+			int roll = rollDice(player);
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {}
+			
+			player.move(roll);
+		
 		} else {
 
 			playersInGame.remove(player);
@@ -385,10 +475,8 @@ public class GameSystem {
 			}
 
 		}
+		
 
-		if (players.size() < 2 || playersInGame.size() < 2) {
-			gameEndTrigger = true;
-		}
 	}
 
 	/**
@@ -399,7 +487,6 @@ public class GameSystem {
 	 * @return boolean - the decision
 	 */
 	private static boolean consent(Player player) {
-		player.getAttention();
 		player.displayBalance();
 		String input = "";
 		System.out.printf(
@@ -677,13 +764,25 @@ public class GameSystem {
 		int rollA = die1.roll();
 		int rollB = die2.roll();
 
-		int total = rollA + rollB;
-
-		System.out.printf("%s%s%s, you've rolled a %d and a %d for %d total, landing you in position %d.%n",
-				COLOUR_PLAYER, player.getName(), RESET, rollA, rollB, total,
-				((player.getPosition() - 1 + total) % board.getSize()) + 1);
-
+		System.out.printf("%s%s%s, you've rolled a %d and a %d for %d total.%n", COLOUR_PLAYER, player.getName(), RESET, rollA, rollB, total);
+		
 		return total;
+	}
+	
+	/**
+	 * Game end trigger - called before every turn
+	 * @return
+	 */
+	public static boolean gameEndTrigger() {
+		
+		// trigger game end if only one player
+		if (players.size() < 2 || playersInGame.size() < 2) return true;
+		
+		// trigger game end if productionGoal reached
+		int totalResource = 0;
+		for (Player player : players) totalResource += player.getBalance();
+		return (totalResource >= productionGoal);
+		
 	}
 
 }

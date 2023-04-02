@@ -1,3 +1,2 @@
-put story here? :D 
-//Li's try
+Welcome to SOLAROPOLY!
 
