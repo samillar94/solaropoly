@@ -4,21 +4,21 @@
 package solaropoly;
 
 /**
- * Second square on the board with no effects - equivalent to Monopoly "Just Parking"
+ * Second square on the board with no effects - equivalent to Monopoly "Just Holiday"
  * @author G17
  */
-public class Parking extends Square {
+public class Holiday extends Square {
 
 	/**
 	 * 
 	 */
-	public Parking() {
+	public Holiday() {
 	}
 
 	/**
 	 * @param name
 	 */
-	public Parking(String name) {
+	public Holiday(String name) {
 		super(name);
 	}
 

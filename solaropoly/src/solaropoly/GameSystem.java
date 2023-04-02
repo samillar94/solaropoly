@@ -311,14 +311,14 @@ public class GameSystem {
 						squares.add(area);
 						break;
 						
-					case "Go":
+					case "Sunrise":
 						
-						squares.add(new Go(data[3], Integer.parseInt(data[4])));
+						squares.add(new Sunrise(data[3], Integer.parseInt(data[4])));
 						break;
 						
-					case "Parking":
+					case "Holiday":
 						
-						squares.add(new Parking(data[3]));
+						squares.add(new Holiday(data[3]));
 						break;	
 						
 					case "Failure":
