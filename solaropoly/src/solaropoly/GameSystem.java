@@ -23,12 +23,15 @@ import java.io.IOException;
 public class GameSystem {
 
 	/// game parameter constants (rules)
+	/// set from csv
 	public static int startingBalance;
 	public static int productionGoal;
+	/// set here
 	public static final int MIN_PLAYERS = 2;
 	public static final int MAX_PLAYERS = 4;
 	public static final String PRE = ""; /// resource prefix
-	public static final String SUF = " kWh"; /// resource suffix
+	public static final String SUF = " GET"; /// resource suffix
+	
 	/// console colour keys
 	// Regular
 	public static final String RESET = "\u001B[0m";
@@ -135,9 +138,9 @@ public class GameSystem {
 		
 		try {
 			
-			welcome();
-			
 			setupBoard();
+			
+			welcome();
 			
 			/// set number of players
 			int numPlayers = setNumPlayers();
@@ -145,13 +148,14 @@ public class GameSystem {
 			/// register players
 			players = registerPlayers(numPlayers);
 			playersInGame.addAll(players);
+			
 			/// TODO Replace board map with list that can accommodate other than 12 squares
 //			board.visualMap();
 			
 			/// game starts - cycling through players until game
 			/// end triggered
 			int firstPlayerIndex = 0;
-			for (int playerIndex = firstPlayerIndex; !gameEndTrigger(); playerIndex = playerIndex%numPlayers) {
+			for (int playerIndex = firstPlayerIndex; !gameEndTrigger(); playerIndex = (playerIndex+1)%numPlayers) {
 
 				if (playersInGame.contains(players.get(playerIndex))) {
 					
@@ -216,24 +220,29 @@ public class GameSystem {
 	
 	private static void welcome() {
 		
-		System.out.println("    Welcome to SOLAROPOLY!    \n\n"
+		System.out.println(WHITE_BOLD+"\n    Welcome to SOLAROPOLY!    \n\n"+RESET
 				+"In this game, you'll each take the role of a solar energy startup competing for "
-				+"space to set up your infrastructure production facilities and solar farms. "
-				+"Starting the game with "+COLOUR_RESOURCE+ PRE+ startingBalance+ SUF+ RESET+" in renewable energy tokens,"
+				+"space to set up your infrastructure production facilities and solar farms. \n\n"
+				+"Starting the game with "
+				+COLOUR_RESOURCE+ PRE+ String.format("%,d",startingBalance)+ SUF+ RESET
+				+" (Green Energy Tokens), "
 				+"the goal is to maximise energy production among all players. But the player whose "
-				+"production tips the total energy capture over "+COLOUR_RESOURCE+ PRE+ productionGoal+ SUF+ RESET+" gets an all-expenses paid "
-				+"adventure trip to the Sunshine State, California! So compete and collaborate wisely.\n");
+				+"production tips the total energy capture over "
+				+COLOUR_RESOURCE+ PRE+ String.format("%,d",productionGoal)+ SUF+ RESET
+				+" recieves a legendary commemorative ScamCoin! So compete and collaborate wisely.\n");
 		
 	}
 	
 	/**
 	* Reads game, square and group parameters from csv.
 	* The csv should include Group data before Square data.
+	* The read order of Game parameters and Cards doesn't matter.
 	*/
 	private static void setupBoard() {
 
-		ArrayList<Square> squares = new ArrayList<Square>(12);
+		ArrayList<Square> squares = new ArrayList<Square>(14);
 		ArrayList<Group> groups = new ArrayList<Group>(4);
+		ArrayList<Card> cards = new ArrayList<Card>();
 	
 		File file = new File(BOARD_FILE);
 		
@@ -242,6 +251,7 @@ public class GameSystem {
 			String line;
 			br.readLine();
 			line = br.readLine();
+			int counter = 1;
 			
 			while(line!=null) {
 			
@@ -265,14 +275,18 @@ public class GameSystem {
 						
 					default:
 						
-						System.out.println("Game line in board setup csv skipped due to invalid \"name\" value");
+						System.err.println("Line "+counter+" (Game) in board setup csv skipped due to invalid \"name\" value");
 					
 					}
 					break;
 					
 				case "Group":
 					
-					groups.add(new Group(data[3]));
+					String groupName = data[3];
+					int minorDevCost = Integer.parseInt(data[5]);
+					int majorDevCost = Integer.parseInt(data[9]);
+					
+					groups.add(new Group(groupName, minorDevCost, majorDevCost));
 					break;
 					
 				case "Square":
@@ -320,19 +334,31 @@ public class GameSystem {
 						
 					default:
 						
-						System.out.println("Square line in board setup csv skipped due to invalid \"type\" value");
+						System.err.println("Line "+counter+" (Square) in board setup csv skipped due to invalid \"type\" value");
 					
 					}
+					
+					break;
+				
+				case "Card":
+					
+					String eventText = data[3];
+					int move = Integer.parseInt(data[11]);
+					int earn = Integer.parseInt(data[12]);
+					int turns = Integer.parseInt(data[13]);
+
+					cards.add(new Card(eventText, move, earn, turns));
 					
 					break;
 					
 				default: 
 					
-					System.out.println("Line in board setup csv skipped due to invalid \"data\" value");
+					System.err.println("Line "+counter+" in board setup csv skipped due to invalid \"data\" value");
 					
 				}
 				
 				line = br.readLine();	
+				counter++;
 				
 			}
 			
@@ -343,14 +369,27 @@ public class GameSystem {
 			}
 			
 			board.setGroups(new HashSet<Group>(groups));
+			
+			for (Square square : squares) {
+				if (square instanceof Event) {
+					((Event) square).addCards(cards);
+				}
+			}
+			
+			
+			
 	
 			
 		} catch (FileNotFoundException e) {
+			
 			System.out.println("File not found - check BOARD_FILE in Game.java");
 			e.printStackTrace();
+			
 		} catch (IOException e) {
+			
 			System.out.println("Input exception - check csv file for issues");
 			e.printStackTrace();
+			
 		}
 
 	}
@@ -366,16 +405,24 @@ public class GameSystem {
 		int num = 0;
 
 		while (num<MIN_PLAYERS || num>MAX_PLAYERS) {
+			
 			System.out.println(RESET+"How many are playing? Type a number between "+COLOUR_OPTION+MIN_PLAYERS+RESET
 				+" and "+COLOUR_OPTION+MAX_PLAYERS+RESET+" and press Enter."+COLOUR_INPUT);
+			
 			try {
+				
 				num = SCANNER.nextInt();
 				if (num<MIN_PLAYERS || num>MAX_PLAYERS) System.out.println(RESET+"Sorry, invalid number.");
+				
 			} catch (InputMismatchException e) {
+				
 				System.out.println(RESET+"Sorry, need a whole number."+COLOUR_INPUT);
 				SCANNER.nextLine();
+				
 			} catch (Exception e) {
+				
 				System.out.println(RESET + "Sorry, try again." + COLOUR_INPUT);
+				
 			}
 
 		}
@@ -759,14 +806,18 @@ public class GameSystem {
 	 * rollDice method called from turn method. imitates 2 dice.
 	 */
 	private static int rollDice(Player player) {
+		
 		Die die1 = new Die(), die2 = new Die();
 
 		int rollA = die1.roll();
 		int rollB = die2.roll();
+		
+		int total = rollA+rollB;
 
 		System.out.printf("%s%s%s, you've rolled a %d and a %d for %d total.%n", COLOUR_PLAYER, player.getName(), RESET, rollA, rollB, total);
 		
 		return total;
+		
 	}
 	
 	/**

@@ -219,7 +219,7 @@ public class Area extends Square implements GeneratesIncome {
 	
 	@Override
 	public String toString() {
-		return String.format("%n    %s%s%s (%s, value %s%s%,d%s%s)"
+		return String.format("%n    %s%s%s (%s, cost %s%s%,d%s%s)"
 				, GameSystem.COLOUR_LOCATION, this.getName(), GameSystem.RESET
 				, this.group 
 				, GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.getCost(), GameSystem.SUF, GameSystem.RESET
@@ -255,8 +255,10 @@ public class Area extends Square implements GeneratesIncome {
 	 */
 	@Override
 	public void act(Player player) {
-		System.out
-				.println("You landed in: "  + GameSystem.COLOUR_LOCATION + this.getName() + GameSystem.RESET + " (position "  + GameSystem.COLOUR_LOCATION + player.getPosition() + GameSystem.RESET + ")\n" + "This square information:\n\n" + this.detailsArea());
+		System.out.println("\nYou landed in: "  
+	+ GameSystem.COLOUR_LOCATION + this.getName() + GameSystem.RESET 
+	+ " (position "  + GameSystem.COLOUR_LOCATION + player.getPosition() + GameSystem.RESET + ")\n" 
+	+ "This square information:\n\n" + this.detailsArea());
 
 		if (this.owner == null) {
 			purchaseArea(player);

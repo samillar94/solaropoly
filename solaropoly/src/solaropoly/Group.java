@@ -134,8 +134,10 @@ public class Group {
 	 * 
 	 * @param name
 	 */
-	public Group(String name) {
+	public Group(String name, int minorDevelopmentCost, int majorDevelopmentCost) {
 		this.setName(name);
+		this.setMinorDevelopmentCost(minorDevelopmentCost);
+		this.setMajorDevelopmentCost(majorDevelopmentCost);
 	}
 
 	/// methods
