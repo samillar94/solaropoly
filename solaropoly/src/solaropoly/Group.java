@@ -56,13 +56,15 @@ public class Group {
 	 * @param areas an ArrayList of areas - only those of this field 
 	 * will be added
 	 */
-	public void setAreas(ArrayList<Area> areas) {
+	public void setAreas(ArrayList<Square> squares) {
 		
 		ArrayList<Area> thissAreas = new ArrayList<Area>();
 		
-		for (Area area : areas) {
-			if (area.getGroup() == this) {
-				thissAreas.add(area);
+		for (Square square : squares) {
+			if (square instanceof Area) {
+				if (((Area) square).getGroup() == this) {
+					thissAreas.add((Area) square);
+				}
 			}
 		}
 		
