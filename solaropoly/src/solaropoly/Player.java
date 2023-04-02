@@ -85,6 +85,13 @@ public class Player {
 	}
 	
 	/**
+	 * Decrease turn number
+	 */
+	public void sumTurns(int turns) {
+		this.turns += turns;
+	}
+	
+	/**
 	 * @return the name
 	 */
 	public String getName() {
