@@ -307,7 +307,7 @@ public class Board {
 		// for(int loop=2;loop<10;loop++) {
 		// areaInfor.put((Area)GameSystem.board.getSquare(loop),0);
 		// }
-		System.out.println("Here is visualized map, your action will be in clockwise order");
+		System.out.println("\nHere is the board map - players move clockwise:");
 		StringBuilder sb = new StringBuilder();
 		ArrayList<Area> areas = new ArrayList<>();
 		ArrayList<String> areaInfor = new ArrayList<>();
@@ -349,5 +349,6 @@ public class Board {
 		sb.append(String.format("%92s\n","|"));
 		sb.append(String.format("%-36s",areaInfor.get(7)) + " ———— "+String.format("%-36s",areaInfor.get(6))+"——"+String.format("%-37s",areaInfor.get(5))+"———"+String.format("%-40s",areaInfor.get(4)));
 		System.out.println(sb);
+		System.out.println();
 	}
 }

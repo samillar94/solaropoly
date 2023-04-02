@@ -248,9 +248,9 @@ public class Player {
 	}
 	
 	public void displayBalance() {
-		System.out.printf("%s%s%s, your current balance is %s%s%,d%s%s and you own:%n", GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET, GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.balance, GameSystem.SUF, GameSystem.RESET);
-		System.out.println("Areas: " + this.getOwnedSquares());
-		System.out.println("Groups: " + this.getOwnedGroups());
+		System.out.printf("Your current balance is %s%s%,d%s%s and you own:%n", GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.balance, GameSystem.SUF, GameSystem.RESET);
+		System.out.println("\n  Areas: "+this.getOwnedSquares());
+		System.out.println("  Groups: "+this.getOwnedGroups()+"\n");
 	}
 	
 	public void increaseBalance(int credit) {
