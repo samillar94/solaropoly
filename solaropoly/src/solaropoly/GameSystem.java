@@ -25,7 +25,7 @@ public class GameSystem {
 	/// game parameter constants (rules)
 	/// set from csv
 	public static int startingBalance;
-	public static int productionGoal;
+	public static int productionTarget;
 	public static int maxTurns;
 	public static Player currentPlayer;
 	/// set here
@@ -164,23 +164,24 @@ public class GameSystem {
         System.out.println(String.valueOf(SEPARATOR_CHAR).repeat(consoleWidth)+"\n");
 		
 		// win or lose message
-		if (getTotalOutput() >= productionGoal) {
+		if (getTotalOutput() >= productionTarget) {
 			
 			System.out.printf("CONGRATULATIONS!! The project reached its target output of %s%s%,d%s%s with "
 					+ "%d turn%s to spare!%n%n"
-					, COLOUR_OUTPUT, OUT_PRE, productionGoal, OUT_SUF, RESET
+					, COLOUR_OUTPUT, OUT_PRE, productionTarget, OUT_SUF, RESET
 					, turnsLeft, s
 					);
-			System.out.printf("%s%s%s, you generated the %sth megawatt, and as thanks you receive a "
-					+ "beautifully sculpted ScamCoin made of one tonne of recycled plastic recovered "
-					+ "from the Pacific Ocean. Wear it with pride."
+			System.out.printf("%s%s%s, you generated the %dth megawatt, and as thanks you receive a "
+					+ "beautifully sculpted commemorative ScamCoin made from one tonne of recycled plastic recovered "
+					+ "from the Pacific Ocean. Wear it with pride.%n%n"
 					, COLOUR_PLAYER, currentPlayer.getName(), RESET
+					, productionTarget
 					);
 			
 		} else {
 			
 			System.out.printf("Unfortunately, you've all run out of time and not met the target combined output of %s%s%,d%s%s.%n%n"
-					, COLOUR_OUTPUT, OUT_PRE, productionGoal, OUT_SUF, RESET
+					, COLOUR_OUTPUT, OUT_PRE, productionTarget, OUT_SUF, RESET
 					);
 			
 		}
@@ -199,7 +200,7 @@ public class GameSystem {
 			}
 
 			System.out.printf(
-					"%s%s%s has %s%s%,d%s%s and owns %s%s%,d%s%s of assets %s.%nThe company is valued at %s%s%,d%s%s"
+					"%s%s%s has %s%s%,d%s%s and owns %s%s%,d%s%s of assets %s.%nThe company is valued at %s%s%,d%s%s "
 					+ "and is generating %s%s%,d%s%s of power.%n%n"
 					, COLOUR_PLAYER, player.getName(), RESET
 					, COLOUR_RESOURCE, RES_PRE, player.getBalance(), RES_SUF, RESET
@@ -215,20 +216,36 @@ public class GameSystem {
 		
 	}
 
+	/**
+	 * Welcome message setting the scene for the game
+	 */
 	private static void welcome() {
+		
+		/// find max output
+		int maxOutput = 0;
+		for (Square square : board.getSquares()) {
+			if (square instanceof Area) {
+				maxOutput += ((Area) square).getMaxOutput();
+			}
+		}
 		
 		System.out.println(ColourLibrary.WHITE_BOLD+"\n    Welcome to SOLAROPOLY!    \n\n"+RESET
 				+"In this game, you'll each take the role of a solar energy startup competing for "
 				+"space to set up your solar farms, production facilities and grids across the globe. \n\n"
 				+"Starting the game with "
 				+COLOUR_RESOURCE+ RES_PRE+ String.format("%,d",startingBalance)+ RES_SUF+ RESET
-				+" (Green Energy Tokens), "
-				+"the goal is to maximise energy production among all players and reach the target of "
-				+COLOUR_OUTPUT+ OUT_PRE+ String.format("%,d",productionGoal)+ OUT_SUF+ RESET
-				+" within "+maxTurns+" turns - so compete and collaborate wisely. \n\n"
-				+"But also, the player whose "
-				+"production increase tips the total energy capture over the target "
-				+"recieves a legendary commemorative ScamCoin! \n");
+				+" (Green Energy Tokens) each, provided by the United Nations for the project, "
+				+"the goal is to maximise energy production among all companies and reach the target of "
+				+COLOUR_OUTPUT+ OUT_PRE+ String.format("%,d",productionTarget)+ OUT_SUF+ RESET
+				+" within "+maxTurns+" turns - so compete and collaborate wisely.\n\n"
+				+"But also, the player whose production increase tips the total energy capture over the target "
+				+"recieves a legendary commemorative ScamCoin! \n\n"
+				+"You can increase production by buying infrastructure, completing infrastructure sets, and developing "
+				+"completed sets - the theoretical maximum output for this board is "
+				+COLOUR_OUTPUT+ OUT_PRE+ String.format("%,d",maxOutput)+ OUT_SUF+ RESET
+				+".\n"
+				);
+		
 		
 	}
 	
@@ -251,7 +268,6 @@ public class GameSystem {
 			br.readLine();
 			line = br.readLine();
 			int counter = 1;
-			int maxOutput = 0;
 						
 			while(line!=null) {
 			
@@ -268,9 +284,9 @@ public class GameSystem {
 						startingBalance = Integer.parseInt(data[4]);
 						break;
 						
-					case "productionGoal":
+					case "productionTarget":
 						
-						productionGoal = Integer.parseInt(data[4]);
+						productionTarget = Integer.parseInt(data[4]);
 						break;
 						
 					case "maxTurns":
@@ -379,15 +395,11 @@ public class GameSystem {
 			
 			board.setGroups(new HashSet<Group>(groups));
 			
-			for (Square square : squares) {
+			for (Square square : board.getSquares()) {
 				if (square instanceof Event) {
 					((Event) square).addCards(cards);
-				} else if (square instanceof Area) {
-					maxOutput += ((Area) square).getMaxOutput();
-				}
+				} 
 			}
-			
-			System.out.println("DEBUG: Theoretical max output: "+maxOutput);
 			
 		} catch (FileNotFoundException e) {
 			
@@ -589,7 +601,7 @@ public class GameSystem {
 				displayMenu(player);
 				System.out.println();
 				System.out.println(
-						"If you wish to develop within a group please enter the group name, else, to skip just press Enter");
+						"If you wish to develop within a completed set please enter the set name, else, to skip just press Enter");
 				String inputGroup = SCANNER.nextLine();
 
 				if (inputGroup == null || inputGroup == "") {
@@ -695,7 +707,7 @@ public class GameSystem {
 
 						} 
 						}catch (Exception e) {
-							System.out.println("Please enter a group that you own");
+							System.out.println("Please enter a set that you own");
 						}
 					}
 				}
@@ -703,7 +715,7 @@ public class GameSystem {
 			} while (groupStatus != false);
 		}
 	 	} catch (Exception e) {
-			System.out.println("You do not own any groups");
+			System.out.println("You do not own any sets");
 		}
 	}
 
@@ -845,9 +857,9 @@ public class GameSystem {
 		// trigger game end if turns run out
 		if (turnsLeft<1) return true;
 		
-		// trigger game end if productionGoal reached
+		// trigger game end if productionTarget reached
 		currentPlayer = players.get(playerIndex);
-		return (getTotalOutput() >= productionGoal);
+		return (getTotalOutput() >= productionTarget);
 		
 	}
 	

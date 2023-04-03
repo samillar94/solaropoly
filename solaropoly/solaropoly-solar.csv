@@ -1,6 +1,6 @@
 ﻿data,index,type,name,value,d0 rent,d1 rent,d2 rent,d3 rent,d4 rent,base output,Group index (Area),minor dev cost (Group),major dev cost (Group),monopoly buff,minor dev buff,major dev buff,move (Card),earn (Card),add turns (Card),notes
 Game,,int,startingBalance,1500,,,,,,,,,,,,,,,,value in GET
-Game,,int,productionGoal,10,,,,,,,,,,,,,,,,value in MW - 1600 is good as max for this board is 2120
+Game,,int,productionTarget,1600,,,,,,,,,,,,,,,,value in MW - 1600 is good as max for this board is 2120; without completed sets the max achievable is 48MW.
 Game,,int,maxTurns,50,,,,,,,,,,,,,,,,value is turns/time available - 50 may be a good setting
 Group,0,Group,New York,,,,,,,,,50,100,4,10,25,,,,
 Group,1,Group,Sahara,,,,,,,,,100,200,6,20,50,,,,
