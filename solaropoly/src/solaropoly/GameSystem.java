@@ -231,17 +231,17 @@ public class GameSystem {
 		
 		System.out.println(ColourLibrary.WHITE_BOLD+"\n    Welcome to SOLAROPOLY!    \n\n"+RESET
 				+"In this game, you'll each take the role of a solar energy startup competing for "
-				+"space to set up your solar farms, production facilities and grids across the globe. \n\n"
+				+"space to set up your solar farms, factories and grids across the globe. \n\n"
 				+"Starting the game with "
 				+COLOUR_RESOURCE+ RES_PRE+ String.format("%,d",startingBalance)+ RES_SUF+ RESET
 				+" (Green Energy Tokens) each, provided by the United Nations for the project, "
 				+"the goal is to maximise energy production among all companies and reach the target of "
 				+COLOUR_OUTPUT+ OUT_PRE+ String.format("%,d",productionTarget)+ OUT_SUF+ RESET
 				+" within "+maxTurns+" turns - so compete and collaborate wisely.\n\n"
-				+"But also, the player whose production increase tips the total energy capture over the target "
+				+"But also, the player whose power increase tips the total energy capture over the target "
 				+"recieves a legendary commemorative ScamCoin! \n\n"
-				+"You can increase production by buying infrastructure, completing infrastructure sets, and developing "
-				+"completed sets - the theoretical maximum output for this board is "
+				+"You can increase power output by buying areas with basic facilities, completing sets of complementary facilities in regions (vertical integration of operations), and developing those completed sets. You'll be able to trade with other players to complete sets, start development and increase your individual and collective chances of hitting the target."
+				+ "The theoretical maximum output for this board is "
 				+COLOUR_OUTPUT+ OUT_PRE+ String.format("%,d",maxOutput)+ OUT_SUF+ RESET
 				+".\n"
 				);
