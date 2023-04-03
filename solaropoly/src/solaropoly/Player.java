@@ -208,7 +208,7 @@ public class Player {
 	 * This method move the player by a given valid dice result value and start his turn
 	 */
 	public void move(int roll) throws IllegalArgumentException {
-		if (roll >= DICE_NUMBER) {
+		
 			BoardPosition boardPosition = GameSystem.board.getBoardPosition(this.position, roll);
 			
 			for (int i = 0; i < boardPosition.getStartPassed(); i++) {
@@ -250,9 +250,7 @@ public class Player {
 				System.out.println(GameSystem.RESET + "You chose to trade.");
 				Area.dutchAuctionSystem(this);
 			}
-		} else {
-			throw new IllegalArgumentException("Invalid dice roll. Try to change the number of dice to roll");
-		}
+		
 	}
 	
 	public void displayBalance() {

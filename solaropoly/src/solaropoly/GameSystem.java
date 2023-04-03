@@ -641,18 +641,22 @@ public class GameSystem {
 
 														}
 
+													}else {
+														throw new IllegalArgumentException("Area cannot be developed\n");
 													}
 												} catch (Exception e) {
 													System.out.println("Areas must be developed equally");
 												}
 
+											} else {
+												throw new IllegalArgumentException("Not an area\n");
 											}
-										 	} catch (Exception e) {
+										 	} catch (IllegalArgumentException e) {
 												System.out.println("Please enter a square that is an area");
 											}
 
 										}
-										}catch (Exception e) {
+										}catch (IllegalArgumentException e) {
 											System.out.println("Please enter an area that you own");
 										}
 										 
@@ -681,18 +685,21 @@ public class GameSystem {
 							} while (areaStatus != false);
 
 						} else {
-							throw new IllegalAccessException("No groups owned");
+							throw new IllegalAccessException("Invalid area name\n");
 						}
 						}catch (Exception e) {
-							System.out.println("Please enter a group that you own");
+							System.out.println(e + "Please enter an area that you own");
+							e.printStackTrace();
 						}
 					}
 				}
 
 			} while (groupStatus != false);
-		} 
+		} else {
+			
+		} throw new IllegalArgumentException("No groups owned\n"); 
 	 	} catch (IllegalArgumentException e) {
-			System.out.println("You do not own any groups.");
+			System.out.println(e + "You do not own any groups.");
 		}
 	}
 
@@ -733,7 +740,7 @@ public class GameSystem {
 			// need to do getowned squares inside the groups
 			for (Square square : player.getOwnedSquares()) {
 
-				if (square instanceof Area) {
+				if (square instanceof Area && ((Area) square).getGroup().equals(group)) {
 					Area area = (Area) square;
 					String groupName = group.getName();
 					String squareName = square.getName();
@@ -752,7 +759,10 @@ public class GameSystem {
 
 					menuItems.add(new MenuItem(groupName, squareName, developmentLevel, developmentCost));
 
-				} else {
+				} else if (square instanceof Area && !((Area) square).getGroup().equals(group)) {
+					continue;
+				}
+				else {
 					// so this is basically if someone owns a square thats like a train station
 					// so not sure it has a group or a development level etc?
 					
