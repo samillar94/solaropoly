@@ -156,11 +156,12 @@ public class Group {
 	 * @return
 	 */
 	public boolean canAreaBeDeveloped(Area area, Group group) {
-		int targetDevLevel = area.getDevelopmentLevel();
+		int targetDevLevel = area.getDevelopmentLevel()+1;
 
 	
 		for (Area a : group.getAreas()) {
 			if (a != area) {
+				
 				int devLevelDiff = Math.abs(targetDevLevel - a.getDevelopmentLevel());
 				if (devLevelDiff > 1) {
 					return false;

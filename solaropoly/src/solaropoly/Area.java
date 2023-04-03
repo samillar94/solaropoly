@@ -26,8 +26,9 @@ public class Area extends Square implements GeneratesIncome {
 	private int monopolyLevel = 0;
 	private int developmentLevel = 0;
 	public int minorDevelopmentCost, majorDevelopmentCost;
-	public static final int MAX_LEVEL = 3;
+	public static final int MAX_LEVEL = 4;
 	private static final int MIN_LEVEL = 0;
+	
 	
 	
 	
@@ -162,10 +163,10 @@ public class Area extends Square implements GeneratesIncome {
 	}
 
 	/**
-	 * @param developmentLevel the developmentLevel to set
+	 * @param incrementLevel the developmentLevel to set
 	 */
-	public int setDevelopmentLevel() {
-		int developmentLevel =0;
+	public int incrementDevelopmentLevel() {
+		
 		developmentLevel++;
 		if(developmentLevel<MIN_LEVEL || developmentLevel > MAX_LEVEL) {
 			throw new IllegalArgumentException("Development level level must be greater or equal than " + MIN_LEVEL +  " or less than or equal to "+ MAX_LEVEL);
