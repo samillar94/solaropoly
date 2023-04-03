@@ -680,7 +680,9 @@ public class GameSystem {
 
 							} while (areaStatus != false);
 
-						} 
+						} else {
+							throw new IllegalAccessException("No groups owned");
+						}
 						}catch (Exception e) {
 							System.out.println("Please enter a group that you own");
 						}
@@ -688,9 +690,9 @@ public class GameSystem {
 				}
 
 			} while (groupStatus != false);
-		}
-	 	} catch (Exception e) {
-			System.out.println("You do not own any groups");
+		} 
+	 	} catch (IllegalArgumentException e) {
+			System.out.println("You do not own any groups.");
 		}
 	}
 
@@ -728,7 +730,7 @@ public class GameSystem {
 		int playerBalance = player.getBalance();
 
 		for (Group group : player.getOwnedGroups()) {
-
+			// need to do getowned squares inside the groups
 			for (Square square : player.getOwnedSquares()) {
 
 				if (square instanceof Area) {
@@ -753,9 +755,9 @@ public class GameSystem {
 				} else {
 					// so this is basically if someone owns a square thats like a train station
 					// so not sure it has a group or a development level etc?
-					String groupName = group.getName();
+					
 					String squareName = square.getName();
-					String developmentLevel = "";
+					
 
 					menuItems.add(new MenuItem("", squareName, "", 0));
 				}
