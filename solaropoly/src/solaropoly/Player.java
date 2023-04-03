@@ -12,10 +12,7 @@ import java.util.ArrayList;
  */
 public class Player {
 	
-	/**
-	 * Separator to use in the getPlayerAttention to separate the action for each player
-	 */
-	private static final char SEPARATOR_CHAR = '_';
+
 	
 	/**
 	 * Force the business rule if required to stop the game if there's a limit of loops on the board
@@ -193,8 +190,22 @@ public class Player {
         } catch (NumberFormatException e) {
             // Ignore the exception and use the default console width
         }
-        System.out.println(String.valueOf(SEPARATOR_CHAR).repeat(consoleWidth));
+        System.out.println(String.valueOf(GameSystem.SEPARATOR_CHAR).repeat(consoleWidth));
         System.out.printf("%s%s%s, take action!%n%n", GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET);
+	}
+	
+	/**
+	 * This method sums the outputs of all areas that the player owns.
+	 * @return output in MW
+	 */
+	public int getOutput() {
+		
+		int builder = 0;
+		for (Square square : this.getOwnedSquares()) {
+			if (square instanceof Area) builder += ((Area) square).getCurrentOutput();
+		}
+		return builder;
+		
 	}
 	
 	/**

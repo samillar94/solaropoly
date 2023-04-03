@@ -26,6 +26,8 @@ public class GameSystem {
 	/// set from csv
 	public static int startingBalance;
 	public static int productionGoal;
+	public static int maxTurns;
+	public static Player currentPlayer;
 	/// set here
 	public static final int MIN_PLAYERS = 2;
 	public static final int MAX_PLAYERS = 4;
@@ -33,7 +35,7 @@ public class GameSystem {
 	public static final String RES_SUF = " GET"; /// resource unit suffix
 	public static final String OUT_PRE = ""; /// output unit prefix
 	public static final String OUT_SUF = " MW"; /// resource unit suffix
-	
+	public static final char SEPARATOR_CHAR = '_'; // Separator to use in the getPlayerAttention to separate the action for each player
 
 	/// design language colours
 	public static final String RESET = ColourLibrary.RESET;
@@ -86,57 +88,51 @@ public class GameSystem {
 			/// game starts - cycling through players until game
 			/// end triggered
 			int firstPlayerIndex = 0;
-			for (int playerIndex = firstPlayerIndex; !gameEndTrigger(); playerIndex = (playerIndex+1)%numPlayers) {
+			int turnsLeft = maxTurns;
+			
+			for (int playerIndex = firstPlayerIndex; !gameEndTrigger(playerIndex, turnsLeft); playerIndex = (playerIndex+1)%numPlayers) {
+				
+				Player player = players.get(playerIndex);
 
-				if (playersInGame.contains(players.get(playerIndex))) {
+				if (playersInGame.contains(player)) {
 					
-					players.get(playerIndex).getAttention();
+					player.getAttention();
 					Thread.sleep(1000);
 					
-					if (players.get(playerIndex).getTurns() < 0) {
-						System.out.println("Number of turns to skip: " + Math.abs(players.get(playerIndex).getTurns()) + ". Turn skipped...");
-						players.get(playerIndex).increaseTurns();
+					if (player.getTurns() < 0) {
+						System.out.println("Number of turns to skip: " + Math.abs(player.getTurns()) + ". Turn skipped...");
+						player.increaseTurns();
 						continue;
 					}
 					
-					players.get(playerIndex).increaseTurns();
+					player.increaseTurns();
 					
 					do {
-						turn(players.get(playerIndex));
-						players.get(playerIndex).decreaseTurns();
-					} while (players.get(playerIndex).getTurns() > 0);
+						turn(player);
+						player.decreaseTurns();
+					} while (player.getTurns() > 0);
 					
 				}
 				
-				System.out.printf("%sTurn ended. Total output stands at %s%s%,d%s%s.%n"
-						, GameSystem.RESET
-						, GameSystem.COLOUR_OUTPUT, GameSystem.OUT_PRE, getTotalOutput(), GameSystem.OUT_SUF, GameSystem.RESET
+				// grammar
+				String isAre = "are";
+				String s = "s";
+				if (turnsLeft==2) {
+					isAre = "is";
+					s = "";
+				}
+				
+				// turn end message
+				System.out.printf("%sTurn ended. Total output stands at %s%s%,d%s%s. There %s %d turn%s left.%n"
+						, RESET
+						, COLOUR_OUTPUT, OUT_PRE, getTotalOutput(), OUT_SUF, RESET
+						, isAre, --turnsLeft, s
 						);
 
 			}
+			
+			gameEnd(turnsLeft);
 
-			/// game ending
-			System.out.println("\nGAME OVER!\nAssets accumulated:");
-
-			/// TODO put this into a method so it can also be called when players leave
-			/// early
-			for (Player player : players) {
-
-				int propertyValue = 0;
-
-				for (Square area : player.getOwnedSquares()) {
-					propertyValue += ((Area) area).getCost();
-				}
-
-				System.out.printf(
-						"%s%s%s has %s%s%,d%s%s and owns %s%s%,d%s%s of assets %s for a total of %s%s%,d%s%s.%n",
-						COLOUR_PLAYER, player.getName(), RESET, COLOUR_RESOURCE, RES_PRE, player.getBalance(), RES_SUF, RESET,
-						COLOUR_RESOURCE, RES_PRE, propertyValue, RES_SUF, RESET, player.getOwnedSquares().toString(),
-						COLOUR_RESOURCE, RES_PRE, player.getBalance() + propertyValue, RES_SUF, RESET);
-
-			}
-
-			System.out.println("Thank you for playing SOLAROPOLY");
 
 		} catch (InterruptedException e) {
 
@@ -152,6 +148,73 @@ public class GameSystem {
 
 	}
 	
+	private static void gameEnd(int turnsLeft) {
+		
+		// pluralise turns correctly
+		String s = "s";
+		if (turnsLeft == 1) s = "";
+		
+		// draw line
+		int consoleWidth = 80; // Default console width
+        try {
+            consoleWidth = Integer.parseInt(System.getenv("COLUMNS"));
+        } catch (NumberFormatException e) {
+            // Ignore the exception and use the default console width
+        }
+        System.out.println(String.valueOf(SEPARATOR_CHAR).repeat(consoleWidth)+"\n");
+		
+		// win or lose message
+		if (getTotalOutput() >= productionGoal) {
+			
+			System.out.printf("CONGRATULATIONS!! The project reached its target output of %s%s%,d%s%s with "
+					+ "%d turn%s to spare!%n%n"
+					, COLOUR_OUTPUT, OUT_PRE, productionGoal, OUT_SUF, RESET
+					, turnsLeft, s
+					);
+			System.out.printf("%s%s%s, you generated the %sth megawatt, and as thanks you receive a "
+					+ "beautifully sculpted ScamCoin made of one tonne of recycled plastic recovered "
+					+ "from the Pacific Ocean. Wear it with pride."
+					, COLOUR_PLAYER, currentPlayer.getName(), RESET
+					);
+			
+		} else {
+			
+			System.out.printf("Unfortunately, you've all run out of time and not met the target combined output of %s%s%,d%s%s.%n%n"
+					, COLOUR_OUTPUT, OUT_PRE, productionGoal, OUT_SUF, RESET
+					);
+			
+		}
+
+		/// final scores
+		System.out.println("Assets accumulated by each player:");
+
+		/// TODO put this into a method so it can also be called when players leave
+		/// early
+		for (Player player : playersInGame) {
+
+			int propertyValue = 0;
+
+			for (Square area : player.getOwnedSquares()) {
+				propertyValue += ((Area) area).getCost();
+			}
+
+			System.out.printf(
+					"%s%s%s has %s%s%,d%s%s and owns %s%s%,d%s%s of assets %s.%nThe company is valued at %s%s%,d%s%s"
+					+ "and is generating %s%s%,d%s%s of power.%n%n"
+					, COLOUR_PLAYER, player.getName(), RESET
+					, COLOUR_RESOURCE, RES_PRE, player.getBalance(), RES_SUF, RESET
+					, COLOUR_RESOURCE, RES_PRE, propertyValue, RES_SUF, RESET, player.getOwnedSquares().toString()
+					, COLOUR_RESOURCE, RES_PRE, player.getBalance() + propertyValue, RES_SUF, RESET
+					, COLOUR_OUTPUT, OUT_PRE, player.getOutput(), OUT_SUF, RESET
+					);
+
+		}
+
+		System.out.println("Thank you for playing SOLAROPOLY!");
+
+		
+	}
+
 	private static void welcome() {
 		
 		System.out.println(ColourLibrary.WHITE_BOLD+"\n    Welcome to SOLAROPOLY!    \n\n"+RESET
@@ -160,10 +223,12 @@ public class GameSystem {
 				+"Starting the game with "
 				+COLOUR_RESOURCE+ RES_PRE+ String.format("%,d",startingBalance)+ RES_SUF+ RESET
 				+" (Green Energy Tokens), "
-				+"the goal is to maximise energy production among all players. But the player whose "
-				+"production tips the total energy capture over "
+				+"the goal is to maximise energy production among all players and reach the target of "
 				+COLOUR_OUTPUT+ OUT_PRE+ String.format("%,d",productionGoal)+ OUT_SUF+ RESET
-				+" recieves a legendary commemorative ScamCoin! So compete and collaborate wisely.\n");
+				+" within "+maxTurns+" turns - so compete and collaborate wisely. \n\n"
+				+"But also, the player whose "
+				+"production increase tips the total energy capture over the target "
+				+"recieves a legendary commemorative ScamCoin! \n");
 		
 	}
 	
@@ -206,6 +271,11 @@ public class GameSystem {
 					case "productionGoal":
 						
 						productionGoal = Integer.parseInt(data[4]);
+						break;
+						
+					case "maxTurns":
+						
+						maxTurns = Integer.parseInt(data[4]);
 						break;
 						
 					default:
@@ -767,13 +837,16 @@ public class GameSystem {
 	 * Game end trigger - called before every turn
 	 * @return
 	 */
-	public static boolean gameEndTrigger() {
+	public static boolean gameEndTrigger(int playerIndex, int turnsLeft) {
 		
 		// trigger game end if only one player
 		if (players.size() < 2 || playersInGame.size() < 2) return true;
 		
-		// trigger game end if productionGoal reached
+		// trigger game end if turns run out
+		if (turnsLeft<1) return true;
 		
+		// trigger game end if productionGoal reached
+		currentPlayer = players.get(playerIndex);
 		return (getTotalOutput() >= productionGoal);
 		
 	}

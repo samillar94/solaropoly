@@ -559,14 +559,14 @@ public class Area extends Square implements GeneratesIncome {
 			if (GameSystem.players.contains(p1)) {
 				p1.decreaseBalance(a1.getCurrentRent());
 				a1.getOwner().increaseBalance(a1.getCurrentRent());
-				System.out.printf("Rent fee %s%s%,d%s%s paid successfully to %s%s%s.%n%n", 
+				System.out.printf("You've made an investment of %s%s%,d%s%s in %s%s%s's company.%n%n", 
 						GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, a1.getCurrentRent(), GameSystem.RES_SUF, GameSystem.RESET,
 						GameSystem.COLOUR_OTHERPLAYER, a1.getOwner().getName(), GameSystem.RESET);
 			}
 		} else {
 			p1.decreaseBalance(a1.getCurrentRent());
 			a1.getOwner().increaseBalance(a1.getCurrentRent());
-			System.out.printf("Rent fee %s%s%,d%s%s paid successfully to %s%s%s.%n", 
+			System.out.printf("You've made an investment of %s%s%,d%s%s in %s%s%s's company.%n%n", 
 					GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, a1.getCurrentRent(), GameSystem.RES_SUF, GameSystem.RESET,
 					GameSystem.COLOUR_OTHERPLAYER, a1.getOwner().getName(), GameSystem.RESET);
 			// TODO eliminate code repetition by renaming this method and putting the repeated coade in payRent();

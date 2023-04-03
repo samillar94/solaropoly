@@ -1,6 +1,7 @@
 ﻿data,index,type,name,value,d0 rent,d1 rent,d2 rent,d3 rent,d4 rent,base output,Group index (Area),minor dev cost (Group),major dev cost (Group),monopoly buff,minor dev buff,major dev buff,move (Card),earn (Card),add turns (Card),notes
 Game,,int,startingBalance,1500,,,,,,,,,,,,,,,,value in GET
-Game,,int,productionGoal,1600,,,,,,,,,,,,,,,,value in MW
+Game,,int,productionGoal,10,,,,,,,,,,,,,,,,value in MW - 1600 is good as max for this board is 2120
+Game,,int,maxTurns,50,,,,,,,,,,,,,,,,value is turns/time available - 50 may be a good setting
 Group,0,Group,New York,,,,,,,,,50,100,4,10,25,,,,
 Group,1,Group,Sahara,,,,,,,,,100,200,6,20,50,,,,
 Group,2,Group,Outback,,,,,,,,,150,300,10,40,100,,,,
@@ -19,17 +20,4 @@ Square,10,Area,Outback Grid,280,24,120,360,850,1025,2,2,,,,,,,,,
 Square,11,Event,Weather,,,,,,,,,,,,,,,,,
 Square,12,Area,Gurugram Roof Upgrades,350,35,175,500,1100,1300,16,3,,,,,,,,,
 Square,13,Area,Ghaziabad Photovoltaics Factory,400,50,200,600,1400,1700,8,3,,,,,,,,,
-Card,,Card,Placeholder,,,,,,,,,,,,,,1,1,1,
-Card,,Card,Placeholder,,,,,,,,,,,,,,1,1,1,
-Card,,Card,Placeholder,,,,,,,,,,,,,,1,1,1,
-Card,,Card,Placeholder,,,,,,,,,,,,,,1,1,1,
-Card,,Card,Placeholder,,,,,,,,,,,,,,1,1,1,
-Card,,Card,Placeholder,,,,,,,,,,,,,,1,1,1,
-Card,,Card,Placeholder,,,,,,,,,,,,,,1,1,1,
-Card,,Card,Placeholder,,,,,,,,,,,,,,1,1,1,
-Card,,Card,Placeholder,,,,,,,,,,,,,,1,1,1,
-Card,,Card,Placeholder,,,,,,,,,,,,,,1,1,1,
-Card,,Card,Placeholder,,,,,,,,,,,,,,1,1,1,
-Card,,Card,Placeholder,,,,,,,,,,,,,,1,1,1,
-Card,,Card,Placeholder,,,,,,,,,,,,,,1,1,1,
-Card,,Card,Placeholder,,,,,,,,,,,,,,1,1,1,
+Card,,Card,Move 1 square… earn 1 GET… and take another turn!,,,,,,,,,,,,,,1,1,1,
