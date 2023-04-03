@@ -30,7 +30,7 @@ public class Group {
 	private ArrayList<Area> areas;
 	private Player owner;
 	private int minorDevCost, majorDevCost;
-	private int monopolyOutput, minorDevOutput, majorDevOutput;
+	private int monopolyOutputBuff, minorDevOutputBuff, majorDevOutputBuff;
 
 	/// setget
 
@@ -127,45 +127,45 @@ public class Group {
 
 
 	/**
-	 * @return the monopolyOutput
+	 * @return the monopolyOutputBuff
 	 */
-	public int getMonopolyOutput() {
-		return monopolyOutput;
+	public int getMonopolyOutputBuff() {
+		return monopolyOutputBuff;
 	}
 
 	/**
-	 * @param monopolyOutput the monopolyOutput to set
+	 * @param monopolyOutputBuff the monopolyOutputBuff to set
 	 */
-	public void setMonopolyOutput(int monopolyOutput) {
-		this.monopolyOutput = monopolyOutput;
+	public void setMonopolyOutputBuff(int monopolyOutputBuff) {
+		this.monopolyOutputBuff = monopolyOutputBuff;
 	}
 
 	/**
-	 * @return the minorDevOutput
+	 * @return the minorDevOutputBuff
 	 */
-	public int getMinorDevOutput() {
-		return minorDevOutput;
+	public int getMinorDevOutputBuff() {
+		return minorDevOutputBuff;
 	}
 
 	/**
-	 * @param minorDevOutput the minorDevOutput to set
+	 * @param minorDevOutputBuff the minorDevOutputBuff to set
 	 */
-	public void setMinorDevOutput(int minorDevOutput) {
-		this.minorDevOutput = minorDevOutput;
+	public void setMinorDevOutputBuff(int minorDevOutputBuff) {
+		this.minorDevOutputBuff = minorDevOutputBuff;
 	}
 
 	/**
-	 * @return the majorDevOutput
+	 * @return the majorDevOutputBuff
 	 */
-	public int getMajorDevOutput() {
-		return majorDevOutput;
+	public int getMajorDevOutputBuff() {
+		return majorDevOutputBuff;
 	}
 
 	/**
-	 * @param majorDevOutput the majorDevOutput to set
+	 * @param majorDevOutputBuff the majorDevOutputBuff to set
 	 */
-	public void setMajorDevOutput(int majorDevOutput) {
-		this.majorDevOutput = majorDevOutput;
+	public void setMajorDevOutputBuff(int majorDevOutputBuff) {
+		this.majorDevOutputBuff = majorDevOutputBuff;
 	}
 
 	
@@ -181,18 +181,18 @@ public class Group {
 	 * @param name
 	 * @param minorDevCost
 	 * @param majorDevCost
-	 * @param monopolyOutput
-	 * @param minorDevOutput
-	 * @param majorDevOutput
+	 * @param monopolyOutputBuff
+	 * @param minorDevOutputBuff
+	 * @param majorDevOutputBuff
 	 */
 	public Group(String name, int minorDevCost, int majorDevCost, int monopolyOutput, int minorDevOutput,
 			int majorDevOutput) {
 		this.name = name;
 		this.minorDevCost = minorDevCost;
 		this.majorDevCost = majorDevCost;
-		this.monopolyOutput = monopolyOutput;
-		this.minorDevOutput = minorDevOutput;
-		this.majorDevOutput = majorDevOutput;
+		this.monopolyOutputBuff = monopolyOutput;
+		this.minorDevOutputBuff = minorDevOutput;
+		this.majorDevOutputBuff = majorDevOutput;
 	}
 	
 	

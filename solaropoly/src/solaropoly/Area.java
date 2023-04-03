@@ -25,7 +25,7 @@ public class Area extends Square implements GeneratesIncome {
 
 	private int monopolyLevel = 0;
 	private int developmentLevel = 0;
-	public static final int MAX_LEVEL = 3;
+	public static final int MAX_LEVEL = 4;
 	private static final int MIN_LEVEL = 0;
 	
 	
@@ -74,11 +74,19 @@ public class Area extends Square implements GeneratesIncome {
 		this.group = group;
 	}
 
+	/**
+	 * @return the baseOutput
+	 */
+	public int getBaseOutput() {
+		return baseOutput;
+	}
 
-
-
-
-
+	/**
+	 * @param baseOutput the baseOutput to set
+	 */
+	public void setBaseOutput(int baseOutput) {
+		this.baseOutput = baseOutput;
+	}
 
 	/**
 	 * @return the owner
@@ -167,14 +175,33 @@ public class Area extends Square implements GeneratesIncome {
 		int developmentLevel =0;
 		developmentLevel++;
 		if(developmentLevel<MIN_LEVEL || developmentLevel > MAX_LEVEL) {
-			throw new IllegalArgumentException("Development level level must be greater or equal than " + MIN_LEVEL +  " or less than or equal to "+ MAX_LEVEL);
+			throw new IllegalArgumentException("Development level level must be greater or equal to " + MIN_LEVEL +  " or less than or equal to "+ MAX_LEVEL);
 					
 		} 
 		return developmentLevel;
 	}
 
-	/// show details
+	
+	/// methods
+	
+	/**
+	 * This method returns 0 if a square is unowned, but if owned it sums the baseOutput and any applicable buffs
+	 * @return
+	 */
+	public int getCurrentOutput() {
+		int builder = 0;
+		if (this.getOwner() != null) {
+			builder += this.baseOutput;
+			if (this.getMonopolyLevel() == 1) builder += this.getGroup().getMonopolyOutputBuff();
+			if (this.getDevelopmentLevel() < 4) builder += this.getGroup().getMinorDevOutputBuff() * this.getDevelopmentLevel();
+			if (this.getDevelopmentLevel() == 4) builder += this.getGroup().getMajorDevOutputBuff();
+		}
+		return builder;
+	}
 
+	public int getMaxOutput() {
+		return this.baseOutput + this.getGroup().getMonopolyOutputBuff() + (this.getGroup().getMinorDevOutputBuff() * 3) + this.getGroup().getMajorDevOutputBuff();
+	}
 	/**
 	 * @return the rentProfile but in String format
 	 */
@@ -204,13 +231,17 @@ public class Area extends Square implements GeneratesIncome {
 		String details = String.format(
 				 "  Group name: %s%s%s • Owner: %s%s%s %n"
 				+"  Rent: base: %s%s%,d%s%s • current: %s%s%,d%s%s • max: %s%s%,d%s%s %n"
-				//+"  Sale price: %s%s%,d%s%s"
+				+"  Output: base: %s%s%,d%s%s • current: %s%s%,d%s%s • max: %s%s%,d%s%s %n"
+//				+"  Sale price: %s%s%,d%s%s"
 				, GameSystem.COLOUR_LOCATION, this.group.getName(), GameSystem.RESET
 				, GameSystem.COLOUR_OTHERPLAYER, ((this.owner != null) ? this.owner.getName() : "-"), GameSystem.RESET
 				, GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.getBaseRent(), GameSystem.RES_SUF, GameSystem.RESET
 				, GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.getCurrentRent(), GameSystem.RES_SUF, GameSystem.RESET
 				, GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.getRentProfile().get("Development").get(MAX_LEVEL), GameSystem.RES_SUF, GameSystem.RESET
-				//, GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.getCost(), GameSystem.RES_SUF, GameSystem.RESET
+				, GameSystem.COLOUR_OUTPUT, GameSystem.OUT_PRE, this.getBaseOutput(), GameSystem.OUT_SUF, GameSystem.RESET
+				, GameSystem.COLOUR_OUTPUT, GameSystem.OUT_PRE, this.getCurrentOutput(), GameSystem.OUT_SUF, GameSystem.RESET
+				, GameSystem.COLOUR_OUTPUT, GameSystem.OUT_PRE, this.getMaxOutput(), GameSystem.OUT_SUF, GameSystem.RESET
+//				, GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.getCost(), GameSystem.RES_SUF, GameSystem.RESET
 				);
 		return details;
 
@@ -218,10 +249,11 @@ public class Area extends Square implements GeneratesIncome {
 	
 	@Override
 	public String toString() {
-		return String.format("%n    %s%s%s (%s, cost %s%s%,d%s%s)"
+		return String.format("%n    %s%s%s (%s, cost %s%s%,d%s%s, output %s%s%,d%s%s)"
 				, GameSystem.COLOUR_LOCATION, this.getName(), GameSystem.RESET
 				, this.group 
 				, GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.getCost(), GameSystem.RES_SUF, GameSystem.RESET
+				, GameSystem.COLOUR_OUTPUT, GameSystem.OUT_PRE, this.getCurrentOutput(), GameSystem.OUT_SUF, GameSystem.RESET
 				);
 	}
 
@@ -315,7 +347,7 @@ public class Area extends Square implements GeneratesIncome {
 			if (input.equalsIgnoreCase("Buy") && player.getBalance() >= this.cost) {
 				player.decreaseBalance(this.cost);
 				changeOwnership(player);
-				System.out.printf("%sOk, you've bought %s%s%s! %n%n", GameSystem.RESET
+				System.out.printf("%n%sOk, you've bought %s%s%s! %n%n", GameSystem.RESET
 						, GameSystem.COLOUR_LOCATION, this.getName(), GameSystem.RESET);
 				Thread.sleep(1000);
 				player.displayBalance();
@@ -361,17 +393,22 @@ public class Area extends Square implements GeneratesIncome {
 							GameSystem.COLOUR_OPTION, GameSystem.RESET,
 							GameSystem.COLOUR_INPUT);
 					
-					while (!input.equalsIgnoreCase("Buy") && !input.equalsIgnoreCase("Decline")) {
+					while (true) {
 						
 						input = GameSystem.SCANNER.nextLine();
 
+						if (!input.equalsIgnoreCase("Buy") && !input.equalsIgnoreCase("Decline")) {
 						System.out.printf(
 								"%sWrong input - please choose between %sBuy%s and %sDecline%s:%n%s",
 								GameSystem.RESET, 
 								GameSystem.COLOUR_OPTION, GameSystem.RESET,
 								GameSystem.COLOUR_OPTION, GameSystem.RESET,
 								GameSystem.COLOUR_INPUT);
-							
+						
+						} else {
+							break;
+						}
+						
 					}
 
 					if (input.equalsIgnoreCase("Buy")) {

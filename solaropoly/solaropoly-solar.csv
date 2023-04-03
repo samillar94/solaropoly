@@ -1,6 +1,6 @@
 ﻿data,index,type,name,value,d0 rent,d1 rent,d2 rent,d3 rent,d4 rent,base output,Group index (Area),minor dev cost (Group),major dev cost (Group),monopoly buff,minor dev buff,major dev buff,move (Card),earn (Card),add turns (Card),notes
 Game,,int,startingBalance,1500,,,,,,,,,,,,,,,,
-Game,,int,productionGoal,4096,,,,,,,,,,,,,,,,
+Game,,int,productionGoal,2000,,,,,,,,,,,,,,,,
 Group,0,Group,New York,,,,,,,,,50,100,4,10,25,,,,
 Group,1,Group,Sahara صحراء,,,,,,,,,100,200,6,20,50,,,,
 Group,2,Group,Outback,,,,,,,,,150,300,10,40,100,,,,

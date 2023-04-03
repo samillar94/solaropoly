@@ -208,51 +208,49 @@ public class Player {
 	 * This method move the player by a given valid dice result value and start his turn
 	 */
 	public void move(int roll) throws IllegalArgumentException {
-		if (roll >= DICE_NUMBER) {
-			BoardPosition boardPosition = GameSystem.board.getBoardPosition(this.position, roll);
-			
-			for (int i = 0; i < boardPosition.getStartPassed(); i++) {
-				Sunrise sunrise = (Sunrise) GameSystem.board.getSquare(0);
-				sunrise.passAct(this);
-			}
-			
-			this.setPosition(boardPosition.getPosition());
-			
-			boardPosition.getSquare().act(this);
-			
-			// develop area and trade actions
-			String input = "";
-			System.out.printf("%sIf you would like to trade or develop an area type %sTrade%s or %sDevelop%s and press Enter.%n"
-					+ "Otherwise, just press Enter to end your turn:%s%n",
-					GameSystem.RESET,
-					GameSystem.COLOUR_OPTION, GameSystem.RESET,
-					GameSystem.COLOUR_OPTION, GameSystem.RESET,
-					GameSystem.COLOUR_INPUT);
-			
-			while (true) {
-				input = GameSystem.SCANNER.nextLine();
-				
-				if (input.equalsIgnoreCase("Trade") || input.equalsIgnoreCase("Develop") || input == null || input.equals("")) {
-					break;
-				} else {
-					System.out.printf("%sWrong input - please choose between %sTrade%s, %sDevelop%s and continue (Enter):%n%s",
-							GameSystem.RESET,
-							GameSystem.COLOUR_OPTION, GameSystem.RESET,
-							GameSystem.COLOUR_OPTION, GameSystem.RESET,
-							GameSystem.COLOUR_INPUT);
-				}
-			}
-			
-			if (input.equalsIgnoreCase("Develop")) {
-				System.out.println(GameSystem.RESET + "You chose to develop an area.");
-				GameSystem.developArea(this);
-			} else if (input.equalsIgnoreCase("Trade")) {
-				System.out.println(GameSystem.RESET + "You chose to trade.");
-				Area.dutchAuctionSystem(this);
-			}
-		} else {
-			throw new IllegalArgumentException("Invalid dice roll. Try to change the number of dice to roll");
+
+		BoardPosition boardPosition = GameSystem.board.getBoardPosition(this.position, roll);
+		
+		for (int i = 0; i < boardPosition.getStartPassed(); i++) {
+			Sunrise sunrise = (Sunrise) GameSystem.board.getSquare(0);
+			sunrise.passAct(this);
 		}
+		
+		this.setPosition(boardPosition.getPosition());
+		
+		boardPosition.getSquare().act(this);
+		
+		// develop area and trade actions
+		String input = "";
+		System.out.printf("%sIf you would like to trade or develop an area type %sTrade%s or %sDevelop%s and press Enter.%n"
+				+ "Otherwise, just press Enter to end your turn:%s%n",
+				GameSystem.RESET,
+				GameSystem.COLOUR_OPTION, GameSystem.RESET,
+				GameSystem.COLOUR_OPTION, GameSystem.RESET,
+				GameSystem.COLOUR_INPUT);
+		
+		while (true) {
+			input = GameSystem.SCANNER.nextLine();
+			
+			if (input.equalsIgnoreCase("Trade") || input.equalsIgnoreCase("Develop") || input == null || input.equals("")) {
+				break;
+			} else {
+				System.out.printf("%sWrong input - please choose between %sTrade%s, %sDevelop%s and continue (Enter):%n%s",
+						GameSystem.RESET,
+						GameSystem.COLOUR_OPTION, GameSystem.RESET,
+						GameSystem.COLOUR_OPTION, GameSystem.RESET,
+						GameSystem.COLOUR_INPUT);
+			}
+		}
+		
+		if (input.equalsIgnoreCase("Develop")) {
+			System.out.println(GameSystem.RESET + "You chose to develop an area.");
+			GameSystem.developArea(this);
+		} else if (input.equalsIgnoreCase("Trade")) {
+			System.out.println(GameSystem.RESET + "You chose to trade.");
+			Area.dutchAuctionSystem(this);
+		}
+
 	}
 	
 	public void displayBalance() {

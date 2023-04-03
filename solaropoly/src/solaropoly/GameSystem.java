@@ -46,13 +46,9 @@ public class GameSystem {
 	public static final String COLOUR_LOCATION = ColourLibrary.CYAN_BOLD;
 	
 	/// essential components
-
 	public static Board board = new Board();
-
 	public static final Scanner SCANNER = new Scanner(System.in);
-
 	public static ArrayList<Player> players = new ArrayList<Player>();
-	
 	public static final String BOARD_FILE = "solaropoly-solar.csv";
 	
 	/**
@@ -60,7 +56,9 @@ public class GameSystem {
 	 */
 	public static ArrayList<Player> playersInGame = new ArrayList<Player>();;
 
-	/// executable code
+	
+	
+	/// Main thread
 
 	/**
 	 * Main method - execution starts here
@@ -110,7 +108,10 @@ public class GameSystem {
 					
 				}
 				
-				System.out.println(GameSystem.RESET + "Turn ended. Next player...");
+				System.out.printf("%sTurn ended. Total output stands at %s%s%,d%s%s.%n"
+						, GameSystem.RESET
+						, GameSystem.COLOUR_OUTPUT, GameSystem.OUT_PRE, getTotalOutput(), GameSystem.OUT_SUF, GameSystem.RESET
+						);
 
 			}
 
@@ -185,7 +186,8 @@ public class GameSystem {
 			br.readLine();
 			line = br.readLine();
 			int counter = 1;
-			
+			int maxOutput = 0;
+						
 			while(line!=null) {
 			
 				String[] data = line.split(",");
@@ -310,8 +312,12 @@ public class GameSystem {
 			for (Square square : squares) {
 				if (square instanceof Event) {
 					((Event) square).addCards(cards);
+				} else if (square instanceof Area) {
+					maxOutput += ((Area) square).getMaxOutput();
 				}
 			}
+			
+			System.out.println("DEBUG: Theoretical max output: "+maxOutput);
 			
 		} catch (FileNotFoundException e) {
 			
@@ -414,7 +420,12 @@ public class GameSystem {
 
 		}
 		
-		System.out.println(RESET+"Right everyone, let's go catch some rays!");
+		System.out.println(RESET+"\nRight everyone, let's go catch some rays!");
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+		}
 		
 		return playersBuilder;
 	}
@@ -762,10 +773,21 @@ public class GameSystem {
 		if (players.size() < 2 || playersInGame.size() < 2) return true;
 		
 		// trigger game end if productionGoal reached
-		int totalResource = 0;
-		for (Player player : players) totalResource += player.getBalance();
-		return (totalResource >= productionGoal);
 		
+		return (getTotalOutput() >= productionGoal);
+		
+	}
+	
+	/**
+	 * Finds the total project output using area.getCurrentOutput();
+	 * @return
+	 */
+	public static int getTotalOutput() {
+		int totalOutput = 0;
+		for (Square square : board.getSquares()) 
+			if (square instanceof Area) 
+				totalOutput += ((Area) square).getCurrentOutput();
+		return totalOutput;
 	}
 
 }
