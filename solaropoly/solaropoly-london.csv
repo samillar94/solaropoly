@@ -5,10 +5,10 @@ Group,0,Group,Brown,,500000,,,,500000,,,,,
 Group,1,Group,Pink,,1000000,,,,1000000,,,,,
 Group,2,Group,Yellow,,1500000,,,,1500000,,,,,
 Group,3,Group,Navy,,2000000,,,,2000000,,,,,
-Square,0,Go,Go,1000000,,,,,,,,,,value is passGoCredit
+Square,0,Sunrise,Go,1000000,,,,,,,,,,value is passGoCredit
 Square,1,Area,Portobello Road Market,600000,20000,100000,300000,900000,1600000,0,,,,
 Square,2,Area,Camden Town,600000,40000,200000,600000,1800000,3200000,0,,,,
-Square,3,Parking,Just Parking,,,,,,,,,,,
+Square,3,Holiday,Just Parking,,,,,,,,,,,
 Square,4,Area,Wimbledon,1400000,100000,500000,1500000,4500000,6250000,1,,,,
 Square,5,Area,Oval,1400000,100000,500000,1500000,4500000,6250000,1,,,,
 Square,6,Area,Wembley,1600000,120000,600000,1800000,5000000,7000000,1,,,,
