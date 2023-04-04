@@ -23,7 +23,6 @@ public class Holiday extends Square {
 	}
 
 
-
 	@Override
 	public void act(Player player) {
 
