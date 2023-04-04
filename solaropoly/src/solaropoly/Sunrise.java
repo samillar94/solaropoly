@@ -14,7 +14,7 @@ public class Sunrise extends Square {
 	/**
 	 * resource to take after one loop of the board
 	 */
-	public int passGoCredit;
+	public int sunriseCredit;
 
 	/**
 	 * Default constructor.
@@ -24,10 +24,11 @@ public class Sunrise extends Square {
 	/**
 	 * Constructor with arguments.
 	 * @param name
+	 * @param sunriseCredit when square passed
 	 */
-	public Sunrise(String name, int passGoCredit) {
+	public Sunrise(String name, int sunriseCredit) {
 		super.setName(name);
-		this.passGoCredit = passGoCredit;
+		this.sunriseCredit = sunriseCredit;
 	}
 	
 	/**
@@ -35,10 +36,10 @@ public class Sunrise extends Square {
 	 */
 	@Override
 	public void act(Player player) {
-		player.increaseBalance(passGoCredit);
+		player.increaseBalance(sunriseCredit);
 		System.out.printf("Welcome back to %s%s%s! You've received %s%s%,d%s%s.%n"
 				, GameSystem.COLOUR_LOCATION, this.getName(), GameSystem.RESET
-				, GameSystem.COLOUR_RESOURCE, GameSystem.PRE, passGoCredit, GameSystem.SUF, GameSystem.RESET
+				, GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, sunriseCredit, GameSystem.RES_SUF, GameSystem.RESET
 				);
 		System.out.println("Why not tweet inspirationally about the solar energy industry?\n");
 
@@ -49,7 +50,7 @@ public class Sunrise extends Square {
 	 * @param player
 	 */
 	public void passAct(Player player) {
-		player.increaseBalance(this.passGoCredit);
-		System.out.printf("You passed Sunrise and received %s%s%,d%s%s. ", GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.passGoCredit, GameSystem.SUF, GameSystem.RESET);
+		player.increaseBalance(this.sunriseCredit);
+		System.out.printf("You passed Sunrise and received %s%s%,d%s%s. ", GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.sunriseCredit, GameSystem.RES_SUF, GameSystem.RESET);
 	}
 }
