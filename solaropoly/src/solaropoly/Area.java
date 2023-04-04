@@ -366,13 +366,15 @@ public class Area extends Square implements GeneratesIncome {
 					while (!input.equalsIgnoreCase("Buy") && !input.equalsIgnoreCase("Decline")) {
 						
 						input = GameSystem.SCANNER.nextLine();
-
-						System.out.printf(
-								"%sWrong input - please choose between %sBuy%s and %sDecline%s:%n%s",
-								GameSystem.RESET, 
-								GameSystem.COLOUR_OPTION, GameSystem.RESET,
-								GameSystem.COLOUR_OPTION, GameSystem.RESET,
-								GameSystem.COLOUR_INPUT);
+						
+						if (!input.equalsIgnoreCase("Buy") && !input.equalsIgnoreCase("Decline")) {
+							System.out.printf(
+									"%sWrong input - please choose between %sBuy%s and %sDecline%s:%n%s",
+									GameSystem.RESET, 
+									GameSystem.COLOUR_OPTION, GameSystem.RESET,
+									GameSystem.COLOUR_OPTION, GameSystem.RESET,
+									GameSystem.COLOUR_INPUT);
+						}
 							
 					}
 
@@ -383,17 +385,16 @@ public class Area extends Square implements GeneratesIncome {
 				
 				player.getAttention();
 				if (accepters.isEmpty()) {
-					System.out.println(GameSystem.COLOUR_PLAYER+player.getName()+GameSystem.RESET + ", no one wants your square, so it will be left to the next person who lands on it.");
+					System.out.println("No-one wants the square, so it will be left to the next person who lands on it.");
 				} else if (accepters.size() == 1) {
-					System.out.println(GameSystem.COLOUR_PLAYER+player.getName()+GameSystem.RESET + ", your square was sold to "
-							+ GameSystem.COLOUR_OTHERPLAYER+accepters.get(0).getName()+GameSystem.RESET);
+					System.out.println("The square you landed on was sold to "
+							+ GameSystem.COLOUR_OTHERPLAYER+accepters.get(0).getName()+GameSystem.RESET+".");
 					
 					changeOwnership(accepters.get(0));
 				} else {
 					System.out.printf("%s%s%s, %s players are interested in buying this square.%n"
 							+ "Please enter who you prefer to offer the square to.%n"
 							+ "Choose between these players:%n", 
-							GameSystem.COLOUR_PLAYER, player.getName(), GameSystem.RESET,
 							accepters.size());
 
 					for (Player accepter : accepters) {

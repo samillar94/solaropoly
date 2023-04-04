@@ -193,7 +193,7 @@ public class Player {
         } catch (NumberFormatException e) {
             // Ignore the exception and use the default console width
         }
-        System.out.println(String.valueOf(SEPARATOR_CHAR).repeat(consoleWidth));
+        System.out.println(GameSystem.RESET+String.valueOf(SEPARATOR_CHAR).repeat(consoleWidth));
         System.out.printf("%s%s%s, take action!%n%n", GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET);
 	}
 	

@@ -568,149 +568,152 @@ public class GameSystem {
 	 * @param player
 	 */
 	public static void developArea(Player player) {
+		
+		// these are set to true until the player indicates they are done with developing 
 		boolean groupStatus = true;
 		boolean areaStatus = true;
+		
 		ArrayList<Area> fullyDevelopedAreaStatus = new ArrayList<Area>();
-		try {
-			if (player.getOwnedGroups().size() > 0) {
+			
+		if (player.getOwnedGroups().size() > 0) {
 
-				do {
-					displayMenu(player);
-					System.out.println();
-					System.out.println(
-							"If you wish to develop within a group please enter the group name, else, to quit developing press Enter");
-					String inputGroup = SCANNER.nextLine();
+			do {
 
-					if (inputGroup == null || inputGroup == "") {
-						System.out.println("System recognises you do not wish to develop");
-						groupStatus = false;
-					} else {
+				displayMenu(player);
 
-						for (Group group : player.getOwnedGroups()) {
-							try {
-								if (group.getName().equalsIgnoreCase(inputGroup)) {
-									do {
+				System.out.println(
+						RESET+"\nIf you wish to develop within a group please enter the group name, else, to quit developing press Enter: "+COLOUR_INPUT);
+				String inputGroup = SCANNER.nextLine();
 
-										System.out.println(
-												"Please enter which area you would like to develop, else, to develop another area or quit press Enter ");
-										String inputArea = SCANNER.nextLine();
+				if (inputGroup == null || inputGroup == "") {
 
-										if (inputArea == null || inputArea == "") {
-											System.out.println("System recognises you no longer wish to develop this area\n");
-											break;
+					System.out.println(""); // may not need this message
+					groupStatus = false;
 
-										} else {
-											// developing areas loop
-											for (Square square : player.getOwnedSquares()) {
-												try {
-													if (square.getName().equalsIgnoreCase(inputArea)) {
+				} else {
 
-														Area area;
-														try {
-															if (square instanceof Area) {
-																area = (Area) square;
-																try {
-																	if (group.canAreaBeDeveloped(area, group)) {
+					for (Group group : player.getOwnedGroups()) {
 
-																		if (area.getDevelopmentLevel() < 3) {
-																			try {
-																				if (player.getBalance() >= area
-																						.getGroup()
-																						.getMinorDevelopmentCost()) {
-																					area.incrementDevelopmentLevel();
-																					player.decreaseBalance(area.getGroup().getMinorDevelopmentCost());
-																					System.out.println(area.getName()
-																							+ " developed. Development level: "
-																							+ area.getDevelopmentLevel()+"\nUpdated player balance: "+player.getBalance());
-																					break;
+						if (group.getName().equalsIgnoreCase(inputGroup)) {
 
-																				}
-																			} catch (Exception e) {
-																				System.out
-																						.println("Insufficient funds");
-																			}
+							do {
 
-																		} else if (area.getDevelopmentLevel() == 3) {
-																			try {
-																				if (player.getBalance() >= area
-																						.getGroup()
-																						.getMajorDevelopmentCost()) {
-																					area.incrementDevelopmentLevel();
-																					player.decreaseBalance(area.getGroup().getMajorDevelopmentCost());
-																					System.out.println(
-																							"Major development achieved."
-																									+ area.getName()
-																									+ " developed "
-																									+ area.getDevelopmentLevel()
-																									+ " times\nUpdated player balance: "+player.getBalance());
-																					fullyDevelopedAreaStatus.add(area);
-																					break;
-																				}
-																			} catch (Exception e) {
-																				System.out
-																						.println("Insufficient funds");
-																			}
+								System.out.println(
+										RESET+"Please enter which area you would like to develop, else, to develop another group or quit press Enter: "+COLOUR_INPUT);
+								String inputArea = SCANNER.nextLine();
 
-																		} else {
-																			throw new IllegalArgumentException(
-																					"Error: not able to develop area.");
+								if (inputArea == null || inputArea == "") {
 
-																		}
+									System.out.println(RESET+"Finishing development investment on this area.\n");
+									break;
 
-																	} else {
-																		throw new IllegalArgumentException(
-																				"Area cannot be developed\n");
-																	}
-																} catch (Exception e) {
-																	System.out
-																			.println("Areas must be developed equally");
-																}
+								} else {
+									// developing areas loop
+									
+									Area area = null;
 
-															} else {
-																throw new IllegalArgumentException("Not an area\n");
-															}
-														} catch (IllegalArgumentException e) {
-															System.out.println("Please enter a square that is an area");
-														}
+									for (Square square : group.getAreas()) {
 
-													} else {
-														throw new IllegalArgumentException("Not an area owned\n");
-													}
-													// printing 5 times???
-													// does this when insufficient funds as well
-												} catch (IllegalArgumentException e) {
-													System.out.println("Please enter an area that you own");
+										if (square.getName().equalsIgnoreCase(inputArea)) area = (Area) square;
+										
+									}
+									
+									if (area != null) {
+
+										if (group.canAreaBeDeveloped(area)) {
+
+											if (area.getDevelopmentLevel() < 3) {
+
+												if (player.getBalance() >= area
+														.getGroup()
+														.getMinorDevelopmentCost()) {
+
+													area.incrementDevelopmentLevel();
+													player.decreaseBalance(area.getGroup().getMinorDevelopmentCost());
+													System.out.println(RESET+area.getName()
+															+ " developed. Development level: "
+															+ area.getDevelopmentLevel()
+															+"\nUpdated player balance: "+player.getBalance());
+													break;
+
+												} else {
+
+													System.out.println(RESET+"Insufficient funds to develop this area.");
+
 												}
 
+											} else if (area.getDevelopmentLevel() == 3) {
+
+												if (player.getBalance() >= area
+														.getGroup()
+														.getMajorDevelopmentCost()) {
+
+													area.incrementDevelopmentLevel();
+													player.decreaseBalance(area.getGroup().getMajorDevelopmentCost());
+													System.out.println(
+															RESET+"Major development achieved."
+																	+ area.getName()
+																	+ " developed "
+																	+ area.getDevelopmentLevel()
+																	+ " times\nUpdated player balance: "+player.getBalance());
+													fullyDevelopedAreaStatus.add(area);
+													break;
+
+												} else {
+
+													System.out.println(RESET+"Insufficient funds to develop this area.");
+
+												}
+
+											} else {
+
+												System.out.println(RESET+"This area is already fully developed.");
+
 											}
-											
-											if (fullyDevelopedAreaStatus.size() == player.getOwnedSquares().size()) {
-												System.out.println("All areas owned are fully developed.");
-												break;
-											}
+
+										} else {
+
+											System.out.println(RESET+"Areas must be developed evenly.");
 
 										}
 
-									} while (true);
+									} else {
+										
+										System.out.println(RESET+"Please enter an area that you own.");
 
-								} else {
-									throw new IllegalArgumentException("Invalid group name\n");
+									}
+								
+									if (fullyDevelopedAreaStatus.size() == player.getOwnedSquares().size()) {
+
+										System.out.println(RESET+"All areas owned are fully developed.");
+										break;
+
+									}
+
+									
+
 								}
-							} catch (Exception e) {
-								System.out.println(e + "Please enter an group that you own");
-								e.printStackTrace();
-							}
+
+							} while (true); // should this not use the areaStatus?
+
+						} else {
+
+							System.out.println(RESET+"Please enter an group that you own.");
+
 						}
+
 					}
 
-				} while (groupStatus != false);
-			} else {
-				throw new IllegalArgumentException("No groups owned\n");
-			}
-			
-		} catch (IllegalArgumentException e) {
-			System.out.println(e + "You do not own any groups.");
+				}
+
+			} while (groupStatus != false);
+
+		} else {
+
+			System.out.println("You do not own any groups.");
+
 		}
+			
 	}
 
 	/**
