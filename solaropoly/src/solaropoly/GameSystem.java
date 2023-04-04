@@ -31,7 +31,7 @@ public class GameSystem {
 	public static final int MAX_PLAYERS = 4;
 	public static final String PRE = ""; /// resource prefix
 	public static final String SUF = " GET"; /// resource suffix
-	
+
 	/// console colour keys
 	// Regular
 	public static final String RESET = "\u001B[0m";
@@ -111,7 +111,7 @@ public class GameSystem {
 	public static final String COLOUR_OPTION = YELLOW_BRIGHT;
 	public static final String COLOUR_RESOURCE = GREEN_BRIGHT;
 	public static final String COLOUR_LOCATION = CYAN_BOLD;
-	
+
 	/// essential components
 
 	public static Board board = new Board();
@@ -119,9 +119,9 @@ public class GameSystem {
 	public static final Scanner SCANNER = new Scanner(System.in);
 
 	public static ArrayList<Player> players = new ArrayList<Player>();
-	
+
 	public static final String BOARD_FILE = "solaropoly-london.csv";
-	
+
 	/**
 	 * Stores only players that are still in game
 	 */
@@ -135,48 +135,49 @@ public class GameSystem {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
+
 		try {
-			
+
 			setupBoard();
-			
+
 			welcome();
-			
+
 			/// set number of players
 			int numPlayers = setNumPlayers();
-			
+
 			/// register players
 			players = registerPlayers(numPlayers);
 			playersInGame.addAll(players);
-			
+
 			/// TODO Replace board map with list that can accommodate other than 12 squares
 //			board.visualMap();
-			
+
 			/// game starts - cycling through players until game
 			/// end triggered
 			int firstPlayerIndex = 0;
-			for (int playerIndex = firstPlayerIndex; !gameEndTrigger(); playerIndex = (playerIndex+1)%numPlayers) {
+			for (int playerIndex = firstPlayerIndex; !gameEndTrigger(); playerIndex = (playerIndex + 1) % numPlayers) {
 
 				if (playersInGame.contains(players.get(playerIndex))) {
-					
+
 					players.get(playerIndex).getAttention();
 					Thread.sleep(1000);
-					
+
 					if (players.get(playerIndex).getTurns() < 0) {
-						System.out.println("Number of turns to skip: " + Math.abs(players.get(playerIndex).getTurns()) + ". Turn skipped...");
+						System.out.println("Number of turns to skip: " + Math.abs(players.get(playerIndex).getTurns())
+								+ ". Turn skipped...");
 						players.get(playerIndex).increaseTurns();
 						continue;
 					}
-					
+
 					players.get(playerIndex).increaseTurns();
-					
+
 					do {
 						turn(players.get(playerIndex));
 						players.get(playerIndex).decreaseTurns();
 					} while (players.get(playerIndex).getTurns() > 0);
-					
+
 				}
-				
+
 				System.out.println(GameSystem.RESET + "Turn ended. Next player...");
 
 			}
@@ -217,83 +218,83 @@ public class GameSystem {
 		}
 
 	}
-	
+
 	private static void welcome() {
-		
-		System.out.println(WHITE_BOLD+"\n    Welcome to SOLAROPOLY!    \n\n"+RESET
-				+"In this game, you'll each take the role of a solar energy startup competing for "
-				+"space to set up your infrastructure production facilities and solar farms. \n\n"
-				+"Starting the game with "
-				+COLOUR_RESOURCE+ PRE+ String.format("%,d",startingBalance)+ SUF+ RESET
-				+" (Green Energy Tokens), "
-				+"the goal is to maximise energy production among all players. But the player whose "
-				+"production tips the total energy capture over "
-				+COLOUR_RESOURCE+ PRE+ String.format("%,d",productionGoal)+ SUF+ RESET
-				+" recieves a legendary commemorative ScamCoin! So compete and collaborate wisely.\n");
-		
+
+		System.out.println(WHITE_BOLD + "\n    Welcome to SOLAROPOLY!    \n\n" + RESET
+				+ "In this game, you'll each take the role of a solar energy startup competing for "
+				+ "space to set up your infrastructure production facilities and solar farms. \n\n"
+				+ "Starting the game with " + COLOUR_RESOURCE + PRE + String.format("%,d", startingBalance) + SUF
+				+ RESET + " (Green Energy Tokens), "
+				+ "the goal is to maximise energy production among all players. But the player whose "
+				+ "production tips the total energy capture over " + COLOUR_RESOURCE + PRE
+				+ String.format("%,d", productionGoal) + SUF + RESET
+				+ " recieves a legendary commemorative ScamCoin! So compete and collaborate wisely.\n");
+
 	}
-	
+
 	/**
-	* Reads game, square and group parameters from csv.
-	* The csv should include Group data before Square data.
-	* The read order of Game parameters and Cards doesn't matter.
-	*/
+	 * Reads game, square and group parameters from csv. The csv should include
+	 * Group data before Square data. The read order of Game parameters and Cards
+	 * doesn't matter.
+	 */
 	private static void setupBoard() {
 		ArrayList<Square> squares = new ArrayList<Square>(14);
 		ArrayList<Group> groups = new ArrayList<Group>(4);
 		ArrayList<Card> cards = new ArrayList<Card>();
-	
+
 		File file = new File(BOARD_FILE);
-		
+
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-			
+
 			String line;
 			br.readLine();
 			line = br.readLine();
 			int counter = 1;
-			
-			while(line!=null) {
-			
+
+			while (line != null) {
+
 				String[] data = line.split(",");
-	
+
 				// switch on datatype
 				switch (data[0]) {
 				case "Game":
-					
+
 					switch (data[3]) {
-					
-					case "startingBalance": 
-						
+
+					case "startingBalance":
+
 						startingBalance = Integer.parseInt(data[4]);
 						break;
-						
+
 					case "productionGoal":
-						
+
 						productionGoal = Integer.parseInt(data[4]);
 						break;
-						
+
 					default:
-						
-						System.err.println("Line "+counter+" (Game) in board setup csv skipped due to invalid \"name\" value");
-					
+
+						System.err.println(
+								"Line " + counter + " (Game) in board setup csv skipped due to invalid \"name\" value");
+
 					}
 					break;
-					
+
 				case "Group":
-					
+
 					String groupName = data[3];
 					int minorDevCost = Integer.parseInt(data[5]);
 					int majorDevCost = Integer.parseInt(data[9]);
-					
+
 					groups.add(new Group(groupName, minorDevCost, majorDevCost));
 					break;
-					
+
 				case "Square":
-					
+
 					switch (data[2]) {
-					
+
 					case "Area":
-						
+
 						String areaName = data[3];
 						int cost = Integer.parseInt(data[4]);
 						int baseRent = Integer.parseInt(data[5]);
@@ -302,93 +303,91 @@ public class GameSystem {
 						int threeDev = Integer.parseInt(data[8]);
 						int majorDev = Integer.parseInt(data[9]);
 						int groupIndex = Integer.parseInt(data[10]);
-						
-						int[] monopolyProfile = {baseRent, baseRent*2};
-						int[] developmentProfile = {baseRent, oneDev, twoDev, threeDev, majorDev};
-						
-						Area area = new Area(areaName, groups.get(groupIndex), cost, monopolyProfile, developmentProfile);
+
+						int[] monopolyProfile = { baseRent, baseRent * 2 };
+						int[] developmentProfile = { baseRent, oneDev, twoDev, threeDev, majorDev };
+
+						Area area = new Area(areaName, groups.get(groupIndex), cost, monopolyProfile,
+								developmentProfile);
 						squares.add(area);
 						break;
-						
+
 					case "Sunrise":
-						
+
 						squares.add(new Sunrise(data[3], Integer.parseInt(data[4])));
 						break;
-						
+
 					case "Holiday":
-						
+
 						squares.add(new Holiday(data[3]));
-						break;	
-						
+						break;
+
 					case "Failure":
-						
+
 						squares.add(new Failure(data[3], Integer.parseInt(data[4])));
-						break;	
-						
+						break;
+
 					case "Event":
-						
+
 						// TODO add cards
 						squares.add(new Event(data[3], null));
-						break;	
-						
+						break;
+
 					default:
-						
-						System.err.println("Line "+counter+" (Square) in board setup csv skipped due to invalid \"type\" value");
-					
+
+						System.err.println("Line " + counter
+								+ " (Square) in board setup csv skipped due to invalid \"type\" value");
+
 					}
-					
+
 					break;
-				
+
 				case "Card":
-					
+
 					String eventText = data[3];
 					int move = Integer.parseInt(data[11]);
 					int earn = Integer.parseInt(data[12]);
 					int turns = Integer.parseInt(data[13]);
 
 					cards.add(new Card(eventText, move, earn, turns));
-					
+
 					break;
-					
-				default: 
-					
-					System.err.println("Line "+counter+" in board setup csv skipped due to invalid \"data\" value");
-					
+
+				default:
+
+					System.err.println("Line " + counter + " in board setup csv skipped due to invalid \"data\" value");
+
 				}
-				
-				line = br.readLine();	
+
+				line = br.readLine();
 				counter++;
-				
+
 			}
-			
+
 			board.setSquares(squares);
-			
+
 			for (Group group : groups) {
 				group.setAreas(squares);
 			}
-			
+
 			board.setGroups(new HashSet<Group>(groups));
-			
+
 			for (Square square : squares) {
 				if (square instanceof Event) {
 					((Event) square).addCards(cards);
 				}
 			}
-			
-			
-			
-	
-			
+
 		} catch (FileNotFoundException e) {
-			
+
 			System.out.println("File not found - check BOARD_FILE in Game.java");
 			e.printStackTrace();
-			
+
 		} catch (IOException e) {
-			
+
 			System.out.println("Input exception - check csv file for issues");
 			e.printStackTrace();
-			
+
 		}
 
 	}
@@ -403,25 +402,26 @@ public class GameSystem {
 
 		int num = 0;
 
-		while (num<MIN_PLAYERS || num>MAX_PLAYERS) {
-			
-			System.out.println(RESET+"How many are playing? Type a number between "+COLOUR_OPTION+MIN_PLAYERS+RESET
-				+" and "+COLOUR_OPTION+MAX_PLAYERS+RESET+" and press Enter."+COLOUR_INPUT);
-			
+		while (num < MIN_PLAYERS || num > MAX_PLAYERS) {
+
+			System.out.println(RESET + "How many are playing? Type a number between " + COLOUR_OPTION + MIN_PLAYERS
+					+ RESET + " and " + COLOUR_OPTION + MAX_PLAYERS + RESET + " and press Enter." + COLOUR_INPUT);
+
 			try {
-				
+
 				num = SCANNER.nextInt();
-				if (num<MIN_PLAYERS || num>MAX_PLAYERS) System.out.println(RESET+"Sorry, invalid number.");
-				
+				if (num < MIN_PLAYERS || num > MAX_PLAYERS)
+					System.out.println(RESET + "Sorry, invalid number.");
+
 			} catch (InputMismatchException e) {
-				
-				System.out.println(RESET+"Sorry, need a whole number."+COLOUR_INPUT);
+
+				System.out.println(RESET + "Sorry, need a whole number." + COLOUR_INPUT);
 				SCANNER.nextLine();
-				
+
 			} catch (Exception e) {
-				
+
 				System.out.println(RESET + "Sorry, try again." + COLOUR_INPUT);
-				
+
 			}
 
 		}
@@ -466,8 +466,10 @@ public class GameSystem {
 						playersBuilder.add(new Player(name, startingBalance, 0));
 						names.add(name);
 						resolved = true;
-						System.out.printf("%sWelcome %s%s%s! You start the game with a balance of %s%s%,d%s%s.%n", RESET, COLOUR_PLAYER, playersBuilder.get(playerNum-1).getName(), RESET, COLOUR_RESOURCE, PRE, startingBalance, SUF, RESET);
-					
+						System.out.printf("%sWelcome %s%s%s! You start the game with a balance of %s%s%,d%s%s.%n",
+								RESET, COLOUR_PLAYER, playersBuilder.get(playerNum - 1).getName(), RESET,
+								COLOUR_RESOURCE, PRE, startingBalance, SUF, RESET);
+
 					}
 
 				} catch (Exception e) {
@@ -479,9 +481,9 @@ public class GameSystem {
 			}
 
 		}
-		
-		System.out.println(RESET+"Right everyone, let's go catch some rays!");
-		
+
+		System.out.println(RESET + "Right everyone, let's go catch some rays!");
+
 		return playersBuilder;
 	}
 
@@ -498,18 +500,19 @@ public class GameSystem {
 		boolean consent = consent(player);
 
 		if (consent) {
-			
+
 			// TODO Replace map with list that can accommodate other than 12 Squares
 //			board.visualMap();
 
 			int roll = rollDice(player);
-			
+
 			try {
 				Thread.sleep(1000);
-			} catch (InterruptedException e) {}
-			
+			} catch (InterruptedException e) {
+			}
+
 			player.move(roll);
-		
+
 		} else {
 
 			playersInGame.remove(player);
@@ -521,7 +524,6 @@ public class GameSystem {
 			}
 
 		}
-		
 
 	}
 
@@ -560,142 +562,163 @@ public class GameSystem {
 	}
 
 	/**
-	 * develop method
+	 * @author andrewscott
 	 * 
 	 * @param player
 	 */
 	public static void developArea(Player player) {
+		
+		// these are set to true until the player indicates they are done with developing 
 		boolean groupStatus = true;
 		boolean areaStatus = true;
+		boolean isGroupFound = false;
 		ArrayList<Area> fullyDevelopedAreaStatus = new ArrayList<Area>();
-		try{
+			
 		if (player.getOwnedGroups().size() > 0) {
 
 			do {
+
 				displayMenu(player);
-				System.out.println();
+
 				System.out.println(
-						"If you wish to develop within a group please enter the group name, else, to skip just press Enter");
+						RESET+"\nIf you wish to develop within a group please enter the group name, else, to quit developing press Enter: "+COLOUR_INPUT);
 				String inputGroup = SCANNER.nextLine();
 
 				if (inputGroup == null || inputGroup == "") {
-					System.out.println("System recognises you do not wish to develop");
+
+					System.out.println(""); // may not need this message
 					groupStatus = false;
+
 				} else {
 
 					for (Group group : player.getOwnedGroups()) {
-						try{
+
 						if (group.getName().equalsIgnoreCase(inputGroup)) {
+
 							do {
 
 								System.out.println(
-										"Please enter which area you would like to develop, else, to stop developing press Enter ");
+										RESET+"Please enter which area you would like to develop, else, to develop another group or quit press Enter: "+COLOUR_INPUT);
 								String inputArea = SCANNER.nextLine();
 
 								if (inputArea == null || inputArea == "") {
-									System.out.println("System recognises you no longer wish to develop");
-									areaStatus = false;
+
+									System.out.println(RESET+"Finishing development investment on this area.\n");
+									break;
 
 								} else {
 									// developing areas loop
-									for (Square square : player.getOwnedSquares()) {
-										try{
-										if (square.getName().equalsIgnoreCase(inputArea)) {
+									
+									Area area = null;
 
-											Area area;
-											try{
-											if (square instanceof Area) {
-												area = (Area) square;
-												try {
-													if (group.canAreaBeDeveloped(area, group)) {
+									for (Square square : group.getAreas()) {
 
-														if (area.getDevelopmentLevel() < 2) {
-															try {
-																if (player.getBalance() >= area.getGroup()
-																		.getMinorDevelopmentCost()) {
-																	area.setDevelopmentLevel();
-																	System.out.println(area.getName() + " level: "
-																			+ area.getDevelopmentLevel());
-																}
-															} catch (Exception e) {
-																System.out.println("Insufficient funds");
-															}
+										if (square.getName().equalsIgnoreCase(inputArea)) area = (Area) square;
+										
+									}
+									
+									if (area != null) {
 
-														} else if (area.getDevelopmentLevel() == 2) {
-															try {
-																if (player.getBalance() >= area.getGroup()
-																		.getMajorDevelopmentCost()) {
-																	area.setDevelopmentLevel();
-																	System.out.println("Major development achieved."
-																			+ area.getName() + " developed "
-																			+ area.getDevelopmentLevel() + " times");
-																}
-															} catch (Exception e) {
-																System.out.println("Insufficient funds");
-															}
+										if (group.canAreaBeDeveloped(area)) {
 
-														} else {
-															throw new IllegalArgumentException(
-																	"Error: not able to develop area.");
+											if (area.getDevelopmentLevel() < 3) {
 
-														}
+												if (player.getBalance() >= area
+														.getGroup()
+														.getMinorDevelopmentCost()) {
 
-													}
-												} catch (Exception e) {
-													System.out.println("Areas must be developed equally");
+													area.incrementDevelopmentLevel();
+													player.decreaseBalance(area.getGroup().getMinorDevelopmentCost());
+													System.out.println(RESET+area.getName()
+															+ " developed. Development level: "
+															+ area.getDevelopmentLevel()
+															+"\nUpdated player balance: "+player.getBalance());
+													break;
+
+												} else {
+
+													System.out.println(RESET+"Insufficient funds to develop this area.");
+
 												}
 
-											}
-										 	} catch (Exception e) {
-												System.out.println("Please enter a square that is an area");
-											}
+											} else if (area.getDevelopmentLevel() == 3) {
 
-										}
-										}catch (Exception e) {
-											System.out.println("Please enter an area that you own");
-										}
-										 
-									}
-									// condition for all areas fully developed
-									do {
-										for (Square square : player.getOwnedSquares()) {
-											Area area;
+												if (player.getBalance() >= area
+														.getGroup()
+														.getMajorDevelopmentCost()) {
 
-											if (square instanceof Area) {
-												area = (Area) square;
-												if (area.getDevelopmentLevel() == 3) {
+													area.incrementDevelopmentLevel();
+													player.decreaseBalance(area.getGroup().getMajorDevelopmentCost());
+													System.out.println(
+															RESET+"Major development achieved."
+																	+ area.getName()
+																	+ " developed "
+																	+ area.getDevelopmentLevel()
+																	+ " times\nUpdated player balance: "+player.getBalance());
 													fullyDevelopedAreaStatus.add(area);
-												}
-											}
-										}
-									} while (fullyDevelopedAreaStatus.size() != player.getOwnedSquares().size());
+													break;
 
-									if (fullyDevelopedAreaStatus.size() == player.getOwnedSquares().size()) {
-										areaStatus = false;
-										System.out.println("All areas owned are fully developed.");
+												} else {
+
+													System.out.println(RESET+"Insufficient funds to develop this area.");
+
+												}
+
+											} else {
+
+												System.out.println(RESET+"This area is already fully developed.");
+
+											}
+
+										} else {
+
+											System.out.println(RESET+"Areas must be developed evenly.");
+
+										}
+
+									} else {
+										
+										System.out.println(RESET+"Please enter an area that you own.");
+
 									}
+								
+									if (fullyDevelopedAreaStatus.size() == player.getOwnedSquares().size()) {
+
+										System.out.println(RESET+"All areas owned are fully developed.");
+										break;
+
+									}
+
+									
 
 								}
 
-							} while (areaStatus != false);
+							} while (true); // should this not use the areaStatus?
 
-						} 
-						}catch (Exception e) {
-							System.out.println("Please enter a group that you own");
+						} else {
+
+							System.out.println(RESET+"Please enter an group that you own.");
+
 						}
+
 					}
+
 				}
 
 			} while (groupStatus != false);
+
+		} else {
+
+			System.out.println("You do not own any groups.");
+
 		}
-	 	} catch (Exception e) {
-			System.out.println("You do not own any groups");
-		}
+			
 	}
 
 	/**
 	 * generates the menu using the getmenuitems method
 	 * 
+	 * @author andrewscott
 	 * @param player
 	 */
 	private static void displayMenu(Player player) {
@@ -717,6 +740,7 @@ public class GameSystem {
 	 * development to see their owned properties and associated costs with
 	 * development
 	 * 
+	 * @author andrewscott
 	 * @param player
 	 * @return
 	 */
@@ -727,40 +751,48 @@ public class GameSystem {
 		int playerBalance = player.getBalance();
 
 		for (Group group : player.getOwnedGroups()) {
-
+			
 			for (Square square : player.getOwnedSquares()) {
 
-				if (square instanceof Area) {
+				if (square instanceof Area && ((Area) square).getGroup().equals(group)) {
 					Area area = (Area) square;
 					String groupName = group.getName();
 					String squareName = square.getName();
 					String developmentLevel = "";
-					int developmentCost = 0; // if costs are in an array, can iterate through them for each cost
+					int developmentCost; // if costs are in an array, can iterate through them for each cost
 
 					if (player.getOwnedSquares().contains(area)) {
 						developmentLevel = Integer.toString(area.getDevelopmentLevel());
 
-						if (area.getDevelopmentLevel() < 2) {
+						if (area.getDevelopmentLevel() < 3) {
 							developmentCost = area.getGroup().getMinorDevelopmentCost();
-						} else if (area.getDevelopmentLevel() == 2) {
+							menuItems.add(new MenuItem(groupName, squareName, developmentLevel, developmentCost));
+						} else if (area.getDevelopmentLevel() == 3) {
 							developmentCost = area.getGroup().getMajorDevelopmentCost();
+							menuItems.add(new MenuItem(groupName, squareName, developmentLevel, developmentCost));
+						}  else if (area.getDevelopmentLevel() == 4) {
+							developmentCost = area.getGroup().getMajorDevelopmentCost();
+							menuItems.add(new MenuItem(groupName, squareName, developmentLevel, 0));
 						}
+						
+					
+						
 					}
 
-					menuItems.add(new MenuItem(groupName, squareName, developmentLevel, developmentCost));
+				
 
+				} else if (square instanceof Area && !((Area) square).getGroup().equals(group)) {
+					continue;
 				} else {
 					// so this is basically if someone owns a square thats like a train station
 					// so not sure it has a group or a development level etc?
-					String groupName = group.getName();
+
 					String squareName = square.getName();
-					String developmentLevel = "";
 
 					menuItems.add(new MenuItem("", squareName, "", 0));
 				}
 			}
 		}
-		System.out.println("Player balance: " + playerBalance);
 
 		return menuItems;
 	}
@@ -805,34 +837,38 @@ public class GameSystem {
 	 * rollDice method called from turn method. imitates 2 dice.
 	 */
 	private static int rollDice(Player player) {
-		
+
 		Die die1 = new Die(), die2 = new Die();
 
 		int rollA = die1.roll();
 		int rollB = die2.roll();
-		
-		int total = rollA+rollB;
 
-		System.out.printf("%s%s%s, you've rolled a %d and a %d for %d total.%n", COLOUR_PLAYER, player.getName(), RESET, rollA, rollB, total);
-		
+		int total = rollA + rollB;
+
+		System.out.printf("%s%s%s, you've rolled a %d and a %d for %d total.%n", COLOUR_PLAYER, player.getName(), RESET,
+				rollA, rollB, total);
+
 		return total;
-		
+
 	}
-	
+
 	/**
 	 * Game end trigger - called before every turn
+	 * 
 	 * @return
 	 */
 	public static boolean gameEndTrigger() {
-		
+
 		// trigger game end if only one player
-		if (players.size() < 2 || playersInGame.size() < 2) return true;
-		
+		if (players.size() < 2 || playersInGame.size() < 2)
+			return true;
+
 		// trigger game end if productionGoal reached
 		int totalResource = 0;
-		for (Player player : players) totalResource += player.getBalance();
+		for (Player player : players)
+			totalResource += player.getBalance();
 		return (totalResource >= productionGoal);
-		
+
 	}
 
 }

@@ -23,9 +23,10 @@ public class Area extends Square implements GeneratesIncome {
 	private HashMap<String, ArrayList<Integer>> rentProfile = new HashMap<>(2);
 	private int monopolyLevel = 0;
 	private int developmentLevel = 0;
-	private int minorDevelopmentCost, majorDevelopmentCost;
-	private static final int MAX_LEVEL = 3;
+	public int minorDevelopmentCost, majorDevelopmentCost;
+	public static final int MAX_LEVEL = 4;
 	private static final int MIN_LEVEL = 0;
+	
 	
 	
 	
@@ -181,10 +182,10 @@ public class Area extends Square implements GeneratesIncome {
 	}
 
 	/**
-	 * @param developmentLevel the developmentLevel to set
+	 * @param incrementLevel the developmentLevel to set
 	 */
-	public int setDevelopmentLevel() {
-		int developmentLevel =0;
+	public int incrementDevelopmentLevel() {
+		
 		developmentLevel++;
 		if(developmentLevel<MIN_LEVEL || developmentLevel > MAX_LEVEL) {
 			throw new IllegalArgumentException("Development level level must be greater or equal than " + MIN_LEVEL +  " or less than or equal to "+ MAX_LEVEL);
@@ -401,17 +402,16 @@ public class Area extends Square implements GeneratesIncome {
 				
 				player.getAttention();
 				if (accepters.isEmpty()) {
-					System.out.println(GameSystem.COLOUR_PLAYER+player.getName()+GameSystem.RESET + ", no one wants your square, so it will be offered to the next person who lands on it.");
+					System.out.println("No-one wants the square, so it will be left to the next person who lands on it.");
 				} else if (accepters.size() == 1) {
-					System.out.println(GameSystem.COLOUR_PLAYER+player.getName()+GameSystem.RESET + " congratulations, your square was sold to "
-							+ GameSystem.COLOUR_OTHERPLAYER+accepters.get(0).getName()+GameSystem.RESET);
+					System.out.println("The square you landed on was sold to "
+							+ GameSystem.COLOUR_OTHERPLAYER+accepters.get(0).getName()+GameSystem.RESET+".");
 					
 					changeOwnership(accepters.get(0));
 				} else {
 					System.out.printf("%s%s%s, there are %s players that are willing to buy your square.%n"
 							+ "Please enter the name of the one you prefer to sell the square.%n"
 							+ "Choose between these players:%n", 
-							GameSystem.COLOUR_PLAYER, player.getName(), GameSystem.RESET,
 							accepters.size());
 
 					for (Player accepter : accepters) {
