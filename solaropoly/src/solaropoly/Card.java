@@ -24,7 +24,7 @@ public class Card {
 	 * Constructor with arguments.
 	 * @param event - it is a message to explain the details of the card event.
 	 * @param movePosition - it moves the player back or forward from his position.
-	 * @param earn - it reduce or increase if positive the {@value GameSystem#SUF} of the player.
+	 * @param earn - it reduce or increase if positive the {@value GameSystem#RES_SUF} of the player.
 	 * @param turns - it gives if positive or stop if negative a certain amount of turns to the player.
 	 */
 	public Card(String event, int movePosition, long earn, int turns) {
@@ -72,7 +72,7 @@ public class Card {
 	}
 	
 	/**
-	 * it reduce or increase if positive the {@value GameSystem#SUF} of the player.
+	 * it reduce or increase if positive the {@value GameSystem#RES_SUF} of the player.
 	 * @param earn the earn to set
 	 */
 	public void setEarn(long earn) {

@@ -29,7 +29,8 @@ public class Group {
 	private String name;
 	private ArrayList<Area> areas;
 	private Player owner;
-	private int minorDevelopmentCost, majorDevelopmentCost;
+	private int minorDevCost, majorDevCost;
+	private int monopolyOutputBuff, minorDevOutputBuff, majorDevOutputBuff;
 
 	/// setget
 
@@ -51,32 +52,32 @@ public class Group {
 	 * 
 	 * @return
 	 */
-	public int getMinorDevelopmentCost() {
-		return minorDevelopmentCost;
+	public int getMinorDevCost() {
+		return minorDevCost;
 	}
 
 	/**
 	 * 
-	 * @param minorDevelopmentCost
+	 * @param minorDevCost
 	 */
-	public void setMinorDevelopmentCost(int minorDevelopmentCost) {
-		this.minorDevelopmentCost = minorDevelopmentCost;
+	public void setMinorDevCost(int minorDevCost) {
+		this.minorDevCost = minorDevCost;
 	}
 
 	/**
 	 * 
 	 * @return
 	 */
-	public int getMajorDevelopmentCost() {
-		return majorDevelopmentCost;
+	public int getMajorDevCost() {
+		return majorDevCost;
 	}
 
 	/**
 	 * 
-	 * @param majorDevelopmentCost
+	 * @param majorDevCost
 	 */
-	public void setMajorDevelopmentCost(int majorDevelopmentCost) {
-		this.majorDevelopmentCost = majorDevelopmentCost;
+	public void setMajorDevCost(int majorDevCost) {
+		this.majorDevCost = majorDevCost;
 	}
 
 	/**
@@ -124,21 +125,77 @@ public class Group {
 		this.owner = owner;
 	}
 
-	/// constr
 
+	/**
+	 * @return the monopolyOutputBuff
+	 */
+	public int getMonopolyOutputBuff() {
+		return monopolyOutputBuff;
+	}
+
+	/**
+	 * @param monopolyOutputBuff the monopolyOutputBuff to set
+	 */
+	public void setMonopolyOutputBuff(int monopolyOutputBuff) {
+		this.monopolyOutputBuff = monopolyOutputBuff;
+	}
+
+	/**
+	 * @return the minorDevOutputBuff
+	 */
+	public int getMinorDevOutputBuff() {
+		return minorDevOutputBuff;
+	}
+
+	/**
+	 * @param minorDevOutputBuff the minorDevOutputBuff to set
+	 */
+	public void setMinorDevOutputBuff(int minorDevOutputBuff) {
+		this.minorDevOutputBuff = minorDevOutputBuff;
+	}
+
+	/**
+	 * @return the majorDevOutputBuff
+	 */
+	public int getMajorDevOutputBuff() {
+		return majorDevOutputBuff;
+	}
+
+	/**
+	 * @param majorDevOutputBuff the majorDevOutputBuff to set
+	 */
+	public void setMajorDevOutputBuff(int majorDevOutputBuff) {
+		this.majorDevOutputBuff = majorDevOutputBuff;
+	}
+
+	
+	
+	/// constr
+	
 	public Group() {
 	}
 
 	/**
-	 * A Group is set up with a name and areas added afterward
+	 * A Group is set up with a name and general parameters and areas added afterward
 	 * 
 	 * @param name
+	 * @param minorDevCost
+	 * @param majorDevCost
+	 * @param monopolyOutputBuff
+	 * @param minorDevOutputBuff
+	 * @param majorDevOutputBuff
 	 */
-	public Group(String name, int minorDevelopmentCost, int majorDevelopmentCost) {
-		this.setName(name);
-		this.setMinorDevelopmentCost(minorDevelopmentCost);
-		this.setMajorDevelopmentCost(majorDevelopmentCost);
+	public Group(String name, int minorDevCost, int majorDevCost, int monopolyOutput, int minorDevOutput,
+			int majorDevOutput) {
+		this.name = name;
+		this.minorDevCost = minorDevCost;
+		this.majorDevCost = majorDevCost;
+		this.monopolyOutputBuff = monopolyOutput;
+		this.minorDevOutputBuff = minorDevOutput;
+		this.majorDevOutputBuff = majorDevOutput;
 	}
+	
+	
 
 	/// methods
 
@@ -151,16 +208,18 @@ public class Group {
 	 * Checks if an area can be developed by checking the development level of the
 	 * other areas within the group. ie all ensuring areas are developed equaly
 	 * 
+	 * @author andrewscott
 	 * @param area
 	 * @param group
 	 * @return
 	 */
-	public boolean canAreaBeDeveloped(Area area, Group group) {
-		int targetDevLevel = area.getDevelopmentLevel();
+	public boolean canAreaBeDeveloped(Area area) {
+		int targetDevLevel = area.getDevelopmentLevel()+1;
 
 	
-		for (Area a : group.getAreas()) {
+		for (Area a : this.getAreas()) {
 			if (a != area) {
+				
 				int devLevelDiff = Math.abs(targetDevLevel - a.getDevelopmentLevel());
 				if (devLevelDiff > 1) {
 					return false;
@@ -169,9 +228,9 @@ public class Group {
 		}
 		// Check that all areas in the group have development levels within 1 of each
 		// other
-		for (int i = 0; i < group.getAreas().size(); i++) {
-			for (int j = i + 1; j < group.getAreas().size(); j++) {
-				int devLevelDiff = Math.abs(group.getAreas().get(i).getDevelopmentLevel() - group.getAreas().get(j).getDevelopmentLevel());
+		for (int i = 0; i < this.getAreas().size(); i++) {
+			for (int j = i + 1; j < this.getAreas().size(); j++) {
+				int devLevelDiff = Math.abs(this.getAreas().get(i).getDevelopmentLevel() - this.getAreas().get(j).getDevelopmentLevel());
 				if (devLevelDiff > 1) {
 					return false;
 				}
@@ -179,4 +238,5 @@ public class Group {
 		}
 		return true;
 	}
+	
 }

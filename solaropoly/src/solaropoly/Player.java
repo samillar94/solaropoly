@@ -12,10 +12,7 @@ import java.util.ArrayList;
  */
 public class Player {
 	
-	/**
-	 * Separator to use in the getPlayerAttention to separate the action for each player
-	 */
-	private static final char SEPARATOR_CHAR = '_';
+
 	
 	/**
 	 * Force the business rule if required to stop the game if there's a limit of loops on the board
@@ -193,8 +190,22 @@ public class Player {
         } catch (NumberFormatException e) {
             // Ignore the exception and use the default console width
         }
-        System.out.println(String.valueOf(SEPARATOR_CHAR).repeat(consoleWidth));
+        System.out.println(GameSystem.RESET+String.valueOf(GameSystem.SEPARATOR_CHAR).repeat(consoleWidth));
         System.out.printf("%s%s%s, take action!%n%n", GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET);
+	}
+	
+	/**
+	 * This method sums the outputs of all areas that the player owns.
+	 * @return output in MW
+	 */
+	public int getOutput() {
+		
+		int builder = 0;
+		for (Square square : this.getOwnedSquares()) {
+			if (square instanceof Area) builder += ((Area) square).getCurrentOutput();
+		}
+		return builder;
+		
 	}
 	
 	/**
@@ -208,7 +219,7 @@ public class Player {
 	 * This method move the player by a given valid dice result value and start his turn
 	 */
 	public void move(int roll) throws IllegalArgumentException {
-		if (roll >= DICE_NUMBER) {
+		
 			BoardPosition boardPosition = GameSystem.board.getBoardPosition(this.position, roll);
 			
 			for (int i = 0; i < boardPosition.getStartPassed(); i++) {
@@ -250,15 +261,15 @@ public class Player {
 				System.out.println(GameSystem.RESET + "You chose to trade.");
 				Area.dutchAuctionSystem(this);
 			}
-		} else {
-			throw new IllegalArgumentException("Invalid dice roll. Try to change the number of dice to roll");
-		}
+		
 	}
 	
 	public void displayBalance() {
-		System.out.printf("Your current balance is %s%s%,d%s%s and you own:%n", GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.balance, GameSystem.SUF, GameSystem.RESET);
+		System.out.printf("%s%s%s, your current balance is %s%s%,d%s%s and you own:%n"
+				, GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET
+				, GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.balance, GameSystem.RES_SUF, GameSystem.RESET);
 		System.out.println("\n  Areas: "+this.getOwnedSquares());
-		System.out.println("  Groups: "+this.getOwnedGroups()+"\n");
+		System.out.println("  Regions: "+this.getOwnedGroups()+"\n");
 	}
 	
 	public void increaseBalance(int credit) {
@@ -354,7 +365,7 @@ public class Player {
 	}
 	
 	/**
-	 * This method is used to transfer {@value GameSystem#SUF} between players.
+	 * This method is used to transfer {@value GameSystem#RES_SUF} between players.
 	 * @param player - the player that receive the transaction.
 	 * @param amount - the amount of the transaction.
 	 * @return boolean - if the transaction goes well returns true
@@ -374,7 +385,7 @@ public class Player {
 					GameSystem.RESET, 
 					GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET, 
 					GameSystem.COLOUR_OTHERPLAYER, player.getName(), GameSystem.RESET, 
-					GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.balance, GameSystem.SUF, GameSystem.RESET);
+					GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.balance, GameSystem.RES_SUF, GameSystem.RESET);
 		}
 		return false;
 	}
