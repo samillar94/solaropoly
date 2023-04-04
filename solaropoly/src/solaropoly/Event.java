@@ -92,7 +92,7 @@ public class Event extends Square {
 			}
 		}
 		
-        System.out.print(element.getEvent());
+        System.out.println(element.getEvent()+"\n");
         player.move(element.getMovePosition());
         player.increaseBalance((int) element.getEarn()); // TODO: should the balance be a long?
         player.setTurns(element.getTurns());

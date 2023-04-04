@@ -190,7 +190,7 @@ public class Player {
         } catch (NumberFormatException e) {
             // Ignore the exception and use the default console width
         }
-        System.out.println(String.valueOf(GameSystem.SEPARATOR_CHAR).repeat(consoleWidth));
+        System.out.println(GameSystem.RESET+String.valueOf(GameSystem.SEPARATOR_CHAR).repeat(consoleWidth));
         System.out.printf("%s%s%s, take action!%n%n", GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET);
 	}
 	
@@ -219,55 +219,57 @@ public class Player {
 	 * This method move the player by a given valid dice result value and start his turn
 	 */
 	public void move(int roll) throws IllegalArgumentException {
-
-		BoardPosition boardPosition = GameSystem.board.getBoardPosition(this.position, roll);
 		
-		for (int i = 0; i < boardPosition.getStartPassed(); i++) {
-			Sunrise sunrise = (Sunrise) GameSystem.board.getSquare(0);
-			sunrise.passAct(this);
-		}
-		
-		this.setPosition(boardPosition.getPosition());
-		
-		boardPosition.getSquare().act(this);
-		
-		// develop area and trade actions
-		String input = "";
-		System.out.printf("%sIf you would like to trade or develop an area type %sTrade%s or %sDevelop%s and press Enter.%n"
-				+ "Otherwise, just press Enter to end your turn:%s%n",
-				GameSystem.RESET,
-				GameSystem.COLOUR_OPTION, GameSystem.RESET,
-				GameSystem.COLOUR_OPTION, GameSystem.RESET,
-				GameSystem.COLOUR_INPUT);
-		
-		while (true) {
-			input = GameSystem.SCANNER.nextLine();
+			BoardPosition boardPosition = GameSystem.board.getBoardPosition(this.position, roll);
 			
-			if (input.equalsIgnoreCase("Trade") || input.equalsIgnoreCase("Develop") || input == null || input.equals("")) {
-				break;
-			} else {
-				System.out.printf("%sWrong input - please choose between %sTrade%s, %sDevelop%s and continue (Enter):%n%s",
-						GameSystem.RESET,
-						GameSystem.COLOUR_OPTION, GameSystem.RESET,
-						GameSystem.COLOUR_OPTION, GameSystem.RESET,
-						GameSystem.COLOUR_INPUT);
+			for (int i = 0; i < boardPosition.getStartPassed(); i++) {
+				Sunrise sunrise = (Sunrise) GameSystem.board.getSquare(0);
+				sunrise.passAct(this);
 			}
-		}
+			
+			this.setPosition(boardPosition.getPosition());
+			
+			boardPosition.getSquare().act(this);
+			
+			// develop area and trade actions
+			String input = "";
+			System.out.printf("%sIf you would like to trade or develop an area type %sTrade%s or %sDevelop%s and press Enter.%n"
+					+ "Otherwise, just press Enter to end your turn:%s%n",
+					GameSystem.RESET,
+					GameSystem.COLOUR_OPTION, GameSystem.RESET,
+					GameSystem.COLOUR_OPTION, GameSystem.RESET,
+					GameSystem.COLOUR_INPUT);
+			
+			while (true) {
+				input = GameSystem.SCANNER.nextLine();
+				
+				if (input.equalsIgnoreCase("Trade") || input.equalsIgnoreCase("Develop") || input == null || input.equals("")) {
+					break;
+				} else {
+					System.out.printf("%sWrong input - please choose between %sTrade%s, %sDevelop%s and continue (Enter):%n%s",
+							GameSystem.RESET,
+							GameSystem.COLOUR_OPTION, GameSystem.RESET,
+							GameSystem.COLOUR_OPTION, GameSystem.RESET,
+							GameSystem.COLOUR_INPUT);
+				}
+			}
+			
+			if (input.equalsIgnoreCase("Develop")) {
+				System.out.println(GameSystem.RESET + "You chose to develop an area.");
+				GameSystem.developArea(this);
+			} else if (input.equalsIgnoreCase("Trade")) {
+				System.out.println(GameSystem.RESET + "You chose to trade.");
+				Area.dutchAuctionSystem(this);
+			}
 		
-		if (input.equalsIgnoreCase("Develop")) {
-			System.out.println(GameSystem.RESET + "You chose to develop an area.");
-			GameSystem.developArea(this);
-		} else if (input.equalsIgnoreCase("Trade")) {
-			System.out.println(GameSystem.RESET + "You chose to trade.");
-			Area.dutchAuctionSystem(this);
-		}
-
 	}
 	
 	public void displayBalance() {
-		System.out.printf("Your current balance is %s%s%,d%s%s and you own:%n", GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.balance, GameSystem.RES_SUF, GameSystem.RESET);
-		System.out.println("\n  Facilities: "+this.getOwnedSquares());
-		System.out.println("  Sets: "+this.getOwnedGroups()+"\n");
+		System.out.printf("%s%s%s, your current balance is %s%s%,d%s%s and you own:%n"
+				, GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET
+				, GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, this.balance, GameSystem.RES_SUF, GameSystem.RESET);
+		System.out.println("\n  Areas: "+this.getOwnedSquares());
+		System.out.println("  Regions: "+this.getOwnedGroups()+"\n");
 	}
 	
 	public void increaseBalance(int credit) {
