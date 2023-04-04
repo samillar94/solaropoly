@@ -239,7 +239,6 @@ public class GameSystem {
 	* The read order of Game parameters and Cards doesn't matter.
 	*/
 	private static void setupBoard() {
-
 		ArrayList<Square> squares = new ArrayList<Square>(14);
 		ArrayList<Group> groups = new ArrayList<Group>(4);
 		ArrayList<Card> cards = new ArrayList<Card>();
