@@ -151,6 +151,7 @@ public class Group {
 	 * Checks if an area can be developed by checking the development level of the
 	 * other areas within the group. ie all ensuring areas are developed equaly
 	 * 
+	 * @author andrewscott
 	 * @param area
 	 * @param group
 	 * @return

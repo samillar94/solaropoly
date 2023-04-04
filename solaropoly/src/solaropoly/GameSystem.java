@@ -563,7 +563,7 @@ public class GameSystem {
 	}
 
 	/**
-	 * develop method
+	 * @author andrewscott
 	 * 
 	 * @param player
 	 */
@@ -572,7 +572,7 @@ public class GameSystem {
 		// these are set to true until the player indicates they are done with developing 
 		boolean groupStatus = true;
 		boolean areaStatus = true;
-		
+		boolean isGroupFound = false;
 		ArrayList<Area> fullyDevelopedAreaStatus = new ArrayList<Area>();
 			
 		if (player.getOwnedGroups().size() > 0) {
@@ -719,6 +719,7 @@ public class GameSystem {
 	/**
 	 * generates the menu using the getmenuitems method
 	 * 
+	 * @author andrewscott
 	 * @param player
 	 */
 	private static void displayMenu(Player player) {
@@ -740,6 +741,7 @@ public class GameSystem {
 	 * development to see their owned properties and associated costs with
 	 * development
 	 * 
+	 * @author andrewscott
 	 * @param player
 	 * @return
 	 */
@@ -750,7 +752,7 @@ public class GameSystem {
 		int playerBalance = player.getBalance();
 
 		for (Group group : player.getOwnedGroups()) {
-			// need to do getowned squares inside the groups
+			
 			for (Square square : player.getOwnedSquares()) {
 
 				if (square instanceof Area && ((Area) square).getGroup().equals(group)) {
@@ -769,7 +771,11 @@ public class GameSystem {
 						} else if (area.getDevelopmentLevel() == 3) {
 							developmentCost = area.getGroup().getMajorDevelopmentCost();
 							menuItems.add(new MenuItem(groupName, squareName, developmentLevel, developmentCost));
+						}  else if (area.getDevelopmentLevel() == 4) {
+							developmentCost = area.getGroup().getMajorDevelopmentCost();
+							menuItems.add(new MenuItem(groupName, squareName, developmentLevel, 0));
 						}
+						
 					
 						
 					}
