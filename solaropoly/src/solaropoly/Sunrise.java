@@ -6,7 +6,7 @@ package solaropoly;
 /**
  * Start square for the board. Although you get credits for passing here,
  * because you don't have to land here to get that, there are no real effects 
- * of landing here, similar to Parking.
+ * of landing here, similar to Holiday.
  * @author G17
  */
 public class Sunrise extends Square {
@@ -14,7 +14,7 @@ public class Sunrise extends Square {
 	/**
 	 * resource to take after one loop of the board
 	 */
-	public static final int PASS_GO_RESOURCE = 1000000;
+	public int passGoCredit;
 
 	/**
 	 * Default constructor.
@@ -25,8 +25,9 @@ public class Sunrise extends Square {
 	 * Constructor with arguments.
 	 * @param name
 	 */
-	public Sunrise(String name) {
+	public Sunrise(String name, int passGoCredit) {
 		super.setName(name);
+		this.passGoCredit = passGoCredit;
 	}
 	
 	/**
@@ -34,21 +35,21 @@ public class Sunrise extends Square {
 	 */
 	@Override
 	public void act(Player player) {
-		player.increaseBalance(PASS_GO_RESOURCE);
+		player.increaseBalance(passGoCredit);
 		System.out.printf("Welcome back to %s%s%s! You've received %s%s%,d%s%s.%n"
 				, GameSystem.COLOUR_LOCATION, this.getName(), GameSystem.RESET
-				, GameSystem.COLOUR_RESOURCE, GameSystem.PRE, PASS_GO_RESOURCE, GameSystem.SUF, GameSystem.RESET
+				, GameSystem.COLOUR_RESOURCE, GameSystem.PRE, passGoCredit, GameSystem.SUF, GameSystem.RESET
 				);
 		System.out.println("Why not tweet inspirationally about the solar energy industry?\n");
 
 	}
 	
 	/**
-	 * Static method called when the player passes, but does not land on, Go
+	 * Static method called when the player passes, but does not land on, Sunrise
 	 * @param player
 	 */
-	public static void passAct(Player player) {
-		player.increaseBalance(PASS_GO_RESOURCE);
-		System.out.printf("You passed Go and received %s%s%,d%s%s. ", GameSystem.COLOUR_RESOURCE, GameSystem.PRE, PASS_GO_RESOURCE, GameSystem.SUF, GameSystem.RESET);
+	public void passAct(Player player) {
+		player.increaseBalance(this.passGoCredit);
+		System.out.printf("You passed Sunrise and received %s%s%,d%s%s. ", GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.passGoCredit, GameSystem.SUF, GameSystem.RESET);
 	}
 }

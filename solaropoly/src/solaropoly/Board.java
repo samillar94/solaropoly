@@ -5,10 +5,8 @@ package solaropoly;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * This class represents the game board, which consists of a number of squares
@@ -236,7 +234,7 @@ public class Board {
 		if (overrunPosition < 0) {
 			newPosition = getSize() + (overrunPosition % getSize());
 		} else {
-			startPassed = (overrunPosition - 1) / getSize(); // -1 ensures landing on Go doesn't count
+			startPassed = (overrunPosition - 1) / getSize(); // -1 ensures landing on Sunrise doesn't count
 			newPosition = overrunPosition % getSize();
 		}
 		Square newSquare = this.squares.get(newPosition);
@@ -302,7 +300,7 @@ public class Board {
 	/**
 	 * This method give players visualized map
 	 */
-	public static void visualMap() {
+	public void visualMap() {
 		// Map<Area,Integer> areaInfor=new HashMap<>();
 		// for(int loop=2;loop<10;loop++) {
 		// areaInfor.put((Area)GameSystem.board.getSquare(loop),0);
@@ -338,7 +336,7 @@ public class Board {
 			areaInfor.add(addedInfor);
 			;
 		}
-		sb.append(String.format("%s%-32s",GameSystem.WHITE_BOLD_BRIGHT,"Starting point") + String.format("%-28s","Parking Area")+String.format("%-37s",areaInfor.get(0))+"——"+String.format("%30s",areaInfor.get(1)));
+		sb.append(String.format("%s%-32s",GameSystem.WHITE_BOLD_BRIGHT,"Starting point") + String.format("%-28s","Holiday Area")+String.format("%-37s",areaInfor.get(0))+"——"+String.format("%30s",areaInfor.get(1)));
 		sb.append("\n");
 		sb.append("\n");
 		sb.append(areaInfor.get(9) + String.format("%62s", "") + areaInfor.get(2));
