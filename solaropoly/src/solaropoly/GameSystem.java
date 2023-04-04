@@ -563,7 +563,7 @@ public class GameSystem {
 	}
 
 	/**
-	 * develop method
+	 * @author andrewscott
 	 * 
 	 * @param player
 	 */
@@ -727,6 +727,7 @@ public class GameSystem {
 	/**
 	 * generates the menu using the getmenuitems method
 	 * 
+	 * @author andrewscott
 	 * @param player
 	 */
 	private static void displayMenu(Player player) {
@@ -748,6 +749,7 @@ public class GameSystem {
 	 * development to see their owned properties and associated costs with
 	 * development
 	 * 
+	 * @author andrewscott
 	 * @param player
 	 * @return
 	 */
