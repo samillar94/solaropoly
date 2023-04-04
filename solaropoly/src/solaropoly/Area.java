@@ -399,15 +399,15 @@ public class Area extends Square implements GeneratesIncome {
 					}
 				}
 				
-				player.getAttention();
 				if (accepters.isEmpty()) {
 					System.out.println(GameSystem.COLOUR_PLAYER+player.getName()+GameSystem.RESET + ", no one wants your square, so it will be offered to the next person who lands on it.");
 				} else if (accepters.size() == 1) {
-					System.out.println(GameSystem.COLOUR_PLAYER+player.getName()+GameSystem.RESET + " congratulations, your square was sold to "
-							+ GameSystem.COLOUR_OTHERPLAYER+accepters.get(0).getName()+GameSystem.RESET);
+					Player accepter = accepters.get(0);
+					System.out.println(GameSystem.RESET);
 					
-					changeOwnership(accepters.get(0));
+					acceptedOffer(accepter, player);
 				} else {
+					player.getAttention();
 					System.out.printf("%s%s%s, there are %s players that are willing to buy your square.%n"
 							+ "Please enter the name of the one you prefer to sell the square.%n"
 							+ "Choose between these players:%n", 
@@ -415,7 +415,7 @@ public class Area extends Square implements GeneratesIncome {
 							accepters.size());
 
 					for (Player accepter : accepters) {
-						System.out.println(GameSystem.COLOUR_OTHERPLAYER+accepter.getName()+GameSystem.RESET);
+						System.out.println(GameSystem.COLOUR_OTHERPLAYER + accepter.getName() + GameSystem.RESET);
 					}
 					
 					System.out.println(GameSystem.COLOUR_INPUT);
@@ -425,13 +425,8 @@ public class Area extends Square implements GeneratesIncome {
 						input = GameSystem.SCANNER.nextLine();
 						for (Player accepter : accepters) {
 							if (input.equalsIgnoreCase(accepter.getName())) {
-								accepter.decreaseBalance(this.cost);
-								changeOwnership(accepter);
-								System.out.printf("%sOk, %s%s%s bought %s! %n%n", 
-										GameSystem.RESET,
-										GameSystem.COLOUR_OTHERPLAYER, accepter.getName(), GameSystem.RESET,
-										this.getName());
-								accepter.displayBalance();
+								accepter.getAttention();
+								acceptedOffer(accepter, player);
 								flag = true;
 							}
 						}
@@ -442,8 +437,6 @@ public class Area extends Square implements GeneratesIncome {
 							System.out.println(GameSystem.RESET+ "Wrong input - please choose between one of the valid names: "+GameSystem.COLOUR_INPUT);
 						}
 					}
-
-					System.out.println(GameSystem.RESET+ "You have sold the square successfully.");
 				}
 			}
 		} catch (Exception e) {
@@ -452,6 +445,25 @@ public class Area extends Square implements GeneratesIncome {
 			GameSystem.SCANNER.nextLine(); // clean the scanner to avoid other errors in GameSystem
 		}
 	}
+	
+	/**
+	 * This method transfer the ownership of a sold area to the accepter and must be used only by purchaseArea.
+	 * It updates the balances, print it to screen to the accepter and execute a transaction to the player.
+	 * Then it prints to the player that he sold successfully and his updated balance.
+	 * @param accepter - the accepter of the offer
+	 * @param player - the player who is selling the area
+	 */
+	private void acceptedOffer(Player accepter, Player player) {
+		accepter.transaction(player, this.cost);
+		changeOwnership(accepter);
+		accepter.displayBalance();
+		
+		player.getAttention();
+		System.out.println(GameSystem.COLOUR_PLAYER + player.getName() + GameSystem.RESET + " congratulations, your square was sold to "
+				+ GameSystem.COLOUR_OTHERPLAYER + accepter.getName() + GameSystem.RESET);
+		player.displayBalance();
+	}
+	
 	
 	/**
 	 * This method transfer or assign the ownership of this area to a Player.
