@@ -303,11 +303,11 @@ public class Area extends Square implements GeneratesIncome {
 	private void purchaseArea(Player player) {
 		try {
 			System.out.printf(
-						"%sWould you like to buy this square for %s%s%,d%s%s?%n" 
+						"%sWould you like to buy this square of the group %s for %s%s%,d%s%s?%n" 
 						+ "Type %sBuy%s and Enter to buy%n"
 						+ "Type %sSell%s and Enter to sell%n" 
 						+ "Type %sNone%s to end the turn%s%n",
-						GameSystem.RESET,
+						GameSystem.RESET, GameSystem.board.getGroup(this),
 						GameSystem.COLOUR_RESOURCE, GameSystem.PRE, this.cost, GameSystem.SUF, GameSystem.RESET,
 						GameSystem.COLOUR_OPTION, GameSystem.RESET,
 						GameSystem.COLOUR_OPTION, GameSystem.RESET,
