@@ -140,7 +140,6 @@ public class GameSystem {
 			
 			setupBoard();
 			welcome();
-			
 			/// set number of players
 			int numPlayers = setNumPlayers();
 			

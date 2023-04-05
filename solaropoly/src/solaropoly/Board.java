@@ -309,15 +309,22 @@ public class Board {
 		StringBuilder sb = new StringBuilder();
 		ArrayList<Area> areas = new ArrayList<>();
 		ArrayList<String> areaInfor = new ArrayList<>();
-		for (int loop = 2; loop < 12; loop++) {
+		for (int loop = 0; loop < 13; loop++) {
+			try{Area aa = ((Area) GameSystem.board.getSquare(loop));
+			
+			areas.add(aa);
+			}catch(Exception e) {
+				continue;
+			}
+		}
+		for (int loop = 1; loop < 2; loop++) {
 			Area aa = ((Area) GameSystem.board.getSquare(loop));
 			areas.add(aa);
-		}
 		for (Area a : areas) {
 			String addedInfor = null;
 			if (a.getOwner() != null) {
 				if (a.getOwner().equals(GameSystem.playersInGame.get(0))) {
-					addedInfor = String.format("%s%-25s%d%s", GameSystem.CYAN, a.getName(), a.getDevelopmentLevel(),
+					addedInfor = String.format("%10s%-25s%d%s", GameSystem.CYAN, a.getName(), a.getDevelopmentLevel(),
 							GameSystem.RESET);
 				} else if (a.getOwner().equals(GameSystem.playersInGame.get(1))) {
 					addedInfor = String.format("%s%-25s%d%s", GameSystem.BLUE, a.getName(), a.getDevelopmentLevel(),
@@ -330,13 +337,13 @@ public class Board {
 							GameSystem.RESET);
 				}
 			} else {
-				addedInfor = String.format("%s%-25s%d%s", GameSystem.WHITE_BOLD_BRIGHT, a.getName(), a.getDevelopmentLevel(),
+				addedInfor = String.format("%s%-23s%d%s", GameSystem.WHITE_BOLD, a.getName(), a.getDevelopmentLevel(),
 						GameSystem.RESET);
 			}
 			areaInfor.add(addedInfor);
 			;
 		}
-		sb.append(String.format("%s%-32s",GameSystem.WHITE_BOLD_BRIGHT,"Starting point") + String.format("%-28s","Holiday Area")+String.format("%-37s",areaInfor.get(0))+"——"+String.format("%30s",areaInfor.get(1)));
+		sb.append(String.format("%s%-39s",GameSystem.WHITE_BOLD_BRIGHT,"Starting point") +String.format("%-50s",areaInfor.get(0))+String.format("%-50s",areaInfor.get(1))+ String.format("%-s","Holiday Area"));
 		sb.append("\n");
 		sb.append("\n");
 		sb.append(areaInfor.get(9) + String.format("%62s", "") + areaInfor.get(2));
@@ -348,5 +355,6 @@ public class Board {
 		sb.append(String.format("%-36s",areaInfor.get(7)) + " ———— "+String.format("%-36s",areaInfor.get(6))+"——"+String.format("%-37s",areaInfor.get(5))+"———"+String.format("%-40s",areaInfor.get(4)));
 		System.out.println(sb);
 		System.out.println();
+	}
 	}
 }
