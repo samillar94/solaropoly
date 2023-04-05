@@ -214,16 +214,25 @@ public class Board {
 		int oldPosition = 0;
 		return this.getBoardPosition(oldPosition, index).getSquare();
 	}
-	
+
 	/**
-	 * This method returns the square on the board, the number of times the player has passed the first square and his new position.
-	 * It uses the player's current position and the dice roll result to calculate the new position.
-	 * @param oldPosition - the player's current position on the board. The dice roll result will be added to this value.
-	 * @param diceRoll - the result of the dice roll or a number to be added to the player's current position.
-	 * @return BoardPosition - a container class called BoardPosition consisting of a Square object of the new position, an integer
-	 * 						   representing the number of times the player has looped around the board and an integer with the new index position.
-	 * 						   The values can be accessed using the getSquare() getStartPassed() and getPosition() methods from the class.
-	 * @throws IndexOutOfBoundsException - if there is an error with the calculation of the index or if the squares List is empty.
+	 * This method returns the square on the board, the number of times the player
+	 * has passed the first square and his new position. It uses the player's
+	 * current position and the dice roll result to calculate the new position.
+	 * 
+	 * @param oldPosition - the player's current position on the board. The dice
+	 *                    roll result will be added to this value.
+	 * @param diceRoll    - the result of the dice roll or a number to be added to
+	 *                    the player's current position.
+	 * @return BoardPosition - a container class called BoardPosition consisting of
+	 *         a Square object of the new position, an integer representing the
+	 *         number of times the player has looped around the board and an integer
+	 *         with the new index position. The values can be accessed using the
+	 *         getSquare() getStartPassed() and getPosition() methods from the
+	 *         class.
+	 * @throws IndexOutOfBoundsException - if there is an error with the calculation
+	 *                                   of the index or if the squares List is
+	 *                                   empty.
 	 */
 	public BoardPosition getBoardPosition(int oldPosition, int diceRoll) throws IndexOutOfBoundsException {
 		checkSquaresList();
@@ -240,7 +249,7 @@ public class Board {
 		Square newSquare = this.squares.get(newPosition);
 		return new BoardPosition(newSquare, startPassed, newPosition);
 	}
-	
+
 	/**
 	 * This method return the position of a given Square.
 	 * 
@@ -309,9 +318,13 @@ public class Board {
 		StringBuilder sb = new StringBuilder();
 		ArrayList<Area> areas = new ArrayList<>();
 		ArrayList<String> areaInfor = new ArrayList<>();
-		for (int loop = 2; loop < 12; loop++) {
-			Area aa = ((Area) GameSystem.board.getSquare(loop));
-			areas.add(aa);
+		for (int loop = 2; loop < 20; loop++) {
+			try {
+				Area aa = ((Area) GameSystem.board.getSquare(loop));
+				areas.add(aa);
+			} catch (Exception e) {
+				continue;
+			}
 		}
 		for (Area a : areas) {
 			String addedInfor = null;
@@ -323,30 +336,75 @@ public class Board {
 					addedInfor = String.format("%s%-25s%d%s", ColourLibrary.BLUE, a.getName(), a.getDevelopmentLevel(),
 							GameSystem.RESET);
 				} else if (a.getOwner().equals(GameSystem.playersInGame.get(2))) {
-					addedInfor = String.format("%s%-25s%d%s", ColourLibrary.GREEN, a.getName(), a.getDevelopmentLevel(),
+					addedInfor = String.format("%s%-25s%d%s%s", ColourLibrary.GREEN, a.getName(), a.getDevelopmentLevel(),
 							GameSystem.RESET);
 				} else if (a.getOwner().equals(GameSystem.playersInGame.get(3))) {
-					addedInfor = String.format("%s%-25s%d%s", ColourLibrary.PURPLE, a.getName(), a.getDevelopmentLevel(),
-							GameSystem.RESET);
+					addedInfor = String.format("%s%-25s%d%10s%s", ColourLibrary.PURPLE, a.getName(),
+							a.getDevelopmentLevel(),a.getOwner(),GameSystem.RESET);
 				}
 			} else {
-				addedInfor = String.format("%s%-25s%d%s", ColourLibrary.WHITE_BOLD_BRIGHT, a.getName(), a.getDevelopmentLevel(),
-						GameSystem.RESET);
+				addedInfor = String.format("%s%-30s%d%s", ColourLibrary.WHITE_BOLD_BRIGHT, a.getName(),
+						a.getDevelopmentLevel(), GameSystem.RESET);
 			}
 			areaInfor.add(addedInfor);
 			;
 		}
-		sb.append(String.format("%s%-32s",ColourLibrary.WHITE_BOLD_BRIGHT,"Starting point") + String.format("%-28s","Holiday Area")+String.format("%-37s",areaInfor.get(0))+"——"+String.format("%30s",areaInfor.get(1)));
+		sb.append(String.format("%20s%-29s", ColourLibrary.WHITE_BOLD_BRIGHT, "Sunrise")
+				+ String.format("%-60s", areaInfor.get(0)) + String.format("%-60s", areaInfor.get(1))
+				+ String.format("%s%-39s", ColourLibrary.WHITE_BOLD_BRIGHT, "Event"));
 		sb.append("\n");
 		sb.append("\n");
-		sb.append(areaInfor.get(9) + String.format("%62s", "") + areaInfor.get(2));
 		sb.append("\n");
-		sb.append(String.format("%6s", "|")+String.format("%s%64s%s",ColourLibrary.YELLOW_BOLD, "Welcome to Solaropoly!",GameSystem.RESET)+String.format("%22s\n", "|"));
-		sb.append(areaInfor.get(8) + String.format("%62s", "") + areaInfor.get(3));
+		sb.append(String.format("%172s",areaInfor.get(2)));
 		sb.append("\n");
-		sb.append(String.format("%92s\n","|"));
-		sb.append(String.format("%-36s",areaInfor.get(7)) + " ———— "+String.format("%-36s",areaInfor.get(6))+"——"+String.format("%-37s",areaInfor.get(5))+"———"+String.format("%-40s",areaInfor.get(4)));
+		sb.append("\n");
+		sb.append(String.format("%40s", areaInfor.get(9)));
+		sb.append("\n");
+		sb.append("\n");
+		sb.append(String.format("%172s",areaInfor.get(3)));
+		sb.append("\n");
+		sb.append(String.format("%s%85s%s",ColourLibrary.YELLOW,"Welcome to Solaropoly",ColourLibrary.RESET));
+		sb.append("\n");
+		sb.append(String.format("%40s", areaInfor.get(8)));
+		sb.append("\n");
+		sb.append("\n");
+		sb.append(String.format("%172s",areaInfor.get(4)));
+		sb.append("\n");
+		sb.append("\n");
+		sb.append("\n");
+		sb.append(String.format("%10s%-20s", ColourLibrary.WHITE_BOLD_BRIGHT, "Holiday")
+				+ String.format("%-50s", areaInfor.get(7)) + String.format("%-50s", areaInfor.get(6))+ String.format("%-50s", areaInfor.get(5))
+				+ String.format("%s%-39s%s", ColourLibrary.WHITE_BOLD_BRIGHT, "Penalty",ColourLibrary.RESET));
+		
 		System.out.println(sb);
 		System.out.println();
 	}
+	public void textMap() {
+		System.out.printf("%s%s%s%s%s\n\n","Position 1: ",ColourLibrary.YELLOW,"Sunrise ",ColourLibrary.RESET,"Type :Start Point");
+		ArrayList<Area> areas = new ArrayList<>();
+		for (int loop = 2; loop < 20; loop++) {
+			try {
+				Area aa = ((Area) GameSystem.board.getSquare(loop));
+				areas.add(aa);
+			} catch (Exception e) {
+				continue;
+			}
+		}
+		for(int loop=0;loop<2;loop++) {
+			System.out.println("Position "+(loop+2)+": "+ColourLibrary.CYAN +areas.get(loop).getName()+ColourLibrary.RESET  +"\n Type:Area"+areas.get(loop).detailsArea());
+		}
+		System.out.printf("%s%s%s%s%s\n\n","Position 4: ",ColourLibrary.YELLOW,"Event ",ColourLibrary.RESET,"Type :Card");
+		for(int loop=2;loop<5;loop++) {
+			System.out.println("Position "+(loop+3)+": "+ColourLibrary.CYAN +areas.get(loop).getName()+ColourLibrary.RESET  +"\n Type:Area"+areas.get(loop).detailsArea());
+		}
+		System.out.printf("%s%s%s%s%s\n\n","Position 8: ",ColourLibrary.YELLOW,"Penalty ",ColourLibrary.RESET,"Type :Card");
+		for(int loop=5;loop<8;loop++) {
+			System.out.println("Position "+(loop+4)+": "+ColourLibrary.CYAN +areas.get(loop).getName()+ColourLibrary.RESET  +"\n Type:Area"+areas.get(loop).detailsArea());
+		}
+		System.out.printf("%s%s%s%s%s\n\n","Position 12: ",ColourLibrary.YELLOW,"Penalty ",ColourLibrary.RESET,"Type :Break square");
+		for(int loop=8;loop<10;loop++) {
+			System.out.println("Position "+(loop+5)+": "+ColourLibrary.CYAN +areas.get(loop).getName()+ColourLibrary.RESET  +"\n Type:Area"+areas.get(loop).detailsArea());
+		}
+	}
+	
 }
