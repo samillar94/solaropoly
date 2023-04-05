@@ -330,7 +330,7 @@ public class Board {
 			String addedInfor = null;
 			if (a.getOwner() != null) {
 				if (a.getOwner().equals(GameSystem.playersInGame.get(0))) {
-					addedInfor = String.format("%s%-25s%d%s", ColourLibrary.CYAN, a.getName(), a.getDevelopmentLevel(),
+					addedInfor = String.format("%s%-25s%d%10s%s", ColourLibrary.CYAN, a.getName(), a.getDevelopmentLevel(),a.getOwner(),
 							GameSystem.RESET);
 				} else if (a.getOwner().equals(GameSystem.playersInGame.get(1))) {
 					addedInfor = String.format("%s%-25s%d%s", ColourLibrary.BLUE, a.getName(), a.getDevelopmentLevel(),
@@ -350,30 +350,30 @@ public class Board {
 			;
 		}
 		sb.append(String.format("%20s%-29s", ColourLibrary.WHITE_BOLD_BRIGHT, "Sunrise")
-				+ String.format("%-60s", areaInfor.get(0)) + String.format("%-60s", areaInfor.get(1))
+				+ String.format("%-60s", areaInfor.get(9)) + String.format("%-60s", areaInfor.get(0))
 				+ String.format("%s%-39s", ColourLibrary.WHITE_BOLD_BRIGHT, "Event"));
 		sb.append("\n");
 		sb.append("\n");
 		sb.append("\n");
-		sb.append(String.format("%172s",areaInfor.get(2)));
+		sb.append(String.format("%172s",areaInfor.get(1)));
 		sb.append("\n");
-		sb.append("\n");
-		sb.append(String.format("%40s", areaInfor.get(9)));
-		sb.append("\n");
-		sb.append("\n");
-		sb.append(String.format("%172s",areaInfor.get(3)));
-		sb.append("\n");
-		sb.append(String.format("%s%85s%s",ColourLibrary.YELLOW,"Welcome to Solaropoly",ColourLibrary.RESET));
 		sb.append("\n");
 		sb.append(String.format("%40s", areaInfor.get(8)));
 		sb.append("\n");
 		sb.append("\n");
-		sb.append(String.format("%172s",areaInfor.get(4)));
+		sb.append(String.format("%172s",areaInfor.get(2)));
+		sb.append("\n");
+		sb.append(String.format("%s%85s%s",ColourLibrary.YELLOW,"Welcome to Solaropoly",ColourLibrary.RESET));
+		sb.append("\n");
+		sb.append(String.format("%40s", areaInfor.get(7)));
+		sb.append("\n");
+		sb.append("\n");
+		sb.append(String.format("%172s",areaInfor.get(3)));
 		sb.append("\n");
 		sb.append("\n");
 		sb.append("\n");
 		sb.append(String.format("%10s%-20s", ColourLibrary.WHITE_BOLD_BRIGHT, "Holiday")
-				+ String.format("%-50s", areaInfor.get(7)) + String.format("%-50s", areaInfor.get(6))+ String.format("%-50s", areaInfor.get(5))
+				+ String.format("%-50s", areaInfor.get(6)) + String.format("%-50s", areaInfor.get(5))+ String.format("%-50s", areaInfor.get(4))
 				+ String.format("%s%-39s%s", ColourLibrary.WHITE_BOLD_BRIGHT, "Penalty",ColourLibrary.RESET));
 		
 		System.out.println(sb);

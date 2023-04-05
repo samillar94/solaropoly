@@ -27,7 +27,7 @@ public class Area extends Square implements GeneratesIncome {
 	private int developmentLevel = 0;
 	public static final int MAX_LEVEL = 4;
 	private static final int MIN_LEVEL = 0;
-	
+	private int dutchPrice=2147483647;
 	
 	
 	
@@ -600,8 +600,8 @@ public class Area extends Square implements GeneratesIncome {
 			auctionnerSet = auctioneer.getOwnedSquares();
 			Area tradeArea = new Area();
 			System.out.println("Welcome to Dutch auction system. Here is the basic rules of Duction auction system\n"
-			+"A Dutch auction (also called a descending price auction) refers to a type of auction in which"
-			+ " an auctioneer starts with a very high price, incrementally lowering the price until someone places a bid.");
+			+ColourLibrary.GREEN+"A Dutch auction (also called a descending price auction) refers to a type of auction in which"
+			+ " an auctioneer starts with a very high price\n incrementally lowering the price until someone places a bid."+ColourLibrary.RESET);
 			System.out.println(
 					"Welcome to Dutch auction system,which item would you like to aucion? please enter the name");
 			// show the list of owners' estates
@@ -629,16 +629,18 @@ public class Area extends Square implements GeneratesIncome {
 
 			
 			do {
-				System.out.println("Now please type in the price you want to sell");
+				System.out.println("Now please type in the price you want to sell\n"+ColourLibrary.RED+"Hint:Remember that it's dutch auction, your offer should be less than previous round!"+ColourLibrary.RESET);
 				while (true) {
 
 					if (GameSystem.SCANNER.hasNextInt()) {
 						gamerInput = GameSystem.SCANNER.nextInt();
-						if (gamerInput >= 0) {
-							
+						
+						
+						if (gamerInput >= 0 & gamerInput<tradeArea.getDutchPrice()) {
+							tradeArea.setDutchPrice(gamerInput);
 							break;
 						} else {
-							System.out.println("Please type in a positive number");
+							System.out.println("Please type in a positive number and it should greater than the price you last offer");
 						}
 					} else {
 						System.out.println("Please type in a positive number");
@@ -646,7 +648,7 @@ public class Area extends Square implements GeneratesIncome {
 					}
 				}
 				
-				System.out.println("Does anyone want receive it offer? The offer price is " + gamerInput);
+				System.out.println("Does anyone want receive it offer? The offer price is " + ColourLibrary.CYAN_BRIGHT+gamerInput+ColourLibrary.RESET);
 				System.out.println("If someone want to take it, please enter your name."
 						+ "\nIf no one wants to take it, please type N and enter and we will go to next round");
 				GameSystem.SCANNER.nextLine();
@@ -697,6 +699,22 @@ continue;
 			System.out.println("Exception happened, trade system restart");
 			dutchAuctionSystem(auctioneer);
 		}
+	}
+
+	/**
+	 * @return the dutchPrice
+	 */
+	public int getDutchPrice() {
+		return dutchPrice;
+	}
+
+	/**
+	 * @param dutchPrice the dutchPrice to set
+	 */
+	public void setDutchPrice(int dutchPrice) {
+		if(dutchPrice>0) {
+		this.dutchPrice = dutchPrice;}
+		
 	}
 
 }
