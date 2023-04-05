@@ -471,7 +471,7 @@ public class Area extends Square implements GeneratesIncome {
 	 * @param player - the player who is selling the area
 	 */
 	private void acceptedOffer(Player accepter, Player player) {
-		accepter.transaction(player, this.cost);
+		accepter.decreaseBalance(this.cost);
 		changeOwnership(accepter);
 		accepter.displayBalance();
 		
@@ -553,12 +553,13 @@ public class Area extends Square implements GeneratesIncome {
 		if (player.getBalance() < area.getCurrentRent()) {
 
 			System.out.println(
-					GameSystem.RESET+ "Sorry, you don't have enough money to pay rent. You are forced to enter the AUCTION SYSTEM");
+					GameSystem.RESET+ "Sorry, you don't have enough money to transfer.");
 			do {
 				if (player.getOwnedSquares().isEmpty()) {
-					System.out.println("You have no more properties for sell. You bankrupted!");
+					System.out.println("You have no more properties to sell. Unfortunately, you are forced to leave the Solaropoly initiative.");
 					GameSystem.playersInGame.remove(player);
 				} else {
+					System.out.println("You'll need to auction properties to other players until you have sufficient funds to make the payment.");
 					dutchAuctionSystem(player);
 				}
 			} while (player.getBalance() < area.getCurrentRent());
@@ -587,115 +588,159 @@ public class Area extends Square implements GeneratesIncome {
 	 * @throws Exception
 	 */
 	public static void dutchAuctionSystem(Player auctioneer) {
+		
 		if (auctioneer.getOwnedSquares().isEmpty()) {
-			System.out.println(GameSystem.RESET + "You don't have any property, auction system closed");
-			return;
-		}
-		try {
-			String userName;
-			boolean getResult = false;
-			int gamerInput;
-			boolean legalInput = false;
-			ArrayList<Square> auctionnerSet = new ArrayList<>();
-			auctionnerSet = auctioneer.getOwnedSquares();
-			Area tradeArea = new Area();
-			System.out.println("Welcome to Dutch auction system. Here is the basic rules of Duction auction system\n"
-			+"A Dutch auction (also called a descending price auction) refers to a type of auction in which"
-			+ " an auctioneer starts with a very high price, incrementally lowering the price until someone places a bid.");
-			System.out.println(
-					"Welcome to Dutch auction system,which item would you like to aucion? please enter the name");
-			// show the list of owners' estates
-			for (Square square : auctionnerSet) {
-				Area area = new Area();
-				area = (Area) square;
-				System.out.println(area.toString());
-			}
-			String Userinput = GameSystem.SCANNER.nextLine();
-			// Let player choose the land he or she wants to sell
-			do {
-				for (Square square : auctionnerSet) {
-					if (Userinput.equalsIgnoreCase(square.getName())) {
-						System.out.println("Land is picked up successfully");
-						tradeArea = (Area) square;
-						getResult = true;
-					}
-				}
-				if (!getResult) {
-					System.out.println("Illegal Input, please try again");
-					System.out.println();
-					Userinput = GameSystem.SCANNER.nextLine();
-				}
-			} while (!getResult);
+			System.out.println(GameSystem.RESET + "You don't have any property to trade - auction system closed.");
 
-			
-			do {
-				System.out.println("Now please type in the price you want to sell");
-				while (true) {
-
-					if (GameSystem.SCANNER.hasNextInt()) {
-						gamerInput = GameSystem.SCANNER.nextInt();
-						if (gamerInput >= 0) {
-							
-							break;
-						} else {
-							System.out.println("Please type in a positive number");
-						}
-					} else {
-						System.out.println("Please type in a positive number");
-						GameSystem.SCANNER.next();
-					}
+		} else {
+		
+			try {
+				
+				String userName;
+				boolean getResult = false;
+				int gamerInput;
+				boolean legalInput = false;
+				ArrayList<Square> auctioneerProperties = new ArrayList<>();
+				auctioneerProperties = auctioneer.getOwnedSquares();
+				Area tradeArea = new Area();
+				
+				System.out.println(GameSystem.COLOUR_PLAYER+auctioneer.getName()+ GameSystem.RESET+", you own the following areas:");
+				
+				// show the list of owners' estates
+				for (Square square : auctioneerProperties) {
+					Area area = new Area();
+					area = (Area) square;
+					System.out.print(area.toString());
 				}
 				
-				System.out.println("Does anyone want receive it offer? The offer price is " + gamerInput);
-				System.out.println("If someone want to take it, please enter your name."
-						+ "\nIf no one wants to take it, please type N and enter and we will go to next round");
-				GameSystem.SCANNER.nextLine();
-				userName = GameSystem.SCANNER.nextLine().trim();
-				if (userName.equalsIgnoreCase("N")) {
-continue;
-				}
-				else {
-					break;
-				}
-			} while (true);
-			
-			do {
-				for (Player player : GameSystem.players) {
-					if (player.getName().equalsIgnoreCase(userName)) {
-						if (player.getBalance() > gamerInput) {
-							player.decreaseBalance(gamerInput);
-							tradeArea.getOwner().increaseBalance(gamerInput);
-							tradeArea.changeOwnership(player);
-							System.out.println("Deal! Do you want to auction another property? Y/N");
-							legalInput = true;
-						} else {
-							System.out.println("Sorry for that you do not have enough balance to buy");
-							dutchAuctionSystem(auctioneer);
-							break;
+				System.out.println(GameSystem.RESET+"\n\nEnter the name of the area you wish to auction or press Enter to close trading:"+GameSystem.COLOUR_INPUT);
+				String input = GameSystem.SCANNER.nextLine();
+				
+				if (input != "" && input != null) {
+					// Let player choose the land he or she wants to sell
+					do {
+						do {
+							
+							for (Square square : auctioneerProperties) {
+								if (input.equalsIgnoreCase(square.getName())) {
+			//						System.out.println(GameSystem.RESET+"Land is picked up successfully");
+									tradeArea = (Area) square;
+									getResult = true;
+								}
+							}
+							if (!getResult) {
+								System.out.println(GameSystem.RESET+"Sorry, that was invalid input - please try again:"+GameSystem.COLOUR_INPUT);
+								System.out.println();
+								input = GameSystem.SCANNER.nextLine();
+							}
+						} while (!getResult);
+		
+						System.out.println(GameSystem.RESET+"Now type in the price you want to sell at:"+GameSystem.COLOUR_INPUT);
+						
+						while (true) {
+		
+							if (GameSystem.SCANNER.hasNextInt()) {
+								gamerInput = GameSystem.SCANNER.nextInt();
+								if (gamerInput >= 0) {
+									
+									break;
+								} else {
+									System.out.println(GameSystem.RESET+"Please type in a positive number"+GameSystem.COLOUR_INPUT);
+								}
+							} else {
+								System.out.println(GameSystem.RESET+"Please type in a positive number"+GameSystem.COLOUR_INPUT);
+								GameSystem.SCANNER.next();
+							}
 						}
-					}
+						
+						System.out.format("%sThe offer price is %s%s%,d%s%s.%n"
+								, GameSystem.RESET
+								, GameSystem.COLOUR_RESOURCE, GameSystem.RES_PRE, gamerInput, GameSystem.RES_SUF, GameSystem.RESET
+								);
+						
+						System.out.println(GameSystem.RESET+"If someone wants to take it, please enter your name."
+								+ "\nIf no one wants to take it, please type "
+								+ GameSystem.COLOUR_OPTION
+								+ "N"
+								+ GameSystem.RESET
+								+ " and Enter and we will go to the next round: "+GameSystem.COLOUR_INPUT);
+						GameSystem.SCANNER.nextLine();
+						userName = GameSystem.SCANNER.nextLine().trim();
+						
+						if (userName.equalsIgnoreCase("N")) {
+							continue;
+						} else {
+							
+							break;
+							
+						}
+						
+					} while (true);
+					
+					do {
+						for (Player player : GameSystem.playersInGame) {
+							if (player.getName().equalsIgnoreCase(userName)) {
+								if (player.getBalance() > gamerInput) {
+									player.decreaseBalance(gamerInput);
+									tradeArea.getOwner().increaseBalance(gamerInput);
+									tradeArea.changeOwnership(player);
+									System.out.println(GameSystem.RESET
+											+ "Deal! "
+											+ GameSystem.COLOUR_PLAYER + auctioneer.getName() + GameSystem.RESET
+											+ ", do you want to auction another property? "
+											+ GameSystem.COLOUR_OPTION
+											+ "Y"
+											+ GameSystem.RESET
+											+ "/"
+											+ GameSystem.COLOUR_OPTION
+											+ "N"
+											+ GameSystem.RESET
+											+ ":"
+											+ GameSystem.COLOUR_INPUT);
+								} else {
+									System.out.println(GameSystem.RESET+"Sorry "
+											+ GameSystem.COLOUR_PLAYER + player.getName() + GameSystem.RESET
+											+ ", you do not have sufficient funds to buy this."); 
+									// TODO LOOP THIS, DON'T RECUR IT!!!
+									dutchAuctionSystem(auctioneer);
+//									break;
+								}
+								legalInput = true;
+							}
+						}
+						
+						if (!legalInput) {
+							System.out.println(GameSystem.RESET+"Please enter a valid name."+GameSystem.COLOUR_INPUT);
+							userName = GameSystem.SCANNER.nextLine().trim();
+						}
+		
+					} while (!legalInput);
+					
+					String userAnswer = "";
+					
+					do {				
+						System.out.println();
+						userAnswer = GameSystem.SCANNER.nextLine();
+					
+						if (userAnswer.equalsIgnoreCase("N")) {
+							return;
+						} else if (userAnswer.equalsIgnoreCase("Y")) {
+							dutchAuctionSystem(auctioneer);
+							return;
+						} else {
+							System.out.println(GameSystem.RESET+"Sorry, that was invalid input."+GameSystem.COLOUR_INPUT);
+						}
+						
+					} while (!userAnswer.equalsIgnoreCase("Y") | !userAnswer.equalsIgnoreCase("N"));
 				}
-				if (!legalInput) {
-					System.out.println("Please enter an legal name");
-					userName = GameSystem.SCANNER.nextLine().trim();
-				}
-
-			} while (!legalInput);
-			System.out.println();
-			String UserAnswer = GameSystem.SCANNER.nextLine();
-			do {
-				if (UserAnswer.equalsIgnoreCase("N")) {
-					System.out.println("System closed");
-					return;
-				} else if (UserAnswer.equalsIgnoreCase("Y")) {
-					dutchAuctionSystem(auctioneer);
-					return;
-				}
-			} while (!UserAnswer.equalsIgnoreCase("Y") | !UserAnswer.equalsIgnoreCase("N"));
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.out.println("Exception happened, trade system restart");
-			dutchAuctionSystem(auctioneer);
+				
+				System.out.println(GameSystem.RESET+"System closed.");
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("Exception happened, trade system restart");
+				dutchAuctionSystem(auctioneer);
+			}
 		}
 	}
 
