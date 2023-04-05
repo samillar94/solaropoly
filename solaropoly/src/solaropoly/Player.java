@@ -381,7 +381,7 @@ public class Player {
 				System.err.println("Transaction aborted...");
 			}
 		} else {
-			System.out.printf("Sorry %s%s%s, you don't have enough resource to transfer to %s%s%s, your balance is %s%s%,d%s%s.%n",
+			System.out.printf("%sSorry %s%s%s, you don't have enough resource to transfer to %s%s%s, your balance is %s%s%,d%s%s.%n",
 					GameSystem.RESET, 
 					GameSystem.COLOUR_PLAYER, this.name, GameSystem.RESET, 
 					GameSystem.COLOUR_OTHERPLAYER, player.getName(), GameSystem.RESET, 
