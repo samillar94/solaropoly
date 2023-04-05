@@ -604,7 +604,8 @@ public class Area extends Square implements GeneratesIncome {
 				ArrayList<Square> auctioneerProperties = new ArrayList<>();
 				auctioneerProperties = auctioneer.getOwnedSquares();
 				Area tradeArea = new Area();
-				
+				System.out.println("Welcome to dutch auction system: a Dutch auction is known as a descending price auction."+ColourLibrary.RED+
+						"Be sure you give a descending offer"+ColourLibrary.RESET);
 				System.out.println(GameSystem.COLOUR_PLAYER+auctioneer.getName()+ GameSystem.RESET+", you own the following areas:");
 				
 				// show the list of owners' estates
@@ -636,20 +637,22 @@ public class Area extends Square implements GeneratesIncome {
 							}
 						} while (!getResult);
 		
-						System.out.println(GameSystem.RESET+"Now type in the price you want to sell at:"+GameSystem.COLOUR_INPUT);
+						System.out.println(GameSystem.RESET+"Now type in the price you want to sell at:\n"+ColourLibrary.RED+
+								"Hint: this is Dutch auction. Remember that your offer must be less than previous round"  +GameSystem.COLOUR_INPUT);
 						
 						while (true) {
 		
 							if (GameSystem.SCANNER.hasNextInt()) {
 								gamerInput = GameSystem.SCANNER.nextInt();
-								if (gamerInput >= 0) {
-									
+								
+								if (gamerInput >= 0 & gamerInput<tradeArea.getDutchPrice()) {
+									tradeArea.setDutchPrice(gamerInput);
 									break;
 								} else {
-									System.out.println(GameSystem.RESET+"Please type in a positive number"+GameSystem.COLOUR_INPUT);
+									System.out.println(GameSystem.RESET+"Please type in a positive number and it should be greater than your previous offer"+GameSystem.COLOUR_INPUT);
 								}
 							} else {
-								System.out.println(GameSystem.RESET+"Please type in a positive number"+GameSystem.COLOUR_INPUT);
+								System.out.println(GameSystem.RESET+"Please type in a positive number and it should be greater than your previous offer"+GameSystem.COLOUR_INPUT);
 								GameSystem.SCANNER.next();
 							}
 						}
