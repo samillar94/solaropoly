@@ -91,7 +91,6 @@ public class Event extends Square {
 				System.out.println("Wrong input - please just press Enter to continue your turn");
 			}
 		}
-		
         System.out.print(element.getEvent());
         player.move(element.getMovePosition());
         player.increaseBalance((int) element.getEarn()); // TODO: should the balance be a long?

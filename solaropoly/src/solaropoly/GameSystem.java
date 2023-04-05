@@ -139,7 +139,6 @@ public class GameSystem {
 		try {
 			
 			setupBoard();
-			
 			welcome();
 			
 			/// set number of players
