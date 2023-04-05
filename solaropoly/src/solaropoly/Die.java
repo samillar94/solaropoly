@@ -16,6 +16,11 @@ public class Die {
    private int sides;
    private int result;
    private Random random;
+   
+   /**
+    * In a real-word scenario the number of sides of a dice should be 4.
+    */
+   private static final int DICE_MIN_SIDES = 4;
 
    /**
     * Default constructor
@@ -48,10 +53,10 @@ public class Die {
 	 * 									 Dice with odd numbers exists, there are many of them.
 	 */
 	public void setSides(int sides) throws IllegalArgumentException {
-		if (sides > 0) {
+		if (sides >= DICE_MIN_SIDES) {
 			this.sides = sides;
 		} else {
-			throw new IllegalArgumentException("The sides of a dice must be a number greater than 1");
+			throw new IllegalArgumentException("The sides of a dice must be a number greater than 4");
 		}
 	}
 
