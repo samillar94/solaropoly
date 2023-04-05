@@ -51,8 +51,8 @@ public class Failure extends Square {
 	 */
 	@Override
 	public void act(Player player) {
-		System.out.println("You got a Failure in your power plant. You will loose some turns in order to repair it...");
+		System.out.println("You got a Failure in one of your systems. Unfortunately, you won't be able to move for a few turns while you repair it...");
 		player.sumTurns(this.turns);
-		System.out.println("Turns subtracted: " + this.turns);
+		System.out.println("Turns subtracted: " + this.turns+"\n");
 	}
 }

@@ -68,7 +68,7 @@ public class Event extends Square {
 	 * This method shuffles and adds cards at the end of the Queue
 	 */
 	public void addCards(List<Card> cards) {
-		Collections.shuffle(cards); // Shuffle the list
+		Collections.shuffle(cards); // Shuffle the list 
 		this.cards.addAll(cards);
 	}
 	/**
@@ -93,6 +93,10 @@ public class Event extends Square {
 		}
 		
         System.out.println(element.getEvent()+"\n");
+        try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+		}
         player.move(element.getMovePosition());
         player.increaseBalance((int) element.getEarn()); // TODO: should the balance be a long?
         player.setTurns(element.getTurns());

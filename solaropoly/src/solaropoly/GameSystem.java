@@ -608,7 +608,7 @@ public class GameSystem {
 				displayMenu(player);
 
 				System.out.println(
-						RESET+"\nIf you wish to develop within a group please enter the group name, else, to quit developing press Enter: "+COLOUR_INPUT);
+						RESET+"\nIf you wish to develop within a region you own please enter the region name, else, to quit developing press Enter: "+COLOUR_INPUT);
 				String inputGroup = SCANNER.nextLine();
 
 				if (inputGroup == null || inputGroup == "") {
@@ -625,7 +625,7 @@ public class GameSystem {
 							do {
 
 								System.out.println(
-										RESET+"Please enter which area you would like to develop, else, to develop another group or quit press Enter: "+COLOUR_INPUT);
+										RESET+"Please enter which area you would like to develop, else, to develop another region or quit press Enter: "+COLOUR_INPUT);
 								String inputArea = SCANNER.nextLine();
 
 								if (inputArea == null || inputArea == "") {
@@ -657,9 +657,10 @@ public class GameSystem {
 													area.incrementDevelopmentLevel();
 													player.decreaseBalance(area.getGroup().getMinorDevCost());
 													System.out.println(RESET+area.getName()
-															+ " developed. Development level: "
+															+ " developed to level "
 															+ area.getDevelopmentLevel()
-															+"\nUpdated player balance: "+player.getBalance());
+															+ "."
+															);
 													break;
 
 												} else {
@@ -677,11 +678,9 @@ public class GameSystem {
 													area.incrementDevelopmentLevel();
 													player.decreaseBalance(area.getGroup().getMajorDevCost());
 													System.out.println(
-															RESET+"Major development achieved. "
-																	+ area.getName()
-																	+ " developed "
-																	+ area.getDevelopmentLevel()
-																	+ " times\n"
+															RESET+"Major development achieved: "
+																	+ COLOUR_LOCATION+ area.getName()+ RESET
+																	+ " exhaustively developed."
 //																	+ "Updated player balance: "+player.getBalance()
 																	);
 													fullyDevelopedAreaStatus.add(area);
@@ -726,7 +725,7 @@ public class GameSystem {
 
 						} else {
 
-							System.out.println(RESET+"Please enter an group that you own.");
+							System.out.println(RESET+"Please enter an region that you own.");
 
 						}
 
@@ -738,7 +737,7 @@ public class GameSystem {
 
 		} else {
 
-			System.out.println("You do not own any groups.");
+			System.out.println("You do not own any whole regions.");
 
 		}
 			
@@ -752,14 +751,31 @@ public class GameSystem {
 	 */
 	private static void displayMenu(Player player) {
 
-		System.out.println("Player balance: $" + player.getBalance());
-		System.out.format("%-15s%-15s%-15s%s%n", "Field", "Square", "Level", "Upgrade Cost");
-
 		List<MenuItem> menuItems = getMenuItems(player);
+		
+		// get max string lengths for table layout
+		int groupLength = 6;
+		int areaLength = 4;
+		
+		for (MenuItem menuItem : menuItems) {
+			if (menuItem.getField().length()>groupLength) groupLength = menuItem.getField().length();
+			if (menuItem.getSquare().length()>areaLength) areaLength = menuItem.getSquare().length();
+		}
+
+		System.out.format("%nYour balance: %s%s%,d%s%s%n"
+				, COLOUR_RESOURCE, RES_PRE, player.getBalance(), RES_SUF, RESET
+				);
+		System.out.format("%-"+(groupLength+2)+"s%-"+(areaLength+2)+"s%-7s%12s%n"
+				, "Region", "Area", "Level", "Upgrade Cost");
 
 		for (MenuItem menuItem : menuItems) {
-			System.out.format("%-15s%-15s%-15s$%d%n", menuItem.getField(), menuItem.getSquare(), menuItem.getLevel(),
-					menuItem.getUpgradeCost());
+			System.out.format("%s%-"+(groupLength+2)+"s%-"+(areaLength+2)+"s%s"
+					+ "%-7s%"
+					+ "s%s%,8d%s%s%n"
+					, COLOUR_LOCATION, menuItem.getField(), menuItem.getSquare(), RESET
+					, menuItem.getLevel()
+					, COLOUR_RESOURCE, RES_PRE, menuItem.getUpgradeCost(), RES_SUF, RESET
+					);
 		}
 
 	}
