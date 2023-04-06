@@ -527,8 +527,8 @@ public class GameSystem {
 
 		if (consent) {
 
-			// TODO Replace map with list that can accommodate other than 12 Squares
-//			board.visualMap();
+			
+			//board.visualMap();
 
 			int roll = rollDice(player);
 

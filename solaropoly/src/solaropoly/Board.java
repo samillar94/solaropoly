@@ -330,17 +330,17 @@ public class Board {
 			String addedInfor = null;
 			if (a.getOwner() != null) {
 				if (a.getOwner().equals(GameSystem.playersInGame.get(0))) {
-					addedInfor = String.format("%s%-25s%d%10s%s", ColourLibrary.CYAN, a.getName(), a.getDevelopmentLevel(),a.getOwner(),
+					addedInfor = String.format("%s%-25s%d(%s)%s", ColourLibrary.CYAN, a.getName(), a.getDevelopmentLevel(),a.getOwner().getName(),
 							GameSystem.RESET);
 				} else if (a.getOwner().equals(GameSystem.playersInGame.get(1))) {
-					addedInfor = String.format("%s%-25s%d%s", ColourLibrary.BLUE, a.getName(), a.getDevelopmentLevel(),
+					addedInfor = String.format("%s%-25s%d(%s)%s", ColourLibrary.BLUE, a.getName(), a.getDevelopmentLevel(),a.getOwner().getName(),
 							GameSystem.RESET);
 				} else if (a.getOwner().equals(GameSystem.playersInGame.get(2))) {
-					addedInfor = String.format("%s%-25s%d%s%s", ColourLibrary.GREEN, a.getName(), a.getDevelopmentLevel(),
+					addedInfor = String.format("%s%-25s%d(%s)%s", ColourLibrary.GREEN, a.getName(), a.getDevelopmentLevel(),a.getOwner().getName(),
 							GameSystem.RESET);
 				} else if (a.getOwner().equals(GameSystem.playersInGame.get(3))) {
-					addedInfor = String.format("%s%-25s%d%10s%s", ColourLibrary.PURPLE, a.getName(),
-							a.getDevelopmentLevel(),a.getOwner(),GameSystem.RESET);
+					addedInfor = String.format("%s%-25s%d(%s)%s", ColourLibrary.PURPLE, a.getName(),a.getDevelopmentLevel(),a.getOwner().getName(),
+							a.getDevelopmentLevel(),GameSystem.RESET);
 				}
 			} else {
 				addedInfor = String.format("%s%-30s%d%s", ColourLibrary.WHITE_BOLD_BRIGHT, a.getName(),
