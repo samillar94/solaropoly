@@ -605,7 +605,7 @@ public class Area extends Square implements GeneratesIncome {
 				auctioneerProperties = auctioneer.getOwnedSquares();
 				Area tradeArea = new Area();
 				System.out.println("Welcome to dutch auction system: a Dutch auction is known as a descending price auction."+ColourLibrary.RED+
-						"Be sure you give a descending offer"+ColourLibrary.RESET);
+						"\nBe sure you give a descending offer"+ColourLibrary.RESET);
 				System.out.println(GameSystem.COLOUR_PLAYER+auctioneer.getName()+ GameSystem.RESET+", you own the following areas:");
 				
 				// show the list of owners' estates
