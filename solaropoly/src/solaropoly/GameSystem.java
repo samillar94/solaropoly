@@ -390,7 +390,7 @@ public class GameSystem {
 			board.setSquares(squares);
 
 			for (Group group : groups) {
-				group.setAreas(squares);
+				group.setSquares(squares);
 			}
 
 			board.setGroups(new HashSet<Group>(groups));
