@@ -86,29 +86,35 @@ public class Group {
 	public ArrayList<Area> getAreas() {
 		return areas;
 	}
-
+	
 	/**
-	 * @param areas an ArrayList of areas - only those of this field will be added
+	 * @param squares an ArrayList of squares - only those of this field will be added
 	 */
-	public void setAreas(ArrayList<Square> squares) {
-		
-		ArrayList<Area> thissAreas = new ArrayList<Area>();
+	public void setSquares(ArrayList<Square> squares) {
+		ArrayList<Area> areas = new ArrayList<Area>();
 		
 		for (Square square : squares) {
 			if (square instanceof Area) {
 				if (((Area) square).getGroup() == this) {
-					thissAreas.add((Area) square);
+					areas.add((Area) square);
 				}
 			}
 		}
+		
+		this.setAreas(areas);
+	}
+	
+	/**
+	 * @param areas an ArrayList of areas
+	 */
+	public void setAreas(ArrayList<Area> areas) {
 
 		// System.out.println(this.name + " matches: " + thissAreas.toString());
-		if (thissAreas.size() < MIN_AREAS || thissAreas.size() > MAX_AREAS) {
+		if (areas.size() < MIN_AREAS || areas.size() > MAX_AREAS) {
 			throw new IllegalArgumentException("Fields must have " + MIN_AREAS + "–" + MAX_AREAS + " areas.");
 		} else {
-			this.areas = thissAreas;
+			this.areas = areas;
 		}
-
 	}
 
 	/**
@@ -185,8 +191,7 @@ public class Group {
 	 * @param minorDevOutputBuff
 	 * @param majorDevOutputBuff
 	 */
-	public Group(String name, int minorDevCost, int majorDevCost, int monopolyOutput, int minorDevOutput,
-			int majorDevOutput) {
+	public Group(String name, int minorDevCost, int majorDevCost, int monopolyOutput, int minorDevOutput, int majorDevOutput) {
 		this.name = name;
 		this.minorDevCost = minorDevCost;
 		this.majorDevCost = majorDevCost;

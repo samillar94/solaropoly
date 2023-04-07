@@ -122,7 +122,9 @@ public class Board {
 		checkSquaresList();
 		ArrayList<Area> areasGroups = new ArrayList<Area>();
 		for (Group group : groups) {
-			areasGroups.addAll(group.getAreas());
+			if (group.getAreas() != null) {
+				areasGroups.addAll(group.getAreas());
+			}
 		}
 
 		if (!this.squares.containsAll(areasGroups)) {
@@ -263,7 +265,7 @@ public class Board {
 	public Group getGroup(Area area) throws IndexOutOfBoundsException {
 		checkGroupsSet();
 		for (Group group : this.groups) {
-			if (group.getAreas().contains(area)) {
+			if (group.getAreas() != null && group.getAreas().contains(area)) {
 				return group;
 			}
 		}
